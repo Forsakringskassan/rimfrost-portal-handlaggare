@@ -15,6 +15,9 @@
     "test": "run-s eslint prettier:check",
     "uppgift01": "npm --prefix packages/uppgift01 run build && npm --prefix packages/uppgift01 run preview"
   },
+  "commitlint": {
+    "extends": "@forsakringskassan/commitlint-config/no-jira"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Forsakringskassan/rimfrost-fe-handlaggare.git"
@@ -28,16 +31,14 @@
   },
   "homepage": "https://github.com/Forsakringskassan/rimfrost-fe-handlaggare#readme",
   "devDependencies": {
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
     "@forsakringskassan/commitlint-config": "^3.2.1",
     "@forsakringskassan/eslint-config": "^13.2.2",
     "@forsakringskassan/eslint-config-cli": "^13.2.0",
     "@forsakringskassan/eslint-config-typescript": "^13.2.1",
     "@forsakringskassan/eslint-config-vue": "^13.2.2",
     "@forsakringskassan/prettier-config": "^3.1.7",
-    "lerna": "^9.0.0",
-    "npm-run-all2": "^8.0.4"
+    "lerna": "^9.0.1",
+    "npm-run-all2": "^8.0.4",
+    "typescript": "^5.9.3"
   }
 }
