@@ -5,13 +5,5 @@
   { "id": 1004, "typ": "Kontrollera folkbokföring", "status": "Redo" },
   { "id": 1005, "typ": "Ring arbetsgivare", "status": "Redo" },
   { "id": 1006, "typ": "Kontrollera folkbokföring", "status": "Pågående" },
-  { "id": 1007, "typ": "Ring arbetsgivare", "status": "Pågående" },
-  { "id": 1008, "typ": "Kontrollera folkbokföring", "status": "Redo" },
-  { "id": 1009, "typ": "Ring arbetsgivare", "status": "Redo" },
-  { "id": 1010, "typ": "Kontrollera folkbokföring", "status": "Pågående" },
-  { "id": 1011, "typ": "Ring arbetsgivare", "status": "Pågående" },
-  { "id": 1012, "typ": "Kontrollera folkbokföring", "status": "Redo" },
-  { "id": 1013, "typ": "Ring arbetsgivare", "status": "Redo" },
-  { "id": 1014, "typ": "Kontrollera folkbokföring", "status": "Pågående" },
-  { "id": 1015, "typ": "Ring arbetsgivare", "status": "Redo" }
+  { "id": 1007, "typ": "Ring arbetsgivare", "status": "Pågående" }
 ]

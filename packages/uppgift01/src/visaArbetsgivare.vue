@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import arbetsgivare from './assets/mockArbetsgivare.json'
-  import { FStaticField } from '@fkui/vue'
+import { FStaticField } from "@fkui/vue";
+import arbetsgivare from "./assets/mockArbetsgivare.json";
 </script>
 
 <template>
-  <div class="container">
+  <div class="">
     <h2>Arbetsgivare</h2>
     <f-static-field>
       <template #label><span>Namn</span></template>
@@ -38,13 +38,13 @@
 </template>
 
 <style scoped>
-  .output-field {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    & .label span {
-      font-weight: bold;
-    }
+.output-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  & .label span {
+    font-weight: bold;
   }
+}
 </style>
