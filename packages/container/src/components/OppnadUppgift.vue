@@ -10,7 +10,7 @@ async function loadUppgift() {
   const container = document.getElementById("imported-uppgift-01");
   if (container) {
     container.innerHTML = "";
-  } // clear previous content
+  }
 
   try {
     const response = await fetch("/api/hamta-uppgifter");
@@ -22,10 +22,10 @@ async function loadUppgift() {
     }
 
     // Fetch the remote JS as text, create a blob URL and import it
+    // Used to bypass CORS issues with dynamic imports
     const jsResp = await fetch(moduleUrl);
     const code = await jsResp.text();
 
-    // Revoke previous blob url
     if (currentBlobUrl) {
       URL.revokeObjectURL(currentBlobUrl);
       currentBlobUrl = null;
@@ -34,7 +34,7 @@ async function loadUppgift() {
     const blob = new Blob([code], { type: "text/javascript" });
     currentBlobUrl = URL.createObjectURL(blob);
 
-    // Suppress Vite static-analysis warning for this dynamic runtime import
+    // Suppress Vite static-analysis warning for dynamic runtime import
     const importedUppgift01 = await import(/* @vite-ignore */ currentBlobUrl);
 
     const id = Number(route.params.id);
@@ -46,7 +46,6 @@ async function loadUppgift() {
   }
 }
 
-// Run on mount and whenever route.params.id changes
 watch(() => route.params.id, loadUppgift, { immediate: true });
 
 onBeforeUnmount(() => {
