@@ -2,7 +2,6 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import OppnatUppgift from "./OppnadUppgift.vue";
-import UppgiftActions from "./UppgiftActions.vue";
 
 const route = useRoute();
 
@@ -14,7 +13,6 @@ const pageId = computed(() => route.params.id ?? "Inget ID");
   <div class="container">
     <h1 class="page-title">{{ pageTitle }} - {{ pageId }}</h1>
     <OppnatUppgift />
-    <UppgiftActions />
   </div>
 </template>
 
