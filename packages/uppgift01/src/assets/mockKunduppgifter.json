@@ -6,7 +6,7 @@
     "anstalld": true,
     "harHund": false,
     "uppgiftId": 1001,
-    "uppgiftsTyp": "Kontrollera folkbokföring",
+    "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
       "gata": "Björkgatan",
@@ -15,7 +15,19 @@
       "lägenhetsnummer": "1101",
       "stad": "Stockholm",
       "folkbokförd": true
-    }
+    },
+    "arbetsgivare": {
+      "id": 21,
+      "namn": "Stockholm Konsult AB",
+      "adress": "Hamngatan 4, 11147 Stockholm",
+      "kontaktperson": "Mikael Rosén",
+      "telefon": "08-1112233"
+    },
+    "datum": [
+      { "datumVarde": "2025-11-01", "rattTillForsakring": false },
+      { "datumVarde": "2025-11-02", "rattTillForsakring": false },
+      { "datumVarde": "2025-11-03", "rattTillForsakring": false }
+    ]
   },
   {
     "fornamn": "Johan",
@@ -24,15 +36,28 @@
     "anstalld": false,
     "harHund": true,
     "uppgiftId": 1002,
-    "uppgiftsTyp": "Ring arbetsgivare",
+    "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Tallgatan",
+      "nummer": "7",
+      "postnummer": "345 66",
+      "lägenhetsnummer": "0204",
+      "stad": "Örebro",
+      "folkbokförd": false
+    },
     "arbetsgivare": {
       "id": 3,
       "namn": "Tech Solutions",
       "adress": "Teknikgatan 10, 67890 Techstad",
       "kontaktperson": "Cecilia Carlsson",
       "telefon": "011-2233445"
-    }
+    },
+    "datum": [
+      { "datumVarde": "2025-10-10", "rattTillForsakring": false },
+      { "datumVarde": "2025-10-15", "rattTillForsakring": false },
+      { "datumVarde": "2025-10-20", "rattTillForsakring": false }
+    ]
   },
   {
     "fornamn": "Maria",
@@ -41,8 +66,16 @@
     "anstalld": true,
     "harHund": false,
     "uppgiftId": 1003,
-    "uppgiftsTyp": "Ring arbetsgivare",
+    "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Ringvägen",
+      "nummer": "3B",
+      "postnummer": "118 23",
+      "lägenhetsnummer": "1202",
+      "stad": "Stockholm",
+      "folkbokförd": true
+    },
     "arbetsgivare": {
       "id": 1,
       "namn": "AB Företag",
@@ -50,7 +83,14 @@
       "kontaktperson": "Anna Andersson",
       "telefon": "012-3456789",
       "orgNummer": "556677-8899"
-    }
+    },
+    "datum": [
+      { "datumVarde": "2024-07-13", "rattTillForsakring": false },
+      { "datumVarde": "2024-07-14", "rattTillForsakring": false },
+      { "datumVarde": "2024-07-15", "rattTillForsakring": false },
+      { "datumVarde": "2024-07-16", "rattTillForsakring": false },
+      { "datumVarde": "2024-07-17", "rattTillForsakring": false }
+    ]
   },
   {
     "fornamn": "Erik",
@@ -59,7 +99,7 @@
     "anstalld": false,
     "harHund": true,
     "uppgiftId": 1004,
-    "uppgiftsTyp": "Kontrollera folkbokföring",
+    "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
     "adress": {
       "gata": "Skogsvägen",
@@ -68,7 +108,19 @@
       "lägenhetsnummer": "1303",
       "stad": "Göteborg",
       "folkbokförd": true
-    }
+    },
+    "arbetsgivare": {
+      "id": 22,
+      "namn": "Göta Energi",
+      "adress": "Energigatan 9, 41755 Göteborg",
+      "kontaktperson": "Helena Borg",
+      "telefon": "031-456789"
+    },
+    "datum": [
+      { "datumVarde": "2025-01-05", "rattTillForsakring": false },
+      { "datumVarde": "2025-02-05", "rattTillForsakring": false },
+      { "datumVarde": "2025-03-05", "rattTillForsakring": false }
+    ]
   },
   {
     "fornamn": "Sara",
@@ -77,15 +129,28 @@
     "anstalld": true,
     "harHund": false,
     "uppgiftId": 1005,
-    "uppgiftsTyp": "Ring arbetsgivare",
+    "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Vårbackavägen",
+      "nummer": "10",
+      "postnummer": "145 65",
+      "lägenhetsnummer": "0401",
+      "stad": "Norsborg",
+      "folkbokförd": true
+    },
     "arbetsgivare": {
       "id": 4,
       "namn": "Bygg & Co",
       "adress": "Byggvägen 3, 13579 Byggstad",
       "kontaktperson": "David Dahl",
       "telefon": "022-3344556"
-    }
+    },
+    "datum": [
+      { "datumVarde": "2024-11-10", "rattTillForsakring": false },
+      { "datumVarde": "2024-11-11", "rattTillForsakring": false },
+      { "datumVarde": "2024-11-12", "rattTillForsakring": false }
+    ]
   },
   {
     "fornamn": "Patrik",
@@ -94,7 +159,7 @@
     "anstalld": false,
     "harHund": true,
     "uppgiftId": 1006,
-    "uppgiftsTyp": "Kontrollera folkbokföring",
+    "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
       "gata": "",
@@ -103,7 +168,15 @@
       "lägenhetsnummer": "",
       "stad": "",
       "folkbokförd": false
-    }
+    },
+    "arbetsgivare": {
+      "id": 23,
+      "namn": "Transport Norge",
+      "adress": "Verkstadsgata 6, 4010 Oslo",
+      "kontaktperson": "Nils Hovland",
+      "telefon": "+47-22113344"
+    },
+    "datum": [{ "datumVarde": "2025-04-01", "rattTillForsakring": false }]
   },
   {
     "fornamn": "Lina",
@@ -112,14 +185,284 @@
     "anstalld": true,
     "harHund": true,
     "uppgiftId": 1007,
-    "uppgiftsTyp": "Ring arbetsgivare",
+    "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Industrivägen",
+      "nummer": "11C",
+      "postnummer": "543 21",
+      "lägenhetsnummer": "2301",
+      "stad": "Industriort",
+      "folkbokförd": false
+    },
     "arbetsgivare": {
       "id": 2,
       "namn": "XYZ Industri",
       "adress": "Industrivägen 5, 54321 Industriort",
       "kontaktperson": "Bertil Bengtsson",
       "telefon": "098-7654321"
-    }
+    },
+    "datum": [
+      { "datumVarde": "2025-06-01", "rattTillForsakring": false },
+      { "datumVarde": "2025-06-02", "rattTillForsakring": false },
+      { "datumVarde": "2025-06-03", "rattTillForsakring": false },
+      { "datumVarde": "2025-06-04", "rattTillForsakring": false }
+    ]
+  },
+  {
+    "fornamn": "Oskar",
+    "efternamn": "Holm",
+    "personnummer": 199101173399,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1008,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Solgatan",
+      "nummer": "22",
+      "postnummer": "112 55",
+      "lägenhetsnummer": "1502",
+      "stad": "Uppsala",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 7,
+      "namn": "Nordic Finance",
+      "adress": "Banktorget 3, 11455 Uppsala",
+      "kontaktperson": "Frida Wallin",
+      "telefon": "018-334455"
+    },
+    "datum": [
+      { "datumVarde": "2025-02-10", "rattTillForsakring": false },
+      { "datumVarde": "2025-02-11", "rattTillForsakring": false }
+    ]
+  },
+  {
+    "fornamn": "Tove",
+    "efternamn": "Persson",
+    "personnummer": 198912013211,
+    "anstalld": false,
+    "harHund": true,
+    "uppgiftId": 1009,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Ängsvägen",
+      "nummer": "12",
+      "postnummer": "987 65",
+      "lägenhetsnummer": "0102",
+      "stad": "Grönköping",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 11,
+      "namn": "Green Foods",
+      "adress": "Ängsvägen 12, 98765 Grönköping",
+      "kontaktperson": "Sven Larsson",
+      "telefon": "044-556677"
+    },
+    "datum": [
+      { "datumVarde": "2024-09-01", "rattTillForsakring": false },
+      { "datumVarde": "2024-09-15", "rattTillForsakring": false },
+      { "datumVarde": "2024-09-30", "rattTillForsakring": false }
+    ]
+  },
+  {
+    "fornamn": "Filip",
+    "efternamn": "Åkesson",
+    "personnummer": 200001022355,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1010,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Älvvägen",
+      "nummer": "44B",
+      "postnummer": "445 22",
+      "lägenhetsnummer": "0903",
+      "stad": "Trollhättan",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 24,
+      "namn": "Trollhättan Tekniska",
+      "adress": "Teknikgatan 1, 44122 Trollhättan",
+      "kontaktperson": "Louise Berg",
+      "telefon": "0520-334455"
+    },
+    "datum": [
+      { "datumVarde": "2025-08-20", "rattTillForsakring": false },
+      { "datumVarde": "2025-08-21", "rattTillForsakring": false },
+      { "datumVarde": "2025-08-22", "rattTillForsakring": false },
+      { "datumVarde": "2025-08-23", "rattTillForsakring": false },
+      { "datumVarde": "2025-08-24", "rattTillForsakring": false },
+      { "datumVarde": "2025-08-25", "rattTillForsakring": false }
+    ]
+  },
+  {
+    "fornamn": "Karin",
+    "efternamn": "Dahlgren",
+    "personnummer": 197703154499,
+    "anstalld": false,
+    "harHund": false,
+    "uppgiftId": 1011,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Vintergatan",
+      "nummer": "9",
+      "postnummer": "887 44",
+      "lägenhetsnummer": "0303",
+      "stad": "Logistikstad",
+      "folkbokförd": false
+    },
+    "arbetsgivare": {
+      "id": 12,
+      "namn": "Svenska Transport",
+      "adress": "Lastgatan 7, 55678 Logistikstad",
+      "kontaktperson": "Karl Pettersson",
+      "telefon": "031-998877"
+    },
+    "datum": [
+      { "datumVarde": "2024-03-05", "rattTillForsakring": false },
+      { "datumVarde": "2024-04-05", "rattTillForsakring": false }
+    ]
+  },
+  {
+    "fornamn": "Benjamin",
+    "efternamn": "Ström",
+    "personnummer": 199311243455,
+    "anstalld": true,
+    "harHund": true,
+    "uppgiftId": 1012,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Furuvägen",
+      "nummer": "9",
+      "postnummer": "445 11",
+      "lägenhetsnummer": "0101",
+      "stad": "Borås",
+      "folkbokförd": false
+    },
+    "arbetsgivare": {
+      "id": 25,
+      "namn": "Borås Textil AB",
+      "adress": "Väverigatan 6, 50122 Borås",
+      "kontaktperson": "Emma Lilja",
+      "telefon": "033-112233"
+    },
+    "datum": [
+      { "datumVarde": "2025-05-01", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-02", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-03", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-04", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-05", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-06", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-07", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-08", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-09", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-10", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-11", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-12", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-13", "rattTillForsakring": false },
+      { "datumVarde": "2025-05-14", "rattTillForsakring": false }
+    ]
+  },
+  {
+    "fornamn": "Emilia",
+    "efternamn": "Viklund",
+    "personnummer": 199811223377,
+    "anstalld": false,
+    "harHund": true,
+    "uppgiftId": 1013,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Västergatan",
+      "nummer": "14",
+      "postnummer": "222 33",
+      "lägenhetsnummer": "0505",
+      "stad": "Lund",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 14,
+      "namn": "LundTek",
+      "adress": "Tekniktorget 8, 22344 Lund",
+      "kontaktperson": "Henrik Olsson",
+      "telefon": "046-112233"
+    },
+    "datum": [
+      { "datumVarde": "2024-12-01", "rattTillForsakring": false },
+      { "datumVarde": "2024-12-03", "rattTillForsakring": false },
+      { "datumVarde": "2024-12-05", "rattTillForsakring": false }
+    ]
+  },
+  {
+    "fornamn": "Mats",
+    "efternamn": "Ek",
+    "personnummer": 196812102255,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1014,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Bergvägen",
+      "nummer": "5",
+      "postnummer": "771 23",
+      "lägenhetsnummer": "0201",
+      "stad": "Falun",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 26,
+      "namn": "Falun Energi",
+      "adress": "Koppargatan 7, 79130 Falun",
+      "kontaktperson": "Lars Sjögren",
+      "telefon": "023-556677"
+    },
+    "datum": [
+      { "datumVarde": "2025-10-01", "rattTillForsakring": false },
+      { "datumVarde": "2025-10-02", "rattTillForsakring": false },
+      { "datumVarde": "2025-10-03", "rattTillForsakring": false },
+      { "datumVarde": "2025-10-04", "rattTillForsakring": false },
+      { "datumVarde": "2025-10-05", "rattTillForsakring": false },
+      { "datumVarde": "2025-10-06", "rattTillForsakring": false },
+      { "datumVarde": "2025-10-07", "rattTillForsakring": false }
+    ]
+  },
+  {
+    "fornamn": "Sofia",
+    "efternamn": "Vesterlund",
+    "personnummer": 198604143211,
+    "anstalld": true,
+    "harHund": true,
+    "uppgiftId": 1015,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Tallstigen",
+      "nummer": "6",
+      "postnummer": "903 45",
+      "lägenhetsnummer": "0702",
+      "stad": "Umeå",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 27,
+      "namn": "Umeå Kommun",
+      "adress": "Rådhusesplanaden 2, 90184 Umeå",
+      "kontaktperson": "Daniel Östman",
+      "telefon": "090-123456"
+    },
+    "datum": [
+      { "datumVarde": "2024-01-10", "rattTillForsakring": false },
+      { "datumVarde": "2024-01-17", "rattTillForsakring": false },
+      { "datumVarde": "2024-01-24", "rattTillForsakring": false }
+    ]
   }
 ]

@@ -1,15 +1,35 @@
 <script setup lang="ts">
-import { onBeforeUnmount, watch } from "vue";
+import type { App } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
 
 let currentBlobUrl: string | null = null;
+let currentVueApp: App | null = null;
+const mountKey = ref(0);
 
 async function loadUppgift() {
+  // Unmount previous Vue app instance if it exists
+  if (currentVueApp) {
+    try {
+      currentVueApp.unmount();
+    } catch (err) {
+      console.warn("Failed to unmount previous app:", err);
+    }
+    currentVueApp = null;
+  }
+
+  // Force re-render of the container
+  mountKey.value++;
+
+  // Wait for next tick to ensure DOM is updated
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
   const container = document.getElementById("imported-uppgift-01");
-  if (container) {
-    container.innerHTML = "";
+  if (!container) {
+    console.error("Container not found");
+    return;
   }
 
   try {
@@ -38,7 +58,7 @@ async function loadUppgift() {
     const importedUppgift01 = await import(/* @vite-ignore */ currentBlobUrl);
 
     const id = Number(route.params.id);
-    importedUppgift01.init("#imported-uppgift-01", {
+    currentVueApp = importedUppgift01.init("#imported-uppgift-01", {
       uppgiftId: isNaN(id) ? undefined : id,
     });
   } catch (err) {
@@ -49,6 +69,14 @@ async function loadUppgift() {
 watch(() => route.params.id, loadUppgift, { immediate: true });
 
 onBeforeUnmount(() => {
+  if (currentVueApp) {
+    try {
+      currentVueApp.unmount();
+    } catch (err) {
+      console.warn("Failed to unmount app:", err);
+    }
+    currentVueApp = null;
+  }
   if (currentBlobUrl) {
     URL.revokeObjectURL(currentBlobUrl);
     currentBlobUrl = null;
@@ -57,5 +85,5 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div id="imported-uppgift-01"></div>
+  <div id="imported-uppgift-01" :key="mountKey"></div>
 </template>
