@@ -27,6 +27,7 @@ export default defineConfig({
   },
   define: { "process.env": '"production"' },
   build: {
+    cssCodeSplit: false,
     lib: {
       formats: ["es"],
       entry: resolve(__dirname, "src/index.ts"),

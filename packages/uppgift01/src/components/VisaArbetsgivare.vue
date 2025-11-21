@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { FStaticField } from "@fkui/vue";
 import kunduppgifter from "../assets/mockKunduppgifter.json";
 import { useProductStore } from "../stores/uppgiftStore";
+import ListaDatum from "./ListaDatum.vue";
 
 const store = useProductStore();
 
@@ -48,6 +49,7 @@ const selected = computed(() => {
         <span>{{ selected?.arbetsgivare?.telefon ?? "" }}</span>
       </template>
     </f-static-field>
+    <ListaDatum />
   </div>
 </template>
 

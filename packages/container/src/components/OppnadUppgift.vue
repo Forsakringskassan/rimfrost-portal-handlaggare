@@ -5,7 +5,6 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 
-let currentBlobUrl: string | null = null;
 let currentVueApp: App | null = null;
 const mountKey = ref(0);
 
@@ -41,21 +40,9 @@ async function loadUppgift() {
       return;
     }
 
-    // Fetch the remote JS as text, create a blob URL and import it
-    // Used to bypass CORS issues with dynamic imports
-    const jsResp = await fetch(moduleUrl);
-    const code = await jsResp.text();
-
-    if (currentBlobUrl) {
-      URL.revokeObjectURL(currentBlobUrl);
-      currentBlobUrl = null;
-    }
-
-    const blob = new Blob([code], { type: "text/javascript" });
-    currentBlobUrl = URL.createObjectURL(blob);
-
-    // Suppress Vite static-analysis warning for dynamic runtime import
-    const importedUppgift01 = await import(/* @vite-ignore */ currentBlobUrl);
+    // Import directly - CORS is enabled on the preview server
+    // This allows Vite to properly handle CSS and other assets
+    const importedUppgift01 = await import(/* @vite-ignore */ moduleUrl);
 
     const id = Number(route.params.id);
     currentVueApp = importedUppgift01.init("#imported-uppgift-01", {
@@ -76,10 +63,6 @@ onBeforeUnmount(() => {
       console.warn("Failed to unmount app:", err);
     }
     currentVueApp = null;
-  }
-  if (currentBlobUrl) {
-    URL.revokeObjectURL(currentBlobUrl);
-    currentBlobUrl = null;
   }
 });
 </script>
