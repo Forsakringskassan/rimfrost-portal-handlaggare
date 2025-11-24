@@ -8,6 +8,7 @@ const route = useRoute();
 let currentVueApp: App | null = null;
 const mountKey = ref(0);
 
+// We might be able to get around all this with Module Federation
 async function loadUppgift() {
   // Unmount previous Vue app instance if it exists
   if (currentVueApp) {
@@ -40,8 +41,6 @@ async function loadUppgift() {
       return;
     }
 
-    // Import directly - CORS is enabled on the preview server
-    // This allows Vite to properly handle CSS and other assets
     const importedUppgift01 = await import(/* @vite-ignore */ moduleUrl);
 
     const id = Number(route.params.id);
