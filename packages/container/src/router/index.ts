@@ -5,7 +5,7 @@ import {
 } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
-  { path: "/", component: () => import("../components/IngetArendeValt.vue") },
+  { path: "/", component: () => import("../components/IngenUppgiftVald.vue") },
   {
     path: "/items/:id",
     name: "item",

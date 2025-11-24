@@ -31,6 +31,7 @@ export default [
       "vue/no-restricted-block": "off",
       "no-console": "off",
       "no-warning-comments": "off",
+      "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     },
   },
 ];

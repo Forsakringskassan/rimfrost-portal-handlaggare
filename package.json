@@ -40,5 +40,8 @@
     "lerna": "^9.0.1",
     "npm-run-all2": "^8.0.4",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "vue-router": "^4.6.3"
   }
 }

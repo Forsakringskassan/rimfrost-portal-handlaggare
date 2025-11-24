@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import arendeLista from "../assets/arendeLista.json";
+import uppgiftLista from "../assets/uppgiftLista.json";
 
-export interface ArendeItem {
+export interface UppgiftItem {
   id: number;
   typ: string;
   status: string;
 }
 
-const items = ref<ArendeItem[]>([]);
+const items = ref<UppgiftItem[]>([]);
 const router = useRouter();
 const route = useRoute();
 
 onMounted(async () => {
-  items.value = await arendeLista;
+  items.value = await uppgiftLista;
 });
 
 function goTo(item: { id: number; typ: string }) {

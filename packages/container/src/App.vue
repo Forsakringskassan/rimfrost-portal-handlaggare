@@ -6,7 +6,7 @@ import {
   FLayoutLeftPanel,
   FPageHeader,
 } from "@fkui/vue";
-import IdList from "./components/ArendeLista.vue";
+import IdList from "./components/UppgiftLista.vue";
 /*const route = useRoute();
     const router = useRouter();
     const currentTop = computed(() => {

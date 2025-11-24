@@ -1,0 +1,17 @@
+[
+  { "id": 1001, "typ": "Manuell kontroll RTF", "status": "Pågående" },
+  { "id": 1002, "typ": "Manuell kontroll RTF", "status": "Redo" },
+  { "id": 1003, "typ": "Manuell kontroll RTF", "status": "Pågående" },
+  { "id": 1004, "typ": "Manuell kontroll RTF", "status": "Redo" },
+  { "id": 1005, "typ": "Manuell kontroll RTF", "status": "Redo" },
+  { "id": 1006, "typ": "Manuell kontroll RTF", "status": "Pågående" },
+  { "id": 1007, "typ": "Manuell kontroll RTF", "status": "Pågående" },
+  { "id": 1008, "typ": "Manuell kontroll RTF", "status": "Pågående" },
+  { "id": 1009, "typ": "Manuell kontroll RTF", "status": "Redo" },
+  { "id": 1010, "typ": "Manuell kontroll RTF", "status": "Pågående" },
+  { "id": 1011, "typ": "Manuell kontroll RTF", "status": "Redo" },
+  { "id": 1012, "typ": "Manuell kontroll RTF", "status": "Pågående" },
+  { "id": 1013, "typ": "Manuell kontroll RTF", "status": "Redo" },
+  { "id": 1014, "typ": "Manuell kontroll RTF", "status": "Pågående" },
+  { "id": 1015, "typ": "Manuell kontroll RTF", "status": "Redo" }
+]

@@ -1,21 +1,36 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { FStaticField } from "@fkui/vue";
-import arbetsgivare from "./assets/mockArbetsgivare.json";
+import kunduppgifter from "../assets/mockKunduppgifter.json";
+import { useProductStore } from "../stores/uppgiftStore";
+import ListaDatum from "./ListaDatum.vue";
+
+const store = useProductStore();
+
+const selected = computed(() => {
+  let kund = null;
+
+  if (typeof store.uppgiftId === "number") {
+    kund =
+      kunduppgifter.find((kund) => kund.uppgiftId === store.uppgiftId) ??
+      kunduppgifter[0];
+  }
+  return kund;
+});
 </script>
 
 <template>
-  <div class="">
-    <h2>Arbetsgivare</h2>
+  <div>
     <f-static-field>
       <template #label><span>Namn</span></template>
       <template #default>
-        <span>{{ arbetsgivare[0]?.namn }}</span>
+        <span>{{ selected?.arbetsgivare?.namn ?? "" }}</span>
       </template>
     </f-static-field>
     <f-static-field>
       <template #label><span>Adress</span></template>
       <template #default>
-        <span>{{ arbetsgivare[0]?.adress }}</span>
+        <span>{{ selected?.arbetsgivare?.adress ?? "" }}</span>
       </template>
     </f-static-field>
     <f-static-field>
@@ -23,7 +38,7 @@ import arbetsgivare from "./assets/mockArbetsgivare.json";
         <span>Kontaktperson</span>
       </template>
       <template #default>
-        <span>{{ arbetsgivare[0]?.kontaktperson }}</span>
+        <span>{{ selected?.arbetsgivare?.kontaktperson ?? "" }}</span>
       </template>
     </f-static-field>
     <f-static-field>
@@ -31,9 +46,10 @@ import arbetsgivare from "./assets/mockArbetsgivare.json";
         <span>Telefonnummer</span>
       </template>
       <template #default>
-        <span>{{ arbetsgivare[0]?.telefon }}</span>
+        <span>{{ selected?.arbetsgivare?.telefon ?? "" }}</span>
       </template>
     </f-static-field>
+    <ListaDatum />
   </div>
 </template>
 

@@ -1,0 +1,378 @@
+[
+  {
+    "fornamn": "Anna",
+    "efternamn": "Lindberg",
+    "personnummer": 198503122345,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1001,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Björkgatan",
+      "nummer": "12A",
+      "postnummer": "123 45",
+      "lägenhetsnummer": "1101",
+      "stad": "Stockholm",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 21,
+      "namn": "Stockholm Konsult AB",
+      "adress": "Hamngatan 4, 11147 Stockholm",
+      "kontaktperson": "Mikael Rosén",
+      "telefon": "08-1112233"
+    }
+  },
+  {
+    "fornamn": "Johan",
+    "efternamn": "Svensson",
+    "personnummer": 199207053211,
+    "anstalld": false,
+    "harHund": true,
+    "uppgiftId": 1002,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Tallgatan",
+      "nummer": "7",
+      "postnummer": "345 66",
+      "lägenhetsnummer": "0204",
+      "stad": "Örebro",
+      "folkbokförd": false
+    },
+    "arbetsgivare": {
+      "id": 3,
+      "namn": "Tech Solutions",
+      "adress": "Teknikgatan 10, 67890 Techstad",
+      "kontaktperson": "Cecilia Carlsson",
+      "telefon": "011-2233445"
+    }
+  },
+  {
+    "fornamn": "Maria",
+    "efternamn": "Andersson",
+    "personnummer": 197911182356,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1003,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Ringvägen",
+      "nummer": "3B",
+      "postnummer": "118 23",
+      "lägenhetsnummer": "1202",
+      "stad": "Stockholm",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 1,
+      "namn": "AB Företag",
+      "adress": "Storgatan 1, 12345 Stad",
+      "kontaktperson": "Anna Andersson",
+      "telefon": "012-3456789",
+      "orgNummer": "556677-8899"
+    }
+  },
+  {
+    "fornamn": "Erik",
+    "efternamn": "Karlsson",
+    "personnummer": 199512284512,
+    "anstalld": false,
+    "harHund": true,
+    "uppgiftId": 1004,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Skogsvägen",
+      "nummer": "8",
+      "postnummer": "543 21",
+      "lägenhetsnummer": "1303",
+      "stad": "Göteborg",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 22,
+      "namn": "Göta Energi",
+      "adress": "Energigatan 9, 41755 Göteborg",
+      "kontaktperson": "Helena Borg",
+      "telefon": "031-456789"
+    }
+  },
+  {
+    "fornamn": "Sara",
+    "efternamn": "Nilsson",
+    "personnummer": 198802092145,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1005,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Vårbackavägen",
+      "nummer": "10",
+      "postnummer": "145 65",
+      "lägenhetsnummer": "0401",
+      "stad": "Norsborg",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 4,
+      "namn": "Bygg & Co",
+      "adress": "Byggvägen 3, 13579 Byggstad",
+      "kontaktperson": "David Dahl",
+      "telefon": "022-3344556"
+    }
+  },
+  {
+    "fornamn": "Patrik",
+    "efternamn": "Johansson",
+    "personnummer": 199610153321,
+    "anstalld": false,
+    "harHund": true,
+    "uppgiftId": 1006,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "",
+      "nummer": "",
+      "postnummer": "",
+      "lägenhetsnummer": "",
+      "stad": "",
+      "folkbokförd": false
+    },
+    "arbetsgivare": {
+      "id": 23,
+      "namn": "Transport Norge",
+      "adress": "Verkstadsgata 6, 4010 Oslo",
+      "kontaktperson": "Nils Hovland",
+      "telefon": "+47-22113344"
+    }
+  },
+  {
+    "fornamn": "Lina",
+    "efternamn": "Bergström",
+    "personnummer": 198404042278,
+    "anstalld": true,
+    "harHund": true,
+    "uppgiftId": 1007,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Industrivägen",
+      "nummer": "11C",
+      "postnummer": "543 21",
+      "lägenhetsnummer": "2301",
+      "stad": "Industriort",
+      "folkbokförd": false
+    },
+    "arbetsgivare": {
+      "id": 2,
+      "namn": "XYZ Industri",
+      "adress": "Industrivägen 5, 54321 Industriort",
+      "kontaktperson": "Bertil Bengtsson",
+      "telefon": "098-7654321"
+    }
+  },
+  {
+    "fornamn": "Oskar",
+    "efternamn": "Holm",
+    "personnummer": 199101173399,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1008,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Solgatan",
+      "nummer": "22",
+      "postnummer": "112 55",
+      "lägenhetsnummer": "1502",
+      "stad": "Uppsala",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 7,
+      "namn": "Nordic Finance",
+      "adress": "Banktorget 3, 11455 Uppsala",
+      "kontaktperson": "Frida Wallin",
+      "telefon": "018-334455"
+    }
+  },
+  {
+    "fornamn": "Tove",
+    "efternamn": "Persson",
+    "personnummer": 198912013211,
+    "anstalld": false,
+    "harHund": true,
+    "uppgiftId": 1009,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Ängsvägen",
+      "nummer": "12",
+      "postnummer": "987 65",
+      "lägenhetsnummer": "0102",
+      "stad": "Grönköping",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 11,
+      "namn": "Green Foods",
+      "adress": "Ängsvägen 12, 98765 Grönköping",
+      "kontaktperson": "Sven Larsson",
+      "telefon": "044-556677"
+    }
+  },
+  {
+    "fornamn": "Filip",
+    "efternamn": "Åkesson",
+    "personnummer": 200001022355,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1010,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Älvvägen",
+      "nummer": "44B",
+      "postnummer": "445 22",
+      "lägenhetsnummer": "0903",
+      "stad": "Trollhättan",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 24,
+      "namn": "Trollhättan Tekniska",
+      "adress": "Teknikgatan 1, 44122 Trollhättan",
+      "kontaktperson": "Louise Berg",
+      "telefon": "0520-334455"
+    }
+  },
+  {
+    "fornamn": "Karin",
+    "efternamn": "Dahlgren",
+    "personnummer": 197703154499,
+    "anstalld": false,
+    "harHund": false,
+    "uppgiftId": 1011,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Vintergatan",
+      "nummer": "9",
+      "postnummer": "887 44",
+      "lägenhetsnummer": "0303",
+      "stad": "Logistikstad",
+      "folkbokförd": false
+    },
+    "arbetsgivare": {
+      "id": 12,
+      "namn": "Svenska Transport",
+      "adress": "Lastgatan 7, 55678 Logistikstad",
+      "kontaktperson": "Karl Pettersson",
+      "telefon": "031-998877"
+    }
+  },
+  {
+    "fornamn": "Benjamin",
+    "efternamn": "Ström",
+    "personnummer": 199311243455,
+    "anstalld": true,
+    "harHund": true,
+    "uppgiftId": 1012,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Furuvägen",
+      "nummer": "9",
+      "postnummer": "445 11",
+      "lägenhetsnummer": "0101",
+      "stad": "Borås",
+      "folkbokförd": false
+    },
+    "arbetsgivare": {
+      "id": 25,
+      "namn": "Borås Textil AB",
+      "adress": "Väverigatan 6, 50122 Borås",
+      "kontaktperson": "Emma Lilja",
+      "telefon": "033-112233"
+    }
+  },
+  {
+    "fornamn": "Emilia",
+    "efternamn": "Viklund",
+    "personnummer": 199811223377,
+    "anstalld": false,
+    "harHund": true,
+    "uppgiftId": 1013,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Västergatan",
+      "nummer": "14",
+      "postnummer": "222 33",
+      "lägenhetsnummer": "0505",
+      "stad": "Lund",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 14,
+      "namn": "LundTek",
+      "adress": "Tekniktorget 8, 22344 Lund",
+      "kontaktperson": "Henrik Olsson",
+      "telefon": "046-112233"
+    }
+  },
+  {
+    "fornamn": "Mats",
+    "efternamn": "Ek",
+    "personnummer": 196812102255,
+    "anstalld": true,
+    "harHund": false,
+    "uppgiftId": 1014,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Pågående",
+    "adress": {
+      "gata": "Bergvägen",
+      "nummer": "5",
+      "postnummer": "771 23",
+      "lägenhetsnummer": "0201",
+      "stad": "Falun",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 26,
+      "namn": "Falun Energi",
+      "adress": "Koppargatan 7, 79130 Falun",
+      "kontaktperson": "Lars Sjögren",
+      "telefon": "023-556677"
+    }
+  },
+  {
+    "fornamn": "Sofia",
+    "efternamn": "Vesterlund",
+    "personnummer": 198604143211,
+    "anstalld": true,
+    "harHund": true,
+    "uppgiftId": 1015,
+    "uppgiftsTyp": "Manuell kontroll RTF",
+    "uppgiftsStatus": "Redo",
+    "adress": {
+      "gata": "Tallstigen",
+      "nummer": "6",
+      "postnummer": "903 45",
+      "lägenhetsnummer": "0702",
+      "stad": "Umeå",
+      "folkbokförd": true
+    },
+    "arbetsgivare": {
+      "id": 27,
+      "namn": "Umeå Kommun",
+      "adress": "Rådhusesplanaden 2, 90184 Umeå",
+      "kontaktperson": "Daniel Östman",
+      "telefon": "090-123456"
+    }
+  }
+]

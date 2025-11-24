@@ -1,20 +1,33 @@
-import { createApp } from 'vue'
-import './style.css'
-import App from './visaArbetsgivare.vue'
+import type { App } from "vue";
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import "./style.css";
+import AppComponent from "./HuvudytaVAH.vue";
+import { router } from "./router";
 
 // createApp(App).mount('#app')
 
-export function init(selector: string) {
-    document.querySelector(selector)?.addEventListener("component-validity", (event: Event) => {
-        console.log("App stoppar");
-        event.stopPropagation();
-    });
+export function init(selector: string, params?: { uppgiftId?: number }): App {
+  const container = document.querySelector(selector);
 
-    document.querySelector(selector)!.addEventListener(("component-unmount"), (event: Event) => {
-        console.log("App stoppar");
-        event.stopPropagation();
-    })
+  if (!container) {
+    throw new Error(`Container element not found: ${selector}`);
+  }
 
-    const app = createApp(App);
-    app.mount(selector);
+  container.addEventListener("component-validity", (event: Event) => {
+    console.log("App stoppar");
+    event.stopPropagation();
+  });
+
+  container.addEventListener("component-unmount", (event: Event) => {
+    console.log("App stoppar");
+    event.stopPropagation();
+  });
+
+  const app = createApp(AppComponent, { uppgiftId: params?.uppgiftId ?? null });
+  app.use(createPinia());
+  app.use(router);
+  app.mount(selector);
+
+  return app;
 }
