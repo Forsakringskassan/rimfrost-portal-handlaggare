@@ -3,21 +3,24 @@ import {
   createRouter,
   createWebHistory,
 } from "vue-router";
+import HuvudytaVAH from "../HuvudytaVAH.vue";
+import VisaArbetsgivare from "../components/VisaArbetsgivare.vue";
+import VisaFolkbokforing from "../components/VisaFolkbokforing.vue";
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("../HuvudytaVAH.vue"),
+    component: HuvudytaVAH,
   },
   {
     path: "/arbetsgivare",
     name: "arbetsgivare",
-    component: () => import("../components/VisaArbetsgivare.vue"),
+    component: VisaArbetsgivare,
   },
   {
     path: "/folkbokforing",
     name: "folkbokforing",
-    component: () => import("../components/VisaFolkbokforing.vue"),
+    component: VisaFolkbokforing,
   },
 ];
 

@@ -37,9 +37,10 @@ const filteredDatum = computed(() => {
 
 <style scoped>
 .checkbox-group {
+  min-width: 15rem;
+  max-width: 30rem;
   margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
-  background-color: pink;
 }
 </style>
