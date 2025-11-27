@@ -1,39 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { FButton, FFieldset, FRadioField } from "@fkui/vue";
+import { FButton, FFieldset, FRadioField, FValidationForm } from "@fkui/vue";
 import mockKunduppgifter from "../assets/mockKunduppgifter.json";
 import { useProductStore } from "../stores/uppgiftStore";
-
-interface Kund {
-  fornamn: string;
-  efternamn: string;
-  personnummer: number;
-  anstalld: boolean;
-  harHund: boolean;
-  uppgiftId: number;
-  uppgiftsTyp: string;
-  uppgiftsStatus: string;
-  adress: {
-    gata: string;
-    nummer: string;
-    postnummer: string;
-    lagenhetsnummer: string;
-    stad: string;
-    folkbokford: boolean;
-  };
-  arbetsgivare: {
-    id: number;
-    namn: string;
-    adress: string;
-    kontaktperson: string;
-    telefon: string;
-    orgNummer?: undefined;
-  };
-  datum: Array<{
-    datumVarde: string;
-    rattTillForsakring: boolean;
-  }>;
-}
+import type { Kund } from "../types";
 
 const store = useProductStore();
 
@@ -45,55 +15,93 @@ const filtreradKund = computed(() => {
 });
 
 const selections = ref<Record<string, string>>({});
+//   ValidationService.setErrorMessages({
+//     required: "Detta fält är obligatoriskt.",
+//   });
+//   if (!filtreradKund.value) {
+//     return;
+//   }
 
-const sparaAndringar = () => {
-  if (!filtreradKund.value) {
-    return;
-  }
+//   console.log("Radio group state:", {
+//     isValid: radioGroup.value.isValid,
+//     componentCount: radioGroup.value.componentCount,
+//     componentsWithError: radioGroup.value.componentsWithError,
+//   });
 
-  filtreradKund.value.datum.forEach((datumItem) => {
-    const selection = selections.value[datumItem.datumVarde];
-    if (selection) {
-      datumItem.rattTillForsakring = selection === "godkand";
-    }
-  });
+//   if (!radioGroup.value.isValid) {
+//     const missingDates = filtreradKund.value.datum.filter(
+//       (item) => !selections.value[item.datumVarde],
+//     );
 
-  console.log("Sparade ändringar:", filtreradKund.value);
-};
+//     const errorMessage =
+//       missingDates.length > 0
+//         ? `Vänligen fyll i alla val innan du sparar. Saknade datum: ${missingDates.map((d) => d.datumVarde).join(", ")}`
+//         : "Vänligen fyll i alla val innan du sparar.";
+
+//     alert(errorMessage);
+//     console.log("Missing dates:", missingDates);
+//     return;
+//   }
+
+//   filtreradKund.value.datum.forEach((datumItem) => {
+//     const selection = selections.value[datumItem.datumVarde];
+//     if (selection) {
+//       datumItem.rattTillForsakring = selection === "godkand";
+//     }
+//   });
+
+//   console.log("Sparade ändringar:", filtreradKund.value);
+// };
 </script>
 
 <template>
   <div v-if="filtreradKund">
-    <div
-      v-for="item in filtreradKund.datum"
-      :key="item.datumVarde"
-      class="radio-container"
-    >
-      <p>{{ item.datumVarde }}</p>
-      <f-fieldset
-        v-validation.required
-        :name="`arende-utfall-${item.datumVarde}`"
+    <f-validation-form>
+      <template #error-message>
+        <p>Du har glömt fylla i något. Gå till fältet som är markerat.</p>
+      </template>
+
+      <div
+        v-for="item in filtreradKund.datum"
+        :key="item.datumVarde"
+        class="radio-container"
       >
-        <template #default>
-          <f-radio-field v-model="selections[item.datumVarde]" value="godkand">
-            Godkänd
-          </f-radio-field>
-          <f-radio-field v-model="selections[item.datumVarde]" value="avslag">
-            Avslag
-          </f-radio-field>
-          <f-radio-field
-            v-model="selections[item.datumVarde]"
-            value="utredning"
-          >
-            Utredning
-          </f-radio-field>
-        </template>
-      </f-fieldset>
-    </div>
-    <div class="button-group">
-      <f-button variant="secondary" @click="sparaAndringar">Spara</f-button>
-      <f-button @click="sparaAndringar">Signera & Klarmarkera</f-button>
-    </div>
+        <f-fieldset
+          v-validation.required
+          :name="`arende-utfall-${item.datumVarde}`"
+        >
+          <template #label>
+            <p>{{ item.datumVarde }}</p>
+          </template>
+
+          <template #error-message="{ hasError, validationMessage }">
+            <p v-if="hasError">
+              {{ validationMessage }}
+            </p>
+          </template>
+
+          <template #default>
+            <f-radio-field
+              v-model="selections[item.datumVarde]"
+              value="godkand"
+            >
+              Godkänd
+            </f-radio-field>
+            <f-radio-field v-model="selections[item.datumVarde]" value="avslag">
+              Avslag
+            </f-radio-field>
+            <f-radio-field
+              v-model="selections[item.datumVarde]"
+              value="utredning"
+            >
+              Utredning
+            </f-radio-field>
+          </template>
+        </f-fieldset>
+      </div>
+
+      <f-button type="submit"> Submit </f-button>
+    </f-validation-form>
   </div>
 </template>
 

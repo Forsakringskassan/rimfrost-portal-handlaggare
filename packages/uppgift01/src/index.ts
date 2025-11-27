@@ -1,5 +1,6 @@
 import type { App } from "vue";
 import { createApp } from "vue";
+import { ValidationPlugin } from "@fkui/vue";
 import { createPinia } from "pinia";
 import "./style.css";
 import AppComponent from "./HuvudytaVAH.vue";
@@ -25,6 +26,7 @@ export function init(selector: string, params?: { uppgiftId?: number }): App {
   });
 
   const app = createApp(AppComponent, { uppgiftId: params?.uppgiftId ?? null });
+  app.use(ValidationPlugin);
   app.use(createPinia());
   app.use(router);
   app.mount(selector);

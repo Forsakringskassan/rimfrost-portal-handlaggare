@@ -45,34 +45,36 @@ const selected = computed(() => {
     </f-static-field>
   </div>
   <div>
-    <f-static-field>
-      <template #label><span>Namn</span></template>
-      <template #default>
-        <span>{{ selected?.arbetsgivare?.namn ?? "" }}</span>
-      </template>
-    </f-static-field>
-    <f-static-field>
-      <template #label><span>Adress</span></template>
-      <template #default>
-        <span>{{ selected?.arbetsgivare?.adress ?? "" }}</span>
-      </template>
-    </f-static-field>
-    <f-static-field>
-      <template #label>
-        <span>Kontaktperson</span>
-      </template>
-      <template #default>
-        <span>{{ selected?.arbetsgivare?.kontaktperson ?? "" }}</span>
-      </template>
-    </f-static-field>
-    <f-static-field>
-      <template #label>
-        <span>Telefonnummer</span>
-      </template>
-      <template #default>
-        <span>{{ selected?.arbetsgivare?.telefon ?? "" }}</span>
-      </template>
-    </f-static-field>
+    <div class="arende-information">
+      <f-static-field>
+        <template #label><span>Namn</span></template>
+        <template #default>
+          <span>{{ selected?.arbetsgivare?.namn ?? "" }}</span>
+        </template>
+      </f-static-field>
+      <f-static-field>
+        <template #label><span>Adress</span></template>
+        <template #default>
+          <span>{{ selected?.arbetsgivare?.adress ?? "" }}</span>
+        </template>
+      </f-static-field>
+      <f-static-field>
+        <template #label>
+          <span>Kontaktperson</span>
+        </template>
+        <template #default>
+          <span>{{ selected?.arbetsgivare?.kontaktperson ?? "" }}</span>
+        </template>
+      </f-static-field>
+      <f-static-field>
+        <template #label>
+          <span>Telefonnummer</span>
+        </template>
+        <template #default>
+          <span>{{ selected?.arbetsgivare?.telefon ?? "" }}</span>
+        </template>
+      </f-static-field>
+    </div>
     <ListaDatum />
   </div>
 </template>
@@ -86,5 +88,9 @@ const selected = computed(() => {
   & .label span {
     font-weight: bold;
   }
+}
+
+.arende-information {
+  margin-bottom: 1rem;
 }
 </style>
