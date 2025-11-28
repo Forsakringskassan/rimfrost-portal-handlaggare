@@ -15,43 +15,6 @@ const filtreradKund = computed(() => {
 });
 
 const selections = ref<Record<string, string>>({});
-//   ValidationService.setErrorMessages({
-//     required: "Detta fält är obligatoriskt.",
-//   });
-//   if (!filtreradKund.value) {
-//     return;
-//   }
-
-//   console.log("Radio group state:", {
-//     isValid: radioGroup.value.isValid,
-//     componentCount: radioGroup.value.componentCount,
-//     componentsWithError: radioGroup.value.componentsWithError,
-//   });
-
-//   if (!radioGroup.value.isValid) {
-//     const missingDates = filtreradKund.value.datum.filter(
-//       (item) => !selections.value[item.datumVarde],
-//     );
-
-//     const errorMessage =
-//       missingDates.length > 0
-//         ? `Vänligen fyll i alla val innan du sparar. Saknade datum: ${missingDates.map((d) => d.datumVarde).join(", ")}`
-//         : "Vänligen fyll i alla val innan du sparar.";
-
-//     alert(errorMessage);
-//     console.log("Missing dates:", missingDates);
-//     return;
-//   }
-
-//   filtreradKund.value.datum.forEach((datumItem) => {
-//     const selection = selections.value[datumItem.datumVarde];
-//     if (selection) {
-//       datumItem.rattTillForsakring = selection === "godkand";
-//     }
-//   });
-
-//   console.log("Sparade ändringar:", filtreradKund.value);
-// };
 </script>
 
 <template>
@@ -75,9 +38,11 @@ const selections = ref<Record<string, string>>({});
           </template>
 
           <template #error-message="{ hasError, validationMessage }">
-            <p v-if="hasError">
-              {{ validationMessage }}
-            </p>
+            <div class="error-list">
+              <p v-if="hasError">
+                {{ validationMessage }}
+              </p>
+            </div>
           </template>
 
           <template #default>
@@ -100,7 +65,7 @@ const selections = ref<Record<string, string>>({});
         </f-fieldset>
       </div>
 
-      <f-button type="submit"> Submit </f-button>
+      <f-button type="submit"> Signera och Klarmarkera </f-button>
     </f-validation-form>
   </div>
 </template>
@@ -112,6 +77,9 @@ const selections = ref<Record<string, string>>({});
   margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
+  border-radius: 0.35rem;
+  border: 1px solid black;
+  padding: 1.1rem;
 }
 
 .fieldset {
@@ -127,5 +95,9 @@ const selections = ref<Record<string, string>>({});
   margin-top: 2rem;
   display: flex;
   gap: 0.75rem;
+}
+
+.radio-button-group {
+  margin: 0;
 }
 </style>
