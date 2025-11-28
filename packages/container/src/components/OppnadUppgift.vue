@@ -8,6 +8,7 @@ const route = useRoute();
 let currentVueApp: App | null = null;
 const mountKey = ref(0);
 
+// This whole sections feels meh and hacky, needs proper refactoring
 // We might be able to get around all this with Module Federation
 async function loadUppgift() {
   // Unmount previous Vue app instance if it exists
@@ -40,6 +41,22 @@ async function loadUppgift() {
     if (!moduleUrl) {
       return;
     }
+
+    // Load CSS file (replace .js with .css in the URL)
+    const cssUrl = moduleUrl.replace(/\.js$/, ".css");
+    const cssLinkId = "uppgift-css-link";
+
+    const existingLink = document.getElementById(cssLinkId);
+    if (existingLink) {
+      existingLink.remove();
+    }
+
+    // Create new link element for CSS
+    const linkElement = document.createElement("link");
+    linkElement.id = cssLinkId;
+    linkElement.rel = "stylesheet";
+    linkElement.href = cssUrl;
+    document.head.appendChild(linkElement);
 
     const importedUppgift01 = await import(/* @vite-ignore */ moduleUrl);
 
