@@ -78,14 +78,13 @@ export interface Ersattning {
 export const KonEnum = {
   MAN: "MAN",
   KVINNA: "KVINNA",
-} as const;
-
-export type KonEnum = (typeof KonEnum)[keyof typeof KonEnum];
+};
 
 export const Beslutsutfall = {
   JA: "JA",
   NEJ: "NEJ",
   FU: "FU",
-} as const;
+};
 
+export type KonEnum = (typeof KonEnum)[keyof typeof KonEnum];
 export type Beslutsutfall = (typeof Beslutsutfall)[keyof typeof Beslutsutfall];

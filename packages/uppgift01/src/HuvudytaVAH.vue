@@ -1,22 +1,25 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { FStaticField, FTooltip } from "@fkui/vue";
-import kunduppgifter from "./assets/mockKunduppgifter.json";
+import kunduppgifter from "./assets/mockKunduppgifter-new.json";
 import ListaDatum from "./components/ListaDatum.vue";
 import { useProductStore } from "./stores/uppgiftStore";
 
-const { uppgiftId } = defineProps<{ uppgiftId?: number | null }>();
+const { kundbehovsflodeId } = defineProps<{
+  kundbehovsflodeId?: string | null;
+}>();
 
 const store = useProductStore();
-store.setUppgiftId(uppgiftId ?? null);
+store.setKundbehovsflodeId(kundbehovsflodeId ?? null);
 
 const selected = computed(() => {
   let kund = null;
 
-  if (typeof store.uppgiftId === "number") {
+  if (typeof store.kundbehovsflodeId === "string") {
     kund =
-      kunduppgifter.find((kund) => kund.uppgiftId === store.uppgiftId) ??
-      kunduppgifter[0];
+      kunduppgifter.find(
+        (kund) => kund.kundbehovsflodeId === store.kundbehovsflodeId,
+      ) ?? kunduppgifter[0];
   }
   return kund;
 });
@@ -49,13 +52,13 @@ const selected = computed(() => {
       <f-static-field>
         <template #label><span>Namn</span></template>
         <template #default>
-          <span>{{ selected?.arbetsgivare?.namn ?? "" }}</span>
+          <span>{{ selected?.anstallning?.organisationsnamn ?? "" }}</span>
         </template>
       </f-static-field>
-      <f-static-field>
+      <!-- <f-static-field>
         <template #label><span>Adress</span></template>
         <template #default>
-          <span>{{ selected?.arbetsgivare?.adress ?? "" }}</span>
+          <span>{{ selected?.anstallning?.adress ?? "" }}</span>
         </template>
       </f-static-field>
       <f-static-field>
@@ -63,7 +66,7 @@ const selected = computed(() => {
           <span>Kontaktperson</span>
         </template>
         <template #default>
-          <span>{{ selected?.arbetsgivare?.kontaktperson ?? "" }}</span>
+          <span>{{ selected?.anstallning?.kontaktperson ?? "" }}</span>
         </template>
       </f-static-field>
       <f-static-field>
@@ -71,9 +74,9 @@ const selected = computed(() => {
           <span>Telefonnummer</span>
         </template>
         <template #default>
-          <span>{{ selected?.arbetsgivare?.telefon ?? "" }}</span>
+          <span>{{ selected?.anstallning?.telefon ?? "" }}</span>
         </template>
-      </f-static-field>
+      </f-static-field> -->
     </div>
     <ListaDatum />
   </div>
