@@ -5,7 +5,7 @@
     "personnummer": 198503122345,
     "anstalld": true,
     "harHund": false,
-    "uppgiftId": 1001,
+    "kundbehovsflodeId": 1001,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
@@ -35,7 +35,7 @@
     "personnummer": 199207053211,
     "anstalld": false,
     "harHund": true,
-    "uppgiftId": 1002,
+    "kundbehovsflodeId": 1002,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
     "adress": {
@@ -65,7 +65,7 @@
     "personnummer": 197911182356,
     "anstalld": true,
     "harHund": false,
-    "uppgiftId": 1003,
+    "kundbehovsflodeId": 1003,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
@@ -98,7 +98,7 @@
     "personnummer": 199512284512,
     "anstalld": false,
     "harHund": true,
-    "uppgiftId": 1004,
+    "kundbehovsflodeId": 1004,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
     "adress": {
@@ -128,7 +128,7 @@
     "personnummer": 198802092145,
     "anstalld": true,
     "harHund": false,
-    "uppgiftId": 1005,
+    "kundbehovsflodeId": 1005,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
     "adress": {
@@ -158,7 +158,7 @@
     "personnummer": 199610153321,
     "anstalld": false,
     "harHund": true,
-    "uppgiftId": 1006,
+    "kundbehovsflodeId": 1006,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
@@ -184,7 +184,7 @@
     "personnummer": 198404042278,
     "anstalld": true,
     "harHund": true,
-    "uppgiftId": 1007,
+    "kundbehovsflodeId": 1007,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
@@ -215,7 +215,7 @@
     "personnummer": 199101173399,
     "anstalld": true,
     "harHund": false,
-    "uppgiftId": 1008,
+    "kundbehovsflodeId": 1008,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
@@ -244,7 +244,7 @@
     "personnummer": 198912013211,
     "anstalld": false,
     "harHund": true,
-    "uppgiftId": 1009,
+    "kundbehovsflodeId": 1009,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
     "adress": {
@@ -274,7 +274,7 @@
     "personnummer": 200001022355,
     "anstalld": true,
     "harHund": false,
-    "uppgiftId": 1010,
+    "kundbehovsflodeId": 1010,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
@@ -307,7 +307,7 @@
     "personnummer": 197703154499,
     "anstalld": false,
     "harHund": false,
-    "uppgiftId": 1011,
+    "kundbehovsflodeId": 1011,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
     "adress": {
@@ -336,7 +336,7 @@
     "personnummer": 199311243455,
     "anstalld": true,
     "harHund": true,
-    "uppgiftId": 1012,
+    "kundbehovsflodeId": 1012,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
@@ -377,7 +377,7 @@
     "personnummer": 199811223377,
     "anstalld": false,
     "harHund": true,
-    "uppgiftId": 1013,
+    "kundbehovsflodeId": 1013,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
     "adress": {
@@ -407,7 +407,7 @@
     "personnummer": 196812102255,
     "anstalld": true,
     "harHund": false,
-    "uppgiftId": 1014,
+    "kundbehovsflodeId": 1014,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Pågående",
     "adress": {
@@ -441,7 +441,7 @@
     "personnummer": 198604143211,
     "anstalld": true,
     "harHund": true,
-    "uppgiftId": 1015,
+    "kundbehovsflodeId": 1015,
     "uppgiftsTyp": "Manuell kontroll RTF",
     "uppgiftsStatus": "Redo",
     "adress": {

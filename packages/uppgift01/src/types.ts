@@ -4,7 +4,7 @@
 //   personnummer: number;
 //   anstalld: boolean;
 //   harHund: boolean;
-//   uppgiftId: number;
+//   kundbehovsflodeId: number;
 //   uppgiftsTyp: string;
 //   uppgiftsStatus: string;
 //   adress: {
@@ -48,6 +48,13 @@ export interface Kund {
   kon: KonEnum;
   anstallning: Anstallning;
 }
+
+export interface KundData {
+  kundbehovsflodeId: string;
+  kund: Kund;
+  ersattning: Ersattning[];
+}
+
 export interface Anstallning {
   anstallningsdag: string;
   arbetstidProcent: number;

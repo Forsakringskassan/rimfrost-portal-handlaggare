@@ -2,11 +2,11 @@ import { defineStore } from "pinia";
 
 export const useProductStore = defineStore("uppgiftStore", {
   state: () => ({
-    kundbehovsflodeId: null as string | null,
+    kundbehovsflodeId: "",
   }),
   actions: {
     setKundbehovsflodeId(id: string | null) {
-      this.kundbehovsflodeId = id;
+      this.kundbehovsflodeId = id ? id : "";
     },
   },
 });

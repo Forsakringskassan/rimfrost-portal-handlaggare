@@ -3,7 +3,9 @@ import { type NavigationMenuItem, FNavigationMenu } from "@fkui/vue";
 import { useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftStore";
 
-const { uppgiftId } = defineProps<{ uppgiftId?: number | null }>();
+const { kundbehovsflodeId } = defineProps<{
+  kundbehovsflodeId?: string | null;
+}>();
 
 const router = useRouter();
 
@@ -13,7 +15,7 @@ const routes: NavigationMenuItem[] = [
 ];
 
 const store = useProductStore();
-store.setUppgiftId(uppgiftId ?? null);
+store.setKundbehovsflodeId(kundbehovsflodeId ?? null);
 
 function onSelectRoute(route: string): void {
   router.push({ name: route });

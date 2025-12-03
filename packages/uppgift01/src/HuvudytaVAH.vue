@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { FStaticField, FTooltip } from "@fkui/vue";
-import kunduppgifter from "./assets/mockKunduppgifter-new.json";
+import kundUppgifter from "./assets/mockKunduppgifter-new.json";
 import ListaDatum from "./components/ListaDatum.vue";
 import { useProductStore } from "./stores/uppgiftStore";
 
@@ -17,9 +17,9 @@ const selected = computed(() => {
 
   if (typeof store.kundbehovsflodeId === "string") {
     kund =
-      kunduppgifter.find(
+      kundUppgifter.find(
         (kund) => kund.kundbehovsflodeId === store.kundbehovsflodeId,
-      ) ?? kunduppgifter[0];
+      ) ?? kundUppgifter[0];
   }
   return kund;
 });
@@ -52,7 +52,9 @@ const selected = computed(() => {
       <f-static-field>
         <template #label><span>Namn</span></template>
         <template #default>
-          <span>{{ selected?.anstallning?.organisationsnamn ?? "" }}</span>
+          <span>{{
+            selected?.anstallning?.organisationsnamn ?? "Missing"
+          }}</span>
         </template>
       </f-static-field>
       <!-- <f-static-field>

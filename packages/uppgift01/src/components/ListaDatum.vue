@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { FButton, FFieldset, FRadioField, FValidationForm } from "@fkui/vue";
-import mockKunduppgifter from "../assets/mockKunduppgifter.json";
+import mockKunduppgifter from "../assets/mockKunduppgifter-new.json";
 import { useProductStore } from "../stores/uppgiftStore";
-import type { Kund } from "../types";
+import type { KundData } from "../types";
 
 const store = useProductStore();
 
-const kundData = ref<Kund[]>(JSON.parse(JSON.stringify(mockKunduppgifter)));
+const kundData = ref<KundData[]>(JSON.parse(JSON.stringify(mockKunduppgifter)));
 
 const filtreradKund = computed(() => {
-  const kund = kundData.value.find((k) => k.uppgiftId === store.uppgiftId);
+  const kund = kundData.value.find(
+    (k) => k.kundbehovsflodeId === store.kundbehovsflodeId,
+  );
   return kund || null;
 });
 
@@ -25,16 +27,16 @@ const selections = ref<Record<string, string>>({});
       </template>
 
       <div
-        v-for="item in filtreradKund.datum"
-        :key="item.datumVarde"
+        v-for="item in filtreradKund.ersattning"
+        :key="item.ersattningId"
         class="radio-container"
       >
         <f-fieldset
           v-validation.required
-          :name="`arende-utfall-${item.datumVarde}`"
+          :name="`arende-utfall-${item.ersattningId}`"
         >
           <template #label>
-            <p>{{ item.datumVarde }}</p>
+            <p>Datum: {{ item.from }} - {{ item.tom }}</p>
           </template>
 
           <template #error-message="{ hasError, validationMessage }">
@@ -47,16 +49,19 @@ const selections = ref<Record<string, string>>({});
 
           <template #default>
             <f-radio-field
-              v-model="selections[item.datumVarde]"
+              v-model="selections[item.ersattningId]"
               value="godkand"
             >
               Godkänd
             </f-radio-field>
-            <f-radio-field v-model="selections[item.datumVarde]" value="avslag">
+            <f-radio-field
+              v-model="selections[item.ersattningId]"
+              value="avslag"
+            >
               Avslag
             </f-radio-field>
             <f-radio-field
-              v-model="selections[item.datumVarde]"
+              v-model="selections[item.ersattningId]"
               value="utredning"
             >
               Utredning
@@ -65,7 +70,7 @@ const selections = ref<Record<string, string>>({});
         </f-fieldset>
       </div>
 
-      <f-button type="submit"> Signera och Klarmarkera </f-button>
+      <f-button type="submit">Klarmarkera </f-button>
     </f-validation-form>
   </div>
 </template>
