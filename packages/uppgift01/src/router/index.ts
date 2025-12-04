@@ -5,7 +5,6 @@ import {
 } from "vue-router";
 import HuvudytaVAH from "../HuvudytaVAH.vue";
 import VisaArbetsgivare from "../components/VisaArbetsgivare.vue";
-import VisaFolkbokforing from "../components/VisaFolkbokforing.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -16,11 +15,6 @@ const routes: RouteRecordRaw[] = [
     path: "/arbetsgivare",
     name: "arbetsgivare",
     component: VisaArbetsgivare,
-  },
-  {
-    path: "/folkbokforing",
-    name: "folkbokforing",
-    component: VisaFolkbokforing,
   },
 ];
 

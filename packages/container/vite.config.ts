@@ -5,18 +5,18 @@ import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 
 export default defineConfig({
-    plugins: [
-        apimockPlugin([{ url: "/api", dir: "mock" }]),
+  plugins: [
+    apimockPlugin([{ url: "/api", dir: "mock" }]),
 
-        vue(),
-        vueDevTools(),
-    ],
-    resolve: {
-        alias: {
-            "@": fileURLToPath(new URL("./src", import.meta.url)),
-        },
+    vue(),
+    vueDevTools(),
+  ],
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-    server: {
-        port: 8080,
-    },
+  },
+  server: {
+    port: 3030,
+  },
 });

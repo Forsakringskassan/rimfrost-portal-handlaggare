@@ -16,14 +16,14 @@ export default defineConfig({
     },
   },
   preview: {
-    port: 8081,
+    port: 3031,
     cors: true,
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
   },
   server: {
-    port: 8082,
+    port: 3032,
   },
   define: { "process.env": '"production"' },
   build: {

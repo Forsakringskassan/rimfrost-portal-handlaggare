@@ -8,7 +8,10 @@ import { router } from "./router";
 
 // createApp(App).mount('#app')
 
-export function init(selector: string, params?: { uppgiftId?: number }): App {
+export function init(
+  selector: string,
+  params?: { kundbehovsflodeId?: string },
+): App {
   const container = document.querySelector(selector);
 
   if (!container) {
@@ -25,7 +28,9 @@ export function init(selector: string, params?: { uppgiftId?: number }): App {
     event.stopPropagation();
   });
 
-  const app = createApp(AppComponent, { uppgiftId: params?.uppgiftId ?? null });
+  const app = createApp(AppComponent, {
+    kundbehovsflodeId: params?.kundbehovsflodeId ?? null,
+  });
   app.use(ValidationPlugin);
   app.use(createPinia());
   app.use(router);

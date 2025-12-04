@@ -62,7 +62,7 @@ async function loadUppgift() {
 
     const id = Number(route.params.id);
     currentVueApp = importedUppgift01.init("#imported-uppgift-01", {
-      uppgiftId: isNaN(id) ? undefined : id,
+      kundbehovsflodeId: isNaN(id) ? undefined : id,
     });
   } catch (err) {
     console.error("Failed to load uppgift module:", err);
