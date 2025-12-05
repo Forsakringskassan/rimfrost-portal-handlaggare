@@ -6,6 +6,7 @@ import {
   FPageHeader,
 } from "@fkui/vue";
 import IdList from "./components/UppgiftLista.vue";
+import { getNextUppgift } from "./utils/getNextUppgift";
 </script>
 
 <template>
@@ -31,7 +32,7 @@ import IdList from "./components/UppgiftLista.vue";
             </div>
           </div>
           <div class="nav-footer">
-            <FButton>Ny uppgift</FButton>
+            <FButton @click="getNextUppgift">Ny uppgift</FButton>
           </div>
         </div>
       </template>

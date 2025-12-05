@@ -1,3 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import defaultConfig from "@forsakringskassan/eslint-config";
 import cliConfig from "@forsakringskassan/eslint-config-cli";
 import typescriptConfig from "@forsakringskassan/eslint-config-typescript";
@@ -31,7 +34,17 @@ export default [
       "vue/no-restricted-block": "off",
       "no-console": "off",
       "no-warning-comments": "off",
-      "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: true,
+          packageDir: [
+            path.dirname(fileURLToPath(import.meta.url)),
+            "packages/container",
+            "packages/uppgift01",
+          ],
+        },
+      ],
     },
   },
 ];

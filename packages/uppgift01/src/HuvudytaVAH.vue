@@ -50,11 +50,23 @@ const selected = computed(() => {
   <div>
     <div class="arende-information">
       <f-static-field>
-        <template #label><span>Namn</span></template>
+        <template #label><span>Organisationsnamn</span></template>
         <template #default>
           <span>{{
             selected?.anstallning?.organisationsnamn ?? "Missing"
           }}</span>
+        </template>
+      </f-static-field>
+      <f-static-field>
+        <template #label><span>Kontaktperson</span></template>
+        <template #default>
+          <span>Anna Andersson</span>
+        </template>
+      </f-static-field>
+      <f-static-field>
+        <template #label><span>Telefonnummer</span></template>
+        <template #default>
+          <span>012 345 67 89</span>
         </template>
       </f-static-field>
       <!-- <f-static-field>
