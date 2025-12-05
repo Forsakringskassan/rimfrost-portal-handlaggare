@@ -13,7 +13,12 @@ import { getNextUppgift } from "./utils/getNextUppgift";
   <f-layout-application-template>
     <template #header>
       <f-page-header skip-link="main-title">
-        Rimfrost Demoapp
+        <div
+          style="cursor: pointer; font-weight: bold; font-size: 1.25rem"
+          @click="$router.push('/')"
+        >
+          Rimfrost Demoapp
+        </div>
         <template #right>Handläggare Handläggaresson</template>
       </f-page-header>
     </template>
@@ -32,7 +37,7 @@ import { getNextUppgift } from "./utils/getNextUppgift";
             </div>
           </div>
           <div class="nav-footer">
-            <FButton @click="getNextUppgift">Ny uppgift</FButton>
+            <FButton @click="getNextUppgift">Hämta ny uppgift</FButton>
           </div>
         </div>
       </template>
