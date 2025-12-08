@@ -1,6 +1,6 @@
 [
   {
-    "kundbehovsflodeId": "kbf-001-2025",
+    "kundbehovsflodeId": "001",
     "fornamn": "Anna",
     "efternamn": "Lindberg",
     "kon": "KVINNA",
@@ -22,7 +22,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-002-2025",
+    "kundbehovsflodeId": "002",
     "fornamn": "Johan",
     "efternamn": "Svensson",
     "kon": "MAN",
@@ -44,7 +44,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-003-2024",
+    "kundbehovsflodeId": "003",
     "fornamn": "Maria",
     "efternamn": "Andersson",
     "kon": "KVINNA",
@@ -66,7 +66,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-004-2025",
+    "kundbehovsflodeId": "004",
     "fornamn": "Erik",
     "efternamn": "Karlsson",
     "kon": "MAN",
@@ -88,7 +88,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-005-2024",
+    "kundbehovsflodeId": "005",
     "fornamn": "Sara",
     "efternamn": "Nilsson",
     "kon": "KVINNA",
@@ -110,7 +110,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-006-2025",
+    "kundbehovsflodeId": "006",
     "fornamn": "Patrik",
     "efternamn": "Johansson",
     "kon": "MAN",
@@ -132,7 +132,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-007-2025",
+    "kundbehovsflodeId": "007",
     "fornamn": "Lina",
     "efternamn": "Bergström",
     "kon": "KVINNA",
@@ -154,7 +154,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-008-2025",
+    "kundbehovsflodeId": "008",
     "fornamn": "Oskar",
     "efternamn": "Holm",
     "kon": "MAN",
@@ -176,7 +176,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-009-2024",
+    "kundbehovsflodeId": "009",
     "fornamn": "Tove",
     "efternamn": "Persson",
     "kon": "KVINNA",
@@ -198,7 +198,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-010-2025",
+    "kundbehovsflodeId": "010",
     "fornamn": "Filip",
     "efternamn": "Åkesson",
     "kon": "MAN",
@@ -220,7 +220,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-011-2024",
+    "kundbehovsflodeId": "011",
     "fornamn": "Karin",
     "efternamn": "Dahlgren",
     "kon": "KVINNA",
@@ -242,7 +242,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-012-2025",
+    "kundbehovsflodeId": "012",
     "fornamn": "Benjamin",
     "efternamn": "Ström",
     "kon": "MAN",
@@ -264,7 +264,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-013-2024",
+    "kundbehovsflodeId": "013",
     "fornamn": "Emilia",
     "efternamn": "Viklund",
     "kon": "KVINNA",
@@ -286,7 +286,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-014-2025",
+    "kundbehovsflodeId": "014",
     "fornamn": "Mats",
     "efternamn": "Ek",
     "kon": "MAN",
@@ -308,7 +308,7 @@
     }
   },
   {
-    "kundbehovsflodeId": "kbf-015-2024",
+    "kundbehovsflodeId": "015",
     "fornamn": "Sofia",
     "efternamn": "Vesterlund",
     "kon": "KVINNA",
