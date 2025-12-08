@@ -1,7 +1,7 @@
 import {
   type RouteRecordRaw,
+  createMemoryHistory,
   createRouter,
-  createWebHistory,
 } from "vue-router";
 import HuvudytaVAH from "../HuvudytaVAH.vue";
 import VisaArbetsgivare from "../components/VisaArbetsgivare.vue";
@@ -19,6 +19,6 @@ const routes: RouteRecordRaw[] = [
 ];
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createMemoryHistory(),
   routes,
 });

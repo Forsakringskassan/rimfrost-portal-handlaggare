@@ -1,23 +1,19 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import uppgiftLista from "../assets/uppgiftLista.json";
+import { useProductStore } from "../stores/uppgiftListaStore";
 
 export interface UppgiftItem {
-  id: number;
+  id: string;
   typ: string;
   status: string;
 }
+const store = useProductStore();
 
-const items = ref<UppgiftItem[]>([]);
 const router = useRouter();
 const route = useRoute();
 
-onMounted(async () => {
-  items.value = await uppgiftLista;
-});
-
-function goTo(item: { id: number; typ: string }) {
+function goTo(item: { id: string; typ: string }) {
   router.push({
     name: "item",
     params: { id: item.id.toString() },
@@ -26,14 +22,14 @@ function goTo(item: { id: number; typ: string }) {
 }
 
 const activeId = computed(() => {
-  return route?.params?.id ? Number(route.params.id) : null;
+  return route?.params?.id ? route.params.id : null;
 });
 </script>
 
 <template>
   <ul class="list list--unstyled">
     <li
-      v-for="item in items"
+      v-for="item in store.uppgiftLista"
       :key="item.id"
       :class="[
         'id-list__item',

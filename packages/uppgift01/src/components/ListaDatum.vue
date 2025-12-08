@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { FButton, FFieldset, FRadioField, FValidationForm } from "@fkui/vue";
+import { FFieldset, FRadioField, FValidationForm } from "@fkui/vue";
 import mockKunduppgifter from "../assets/mockKunduppgifter-new.json";
 import { useProductStore } from "../stores/uppgiftStore";
 import type { KundData } from "../types";
@@ -70,7 +70,9 @@ const selections = ref<Record<string, string>>({});
         </f-fieldset>
       </div>
 
-      <f-button type="submit">Klarmarkera </f-button>
+      <!-- 
+      Commented out in mock
+      <f-button type="submit">Klarmarkera</f-button> -->
     </f-validation-form>
   </div>
 </template>
