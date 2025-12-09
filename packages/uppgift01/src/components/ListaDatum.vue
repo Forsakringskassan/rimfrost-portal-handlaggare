@@ -13,6 +13,7 @@ const filtreradKund = computed(() => {
   const kund = kundData.value.find(
     (k) => k.kundbehovsflodeId === store.kundbehovsflodeId,
   );
+  console.log("filtreradKund", kund);
   return kund || null;
 });
 
@@ -36,7 +37,16 @@ const selections = ref<Record<string, string>>({});
           :name="`arende-utfall-${item.ersattningId}`"
         >
           <template #label>
-            <p>Datum: {{ item.from }} - {{ item.tom }}</p>
+            <div class="ersattning-info-container">
+              <div class="ersattning-info-item">
+                <p>Datum:</p>
+                <span>{{ item.from }} - {{ item.tom }}</span>
+              </div>
+              <div class="ersattning-info-item">
+                <p>Omfattning:</p>
+                <span>{{ item.omfattningProcent }}%</span>
+              </div>
+            </div>
           </template>
 
           <template #error-message="{ hasError, validationMessage }">
@@ -106,5 +116,18 @@ const selections = ref<Record<string, string>>({});
 
 .radio-button-group {
   margin: 0;
+}
+
+.ersattning-info-container {
+  display: flex;
+  flex-direction: column;
+  & p {
+    width: 6rem;
+  }
+}
+
+.ersattning-info-item {
+  display: flex;
+  gap: 0.5rem;
 }
 </style>
