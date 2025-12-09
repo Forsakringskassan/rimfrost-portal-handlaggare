@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import OppnatUppgift from "./OppnadUppgift.vue";
 
 const route = useRoute();
 
@@ -11,8 +10,10 @@ const pageId = computed(() => route.params.id ?? "Inget ID");
 
 <template>
   <div class="container">
-    <h1 class="page-title">{{ pageTitle }} - {{ pageId }}</h1>
-    <OppnatUppgift />
+    <h1 v-if="route.params.id" class="page-title">
+      {{ pageTitle }} - {{ pageId }}
+    </h1>
+    <router-view />
   </div>
 </template>
 
