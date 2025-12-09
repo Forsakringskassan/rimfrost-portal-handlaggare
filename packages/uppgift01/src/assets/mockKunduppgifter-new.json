@@ -1,332 +1,497 @@
 [
   {
     "kundbehovsflodeId": "001",
-    "fornamn": "Anna",
-    "efternamn": "Lindberg",
-    "kon": "KVINNA",
-    "anstallning": {
-      "anstallningsdag": "2020-03-15",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Stockholm Konsult AB",
-      "organisationsnummer": "556677-8899",
-      "lon": {
-        "from": "2020-03-15",
-        "tom": null,
-        "lonesumma": 35000
+    "kund": {
+      "fornamn": "Anna",
+      "efternamn": "Lindberg",
+      "kon": "KVINNA",
+      "anstallning": {
+        "anstallningsdag": "2020-03-15",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Stockholm Konsult AB",
+        "organisationsnummer": "556677-8899",
+        "lon": {
+          "from": "2020-03-15",
+          "tom": null,
+          "lonesumma": 35000
+        }
       }
     },
-    "datum": {
-      "from": "2025-11-01",
-      "tom": "2025-11-01"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "001-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 1000,
+        "berakningsgrund": 35000,
+        "beslutsutfall": null,
+        "from": "2025-11-01",
+        "tom": "2025-11-01",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "002",
-    "fornamn": "Johan",
-    "efternamn": "Svensson",
-    "kon": "MAN",
-    "anstallning": {
-      "anstallningsdag": "2019-06-01",
-      "arbetstidProcent": 80,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Tech Solutions",
-      "organisationsnummer": "556123-4567",
-      "lon": {
-        "from": "2024-01-01",
-        "tom": null,
-        "lonesumma": 42000
+    "kund": {
+      "fornamn": "Johan",
+      "efternamn": "Svensson",
+      "kon": "MAN",
+      "anstallning": {
+        "anstallningsdag": "2019-06-01",
+        "arbetstidProcent": 80,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Tech Solutions",
+        "organisationsnummer": "556123-4567",
+        "lon": {
+          "from": "2024-01-01",
+          "tom": null,
+          "lonesumma": 42000
+        }
       }
     },
-    "datum": {
-      "from": "2025-10-10",
-      "tom": "2025-10-12"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "002-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 3000,
+        "berakningsgrund": 42000,
+        "beslutsutfall": null,
+        "from": "2025-10-10",
+        "tom": "2025-10-12",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "003",
-    "fornamn": "Maria",
-    "efternamn": "Andersson",
-    "kon": "KVINNA",
-    "anstallning": {
-      "anstallningsdag": "2018-01-10",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "AB Företag",
-      "organisationsnummer": "556677-8899",
-      "lon": {
-        "from": "2023-07-01",
-        "tom": null,
-        "lonesumma": 38000
+    "kund": {
+      "fornamn": "Maria",
+      "efternamn": "Andersson",
+      "kon": "KVINNA",
+      "anstallning": {
+        "anstallningsdag": "2018-01-10",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "AB Företag",
+        "organisationsnummer": "556677-8899",
+        "lon": {
+          "from": "2023-07-01",
+          "tom": null,
+          "lonesumma": 38000
+        }
       }
     },
-    "datum": {
-      "from": "2024-07-13",
-      "tom": "2024-07-15"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "003-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 3000,
+        "berakningsgrund": 38000,
+        "beslutsutfall": null,
+        "from": "2024-07-13",
+        "tom": "2024-07-15",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "004",
-    "fornamn": "Erik",
-    "efternamn": "Karlsson",
-    "kon": "MAN",
-    "anstallning": {
-      "anstallningsdag": "2021-09-01",
-      "arbetstidProcent": 75,
-      "sistaAnstallningsdag": "2025-12-31",
-      "organisationsnamn": "Göta Energi",
-      "organisationsnummer": "556234-5678",
-      "lon": {
-        "from": "2021-09-01",
-        "tom": "2025-12-31",
-        "lonesumma": 32000
+    "kund": {
+      "fornamn": "Erik",
+      "efternamn": "Karlsson",
+      "kon": "MAN",
+      "anstallning": {
+        "anstallningsdag": "2021-09-01",
+        "arbetstidProcent": 75,
+        "sistaAnstallningsdag": "2025-12-31",
+        "organisationsnamn": "Göta Energi",
+        "organisationsnummer": "556234-5678",
+        "lon": {
+          "from": "2021-09-01",
+          "tom": "2025-12-31",
+          "lonesumma": 32000
+        }
       }
     },
-    "datum": {
-      "from": "2025-01-05",
-      "tom": "2025-01-07"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "004-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 75,
+        "belopp": 3000,
+        "berakningsgrund": 32000,
+        "beslutsutfall": null,
+        "from": "2025-01-05",
+        "tom": "2025-01-07",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "005",
-    "fornamn": "Sara",
-    "efternamn": "Nilsson",
-    "kon": "KVINNA",
-    "anstallning": {
-      "anstallningsdag": "2022-02-15",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Bygg & Co",
-      "organisationsnummer": "556345-6789",
-      "lon": {
-        "from": "2024-02-15",
-        "tom": null,
-        "lonesumma": 36000
+    "kund": {
+      "fornamn": "Sara",
+      "efternamn": "Nilsson",
+      "kon": "KVINNA",
+      "anstallning": {
+        "anstallningsdag": "2022-02-15",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Bygg & Co",
+        "organisationsnummer": "556345-6789",
+        "lon": {
+          "from": "2024-02-15",
+          "tom": null,
+          "lonesumma": 36000
+        }
       }
     },
-    "datum": {
-      "from": "2024-11-10",
-      "tom": "2024-11-12"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "005-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 3000,
+        "berakningsgrund": 36000,
+        "beslutsutfall": null,
+        "from": "2024-11-10",
+        "tom": "2024-11-12",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "006",
-    "fornamn": "Patrik",
-    "efternamn": "Johansson",
-    "kon": "MAN",
-    "anstallning": {
-      "anstallningsdag": "2020-11-20",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Transport Norge",
-      "organisationsnummer": "NO-987654321",
-      "lon": {
-        "from": "2023-01-01",
-        "tom": null,
-        "lonesumma": 40000
+    "kund": {
+      "fornamn": "Patrik",
+      "efternamn": "Johansson",
+      "kon": "MAN",
+      "anstallning": {
+        "anstallningsdag": "2020-11-20",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Transport Norge",
+        "organisationsnummer": "NO-987654321",
+        "lon": {
+          "from": "2023-01-01",
+          "tom": null,
+          "lonesumma": 40000
+        }
       }
     },
-    "datum": {
-      "from": "2025-04-01",
-      "tom": "2025-04-01"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "006-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 1000,
+        "berakningsgrund": 40000,
+        "beslutsutfall": null,
+        "from": "2025-04-01",
+        "tom": "2025-04-01",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "007",
-    "fornamn": "Lina",
-    "efternamn": "Bergström",
-    "kon": "KVINNA",
-    "anstallning": {
-      "anstallningsdag": "2019-04-01",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "XYZ Industri",
-      "organisationsnummer": "556456-7890",
-      "lon": {
-        "from": "2023-04-01",
-        "tom": null,
-        "lonesumma": 37500
+    "kund": {
+      "fornamn": "Lina",
+      "efternamn": "Bergström",
+      "kon": "KVINNA",
+      "anstallning": {
+        "anstallningsdag": "2019-04-01",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "XYZ Industri",
+        "organisationsnummer": "556456-7890",
+        "lon": {
+          "from": "2023-04-01",
+          "tom": null,
+          "lonesumma": 37500
+        }
       }
     },
-    "datum": {
-      "from": "2025-06-01",
-      "tom": "2025-06-04"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "007-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 4000,
+        "berakningsgrund": 37500,
+        "beslutsutfall": null,
+        "from": "2025-06-01",
+        "tom": "2025-06-04",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "008",
-    "fornamn": "Oskar",
-    "efternamn": "Holm",
-    "kon": "MAN",
-    "anstallning": {
-      "anstallningsdag": "2021-03-10",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Nordic Finance",
-      "organisationsnummer": "556567-8901",
-      "lon": {
-        "from": "2024-03-10",
-        "tom": null,
-        "lonesumma": 45000
+    "kund": {
+      "fornamn": "Oskar",
+      "efternamn": "Holm",
+      "kon": "MAN",
+      "anstallning": {
+        "anstallningsdag": "2021-03-10",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Nordic Finance",
+        "organisationsnummer": "556567-8901",
+        "lon": {
+          "from": "2024-03-10",
+          "tom": null,
+          "lonesumma": 45000
+        }
       }
     },
-    "datum": {
-      "from": "2025-02-10",
-      "tom": "2025-02-11"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "008-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 2000,
+        "berakningsgrund": 45000,
+        "beslutsutfall": null,
+        "from": "2025-02-10",
+        "tom": "2025-02-11",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "009",
-    "fornamn": "Tove",
-    "efternamn": "Persson",
-    "kon": "KVINNA",
-    "anstallning": {
-      "anstallningsdag": "2020-07-01",
-      "arbetstidProcent": 50,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Green Foods",
-      "organisationsnummer": "556678-9012",
-      "lon": {
-        "from": "2022-07-01",
-        "tom": null,
-        "lonesumma": 18000
+    "kund": {
+      "fornamn": "Tove",
+      "efternamn": "Persson",
+      "kon": "KVINNA",
+      "anstallning": {
+        "anstallningsdag": "2020-07-01",
+        "arbetstidProcent": 50,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Green Foods",
+        "organisationsnummer": "556678-9012",
+        "lon": {
+          "from": "2022-07-01",
+          "tom": null,
+          "lonesumma": 18000
+        }
       }
     },
-    "datum": {
-      "from": "2024-09-01",
-      "tom": "2024-09-03"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "009-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 50,
+        "belopp": 3000,
+        "berakningsgrund": 18000,
+        "beslutsutfall": null,
+        "from": "2024-09-01",
+        "tom": "2024-09-03",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "010",
-    "fornamn": "Filip",
-    "efternamn": "Åkesson",
-    "kon": "MAN",
-    "anstallning": {
-      "anstallningsdag": "2023-01-15",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Trollhättan Tekniska",
-      "organisationsnummer": "556789-0123",
-      "lon": {
-        "from": "2023-01-15",
-        "tom": null,
-        "lonesumma": 33000
+    "kund": {
+      "fornamn": "Filip",
+      "efternamn": "Åkesson",
+      "kon": "MAN",
+      "anstallning": {
+        "anstallningsdag": "2023-01-15",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Trollhättan Tekniska",
+        "organisationsnummer": "556789-0123",
+        "lon": {
+          "from": "2023-01-15",
+          "tom": null,
+          "lonesumma": 33000
+        }
       }
     },
-    "datum": {
-      "from": "2025-08-20",
-      "tom": "2025-08-23"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "010-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 4000,
+        "berakningsgrund": 33000,
+        "beslutsutfall": null,
+        "from": "2025-08-20",
+        "tom": "2025-08-23",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "011",
-    "fornamn": "Karin",
-    "efternamn": "Dahlgren",
-    "kon": "KVINNA",
-    "anstallning": {
-      "anstallningsdag": "2017-05-20",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Svenska Transport",
-      "organisationsnummer": "556890-1234",
-      "lon": {
-        "from": "2024-01-01",
-        "tom": null,
-        "lonesumma": 39000
+    "kund": {
+      "fornamn": "Karin",
+      "efternamn": "Dahlgren",
+      "kon": "KVINNA",
+      "anstallning": {
+        "anstallningsdag": "2017-05-20",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Svenska Transport",
+        "organisationsnummer": "556890-1234",
+        "lon": {
+          "from": "2024-01-01",
+          "tom": null,
+          "lonesumma": 39000
+        }
       }
     },
-    "datum": {
-      "from": "2024-03-05",
-      "tom": "2024-03-06"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "011-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 2000,
+        "berakningsgrund": 39000,
+        "beslutsutfall": null,
+        "from": "2024-03-05",
+        "tom": "2024-03-06",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "012",
-    "fornamn": "Benjamin",
-    "efternamn": "Ström",
-    "kon": "MAN",
-    "anstallning": {
-      "anstallningsdag": "2022-08-01",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Borås Textil AB",
-      "organisationsnummer": "556901-2345",
-      "lon": {
-        "from": "2023-08-01",
-        "tom": null,
-        "lonesumma": 34000
+    "kund": {
+      "fornamn": "Benjamin",
+      "efternamn": "Ström",
+      "kon": "MAN",
+      "anstallning": {
+        "anstallningsdag": "2022-08-01",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Borås Textil AB",
+        "organisationsnummer": "556901-2345",
+        "lon": {
+          "from": "2023-08-01",
+          "tom": null,
+          "lonesumma": 34000
+        }
       }
     },
-    "datum": {
-      "from": "2025-05-01",
-      "tom": "2025-05-03"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "012-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 3000,
+        "berakningsgrund": 34000,
+        "beslutsutfall": null,
+        "from": "2025-05-01",
+        "tom": "2025-05-03",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "013",
-    "fornamn": "Emilia",
-    "efternamn": "Viklund",
-    "kon": "KVINNA",
-    "anstallning": {
-      "anstallningsdag": "2021-10-15",
-      "arbetstidProcent": 80,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "LundTek",
-      "organisationsnummer": "556012-3456",
-      "lon": {
-        "from": "2023-10-15",
-        "tom": null,
-        "lonesumma": 36800
+    "kund": {
+      "fornamn": "Emilia",
+      "efternamn": "Viklund",
+      "kon": "KVINNA",
+      "anstallning": {
+        "anstallningsdag": "2021-10-15",
+        "arbetstidProcent": 80,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "LundTek",
+        "organisationsnummer": "556012-3456",
+        "lon": {
+          "from": "2023-10-15",
+          "tom": null,
+          "lonesumma": 36800
+        }
       }
     },
-    "datum": {
-      "from": "2024-12-01",
-      "tom": "2024-12-03"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "013-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 80,
+        "belopp": 3000,
+        "berakningsgrund": 36800,
+        "beslutsutfall": null,
+        "from": "2024-12-01",
+        "tom": "2024-12-03",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "014",
-    "fornamn": "Mats",
-    "efternamn": "Ek",
-    "kon": "MAN",
-    "anstallning": {
-      "anstallningsdag": "2015-03-01",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Falun Energi",
-      "organisationsnummer": "556123-4568",
-      "lon": {
-        "from": "2024-03-01",
-        "tom": null,
-        "lonesumma": 41000
+    "kund": {
+      "fornamn": "Mats",
+      "efternamn": "Ek",
+      "kon": "MAN",
+      "anstallning": {
+        "anstallningsdag": "2015-03-01",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Falun Energi",
+        "organisationsnummer": "556123-4568",
+        "lon": {
+          "from": "2024-03-01",
+          "tom": null,
+          "lonesumma": 41000
+        }
       }
     },
-    "datum": {
-      "from": "2025-10-01",
-      "tom": "2025-10-04"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "014-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 4000,
+        "berakningsgrund": 41000,
+        "beslutsutfall": null,
+        "from": "2025-10-01",
+        "tom": "2025-10-04",
+        "avslagsanledning": null
+      }
+    ]
   },
   {
     "kundbehovsflodeId": "015",
-    "fornamn": "Sofia",
-    "efternamn": "Vesterlund",
-    "kon": "KVINNA",
-    "anstallning": {
-      "anstallningsdag": "2019-09-01",
-      "arbetstidProcent": 100,
-      "sistaAnstallningsdag": null,
-      "organisationsnamn": "Umeå Kommun",
-      "organisationsnummer": "212000-2411",
-      "lon": {
-        "from": "2023-09-01",
-        "tom": null,
-        "lonesumma": 37000
+    "kund": {
+      "fornamn": "Sofia",
+      "efternamn": "Vesterlund",
+      "kon": "KVINNA",
+      "anstallning": {
+        "anstallningsdag": "2019-09-01",
+        "arbetstidProcent": 100,
+        "sistaAnstallningsdag": null,
+        "organisationsnamn": "Umeå Kommun",
+        "organisationsnummer": "212000-2411",
+        "lon": {
+          "from": "2023-09-01",
+          "tom": null,
+          "lonesumma": 37000
+        }
       }
     },
-    "datum": {
-      "from": "2024-01-10",
-      "tom": "2024-01-11"
-    }
+    "ersattning": [
+      {
+        "ersattningId": "015-1",
+        "ersattningstyp": "Vård av allvarligt sjukt barn",
+        "omfattningProcent": 100,
+        "belopp": 2000,
+        "berakningsgrund": 37000,
+        "beslutsutfall": null,
+        "from": "2024-01-10",
+        "tom": "2024-01-11",
+        "avslagsanledning": null
+      }
+    ]
   }
 ]

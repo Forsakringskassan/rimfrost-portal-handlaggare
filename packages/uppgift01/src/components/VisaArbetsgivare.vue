@@ -25,7 +25,7 @@ const selected = computed(() => {
     <f-static-field>
       <template #label><span>Namn</span></template>
       <template #default>
-        <span>{{ selected?.anstallning?.organisationsnamn ?? "" }}</span>
+        <span>{{ selected?.kund.anstallning?.organisationsnamn ?? "" }}</span>
       </template>
     </f-static-field>
     <!-- <f-static-field>

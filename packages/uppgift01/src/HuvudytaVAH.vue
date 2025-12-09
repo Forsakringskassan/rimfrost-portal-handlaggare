@@ -53,7 +53,7 @@ const selected = computed(() => {
         <template #label><span>Organisationsnamn</span></template>
         <template #default>
           <span>{{
-            selected?.anstallning?.organisationsnamn ?? "Missing"
+            selected?.kund.anstallning?.organisationsnamn ?? "Missing"
           }}</span>
         </template>
       </f-static-field>
