@@ -12,6 +12,10 @@ export interface Uppgift {
   uppgiftsStatus: string;
 }
 
+/*
+Här behöver vi röja upp lite för att byta
+*/
+
 export async function listItems(): Promise<
   Array<Pick<Uppgift, "kundbehovsflodeId" | "fornamn">>
 > {

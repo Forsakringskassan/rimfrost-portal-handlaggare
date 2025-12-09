@@ -14,6 +14,12 @@ const store = useProductStore();
 const router = useRouter();
 const route = useRoute();
 
+/*
+Här kommer vi skapa URLer med den information vi har,
+exempelvis regel och id. Vi skickar in den som id som
+param till router. Vi kan väl behöva regel-id i OUL
+för att bygga en korrekt URL?
+*/
 const routes = computed(() => {
   return store.uppgiftLista.map((item) => ({
     label: `${item.id}: ${item.typ}`,
