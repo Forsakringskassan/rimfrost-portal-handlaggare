@@ -50,6 +50,12 @@ const selected = computed(() => {
   <div>
     <div class="arende-information">
       <f-static-field>
+        <template #label><span>Kund</span></template>
+        <template #default>
+          <span>Lisa Tass</span>
+        </template>
+      </f-static-field>
+      <f-static-field>
         <template #label><span>Organisationsnamn</span></template>
         <template #default>
           <span>{{
