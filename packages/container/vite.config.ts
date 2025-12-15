@@ -17,6 +17,9 @@ export default defineConfig({
     },
   },
   server: {
+    proxy: {
+      "/uppgifter": "http://localhost:8889",
+    },
     port: 3030,
   },
 });

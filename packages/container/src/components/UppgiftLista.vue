@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onBeforeMount } from "vue";
 import { FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
+import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
 
 export interface UppgiftItem {
-  id: string;
-  typ: string;
+  uppgiftId: string;
+  kundbehovsflodeId: string;
+  skapad: string;
   status: string;
+  handlaggarId: string;
+  planeradTill: string;
+  utford: string;
+  regeltyp: string;
 }
+
 const store = useProductStore();
 
 const router = useRouter();
@@ -22,25 +29,29 @@ för att bygga en korrekt URL?
 */
 const routes = computed(() => {
   return store.uppgiftLista.map((item) => ({
-    label: `${item.id}: ${item.typ}`,
-    route: `item-${item.id}`,
+    label: `${item.uppgiftId}: ${item.regeltyp}`,
+    route: `item-${item.uppgiftId}`,
   }));
 });
 
 function onSelectedRoute(routeId: string) {
   const itemId = routeId.replace("item-", "");
-  const item = store.uppgiftLista.find((i) => i.id === itemId);
+  const item = store.uppgiftLista.find((i) => i.uppgiftId === itemId);
   if (item) {
     router.push({
       name: "item",
-      params: { id: item.id.toString() },
-      query: { title: item.typ },
+      params: { id: item.uppgiftId.toString() },
+      query: { title: item.regeltyp },
     });
   }
 }
 
 const currentRoute = computed(() => {
   return route?.params?.id ? `item-${route.params.id}` : "";
+});
+
+onBeforeMount(async () => {
+  getTilldeladeUppgifter();
 });
 </script>
 
