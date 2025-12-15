@@ -3,18 +3,8 @@ import { computed, onBeforeMount } from "vue";
 import { FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
+import type { UppgiftItem } from "../types";
 import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
-
-export interface UppgiftItem {
-  uppgiftId: string;
-  kundbehovsflodeId: string;
-  skapad: string;
-  status: string;
-  handlaggarId: string;
-  planeradTill: string;
-  utford: string;
-  regeltyp: string;
-}
 
 const store = useProductStore();
 
@@ -28,7 +18,7 @@ param till router. Vi kan väl behöva regel-id i OUL
 för att bygga en korrekt URL?
 */
 const routes = computed(() => {
-  return store.uppgiftLista.map((item) => ({
+  return store.uppgiftLista.map((item: UppgiftItem) => ({
     label: `${item.uppgiftId}: ${item.regeltyp}`,
     route: `item-${item.uppgiftId}`,
   }));
@@ -36,7 +26,9 @@ const routes = computed(() => {
 
 function onSelectedRoute(routeId: string) {
   const itemId = routeId.replace("item-", "");
-  const item = store.uppgiftLista.find((i) => i.uppgiftId === itemId);
+  const item = store.uppgiftLista.find(
+    (item: UppgiftItem) => item.uppgiftId === itemId,
+  );
   if (item) {
     router.push({
       name: "item",

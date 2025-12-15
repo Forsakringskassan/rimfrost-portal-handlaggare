@@ -1,4 +1,5 @@
 import { useProductStore } from "../stores/uppgiftListaStore";
+import type { RawUppgift } from "../types";
 
 export async function getTilldeladeUppgifter() {
   const mockHandlaggarId = "3f439f0d-a915-42cb-ba8f-6a4170c6011f";
@@ -12,7 +13,7 @@ export async function getTilldeladeUppgifter() {
     const data = await response.json();
     const store = useProductStore();
 
-    const transformedUppgifter = data.uppgifter.map((item: anyl) => ({
+    const transformedUppgifter = data.uppgifter.map((item: RawUppgift) => ({
       uppgiftId: item.uppgift_id,
       kundbehovsflodeId: item.kundbehovsflode_id,
       skapad: item.skapad,
