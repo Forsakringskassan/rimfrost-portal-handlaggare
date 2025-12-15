@@ -20,40 +20,30 @@ export async function getNextUppgift() {
     const store = useProductStore();
     const uppgiftLista = store.uppgiftLista;
 
-    for (const uppgift of data) {
-      const exists = uppgiftLista.find(
-        (item: UppgiftItem) => item.uppgiftId === uppgift.id,
-      );
-      if (!exists) {
-        const newUppgiftLista = [...uppgiftLista, uppgift];
-        store.setUppgiftLista(newUppgiftLista);
-        goToItem(uppgift);
-        return;
-      }
+    const transformedUppgift = {
+      uppgiftId: data.uppgift.uppgift_id,
+      kundbehovsflodeId: data.uppgift.kundbehovsflode_id,
+      skapad: data.uppgift.skapad,
+      status: data.uppgift.status,
+      handlaggarId: data.uppgift.handlaggar_id,
+      planeradTill: data.uppgift.planerad_till || "",
+      utford: data.uppgift.utford || "",
+      regeltyp: data.uppgift.regeltyp,
+    };
+
+    const exists = uppgiftLista.find(
+      (item: UppgiftItem) => item.uppgiftId === transformedUppgift.uppgiftId,
+    );
+    if (!exists) {
+      const newUppgiftLista = [...uppgiftLista, transformedUppgift];
+      store.setUppgiftLista(newUppgiftLista);
+      goToItem(data.uppgift);
+      return;
     }
   } catch (error) {
     console.error("Error fetching next uppgift:", error);
   }
 }
-
-// export function getNextUppgiftMock() {
-//   const store = useProductStore();
-//   const uppgiftLista = store.uppgiftLista;
-
-//   if (uppgiftLista.length >= uppgiftListaMock.length) {
-//     return;
-//   }
-
-//   for (const uppgift of uppgiftListaMock) {
-//     const exists = uppgiftLista.find((u) => u.id === uppgift.id);
-//     if (!exists) {
-//       const newUppgiftLista = [...uppgiftLista, uppgift];
-//       store.setUppgiftLista(newUppgiftLista);
-//       goToItem(uppgift);
-//       return;
-//     }
-//   }
-// }
 
 function goToItem(item: { id: string; typ: string }) {
   const routeName = "item";
