@@ -81,6 +81,7 @@ async function loadUppgift() {
     */
     currentVueApp = importedUppgift01.init("#imported-uppgift-01", {
       kundbehovsflodeId: route.params.id ? route.params.id : null,
+      regeltyp: route.params.regeltyp ? route.params.regeltyp : null,
     });
 
     buttonVisible.value = true;

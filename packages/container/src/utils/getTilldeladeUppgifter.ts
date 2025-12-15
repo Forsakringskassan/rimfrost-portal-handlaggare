@@ -1,5 +1,6 @@
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { RawUppgift } from "../types";
+import { transformUppgift } from "./transformUppgift";
 
 export async function getTilldeladeUppgifter() {
   const mockHandlaggarId = "3f439f0d-a915-42cb-ba8f-6a4170c6011f";
@@ -13,16 +14,9 @@ export async function getTilldeladeUppgifter() {
     const data = await response.json();
     const store = useProductStore();
 
-    const transformedUppgifter = data.uppgifter.map((item: RawUppgift) => ({
-      uppgiftId: item.uppgift_id,
-      kundbehovsflodeId: item.kundbehovsflode_id,
-      skapad: item.skapad,
-      status: item.status,
-      handlaggarId: item.handlaggar_id,
-      planeradTill: item.planerad_till || "",
-      utford: item.utford || "",
-      regeltyp: item.regeltyp,
-    }));
+    const transformedUppgifter = data.uppgifter.map((item: RawUppgift) =>
+      transformUppgift(item),
+    );
 
     store.setUppgiftLista(transformedUppgifter);
   } catch (error) {

@@ -19,6 +19,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/uppgifter": "http://localhost:8889",
+      "/regel": "http://localhost:8890",
     },
     port: 3030,
   },

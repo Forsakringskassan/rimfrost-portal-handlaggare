@@ -19,20 +19,23 @@ för att bygga en korrekt URL?
 */
 const routes = computed(() => {
   return store.uppgiftLista.map((item: UppgiftItem) => ({
-    label: `${item.uppgiftId}: ${item.regeltyp}`,
-    route: `item-${item.uppgiftId}`,
+    label: `${item.kundbehovsflodeId.slice(-7)}: ${item.regeltyp}`,
+    route: `item-${item.kundbehovsflodeId}`,
   }));
 });
 
 function onSelectedRoute(routeId: string) {
   const itemId = routeId.replace("item-", "");
   const item = store.uppgiftLista.find(
-    (item: UppgiftItem) => item.uppgiftId === itemId,
+    (item: UppgiftItem) => item.kundbehovsflodeId === itemId,
   );
   if (item) {
     router.push({
       name: "item",
-      params: { id: item.uppgiftId.toString() },
+      params: {
+        id: item.kundbehovsflodeId.toString(),
+        regeltyp: item.regeltyp,
+      },
       query: { title: item.regeltyp },
     });
   }

@@ -1,6 +1,7 @@
 import { router } from "../router/index.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
 import type { UppgiftItem } from "../types.js";
+import { transformUppgift } from "./transformUppgift.js";
 
 export async function getNextUppgift() {
   const mockHandlaggarId = "3f439f0d-a915-42cb-ba8f-6a4170c6011f";
@@ -20,22 +21,12 @@ export async function getNextUppgift() {
     const store = useProductStore();
     const uppgiftLista = store.uppgiftLista;
 
-    const transformedUppgift = {
-      uppgiftId: data.uppgift.uppgift_id,
-      kundbehovsflodeId: data.uppgift.kundbehovsflode_id,
-      skapad: data.uppgift.skapad,
-      status: data.uppgift.status,
-      handlaggarId: data.uppgift.handlaggar_id,
-      planeradTill: data.uppgift.planerad_till || "",
-      utford: data.uppgift.utford || "",
-      regeltyp: data.uppgift.regeltyp,
-    };
-
+    const uppgift = transformUppgift(data.uppgift);
     const exists = uppgiftLista.find(
-      (item: UppgiftItem) => item.uppgiftId === transformedUppgift.uppgiftId,
+      (item: UppgiftItem) => item.uppgiftId === uppgift.uppgiftId,
     );
     if (!exists) {
-      const newUppgiftLista = [...uppgiftLista, transformedUppgift];
+      const newUppgiftLista = [...uppgiftLista, uppgift];
       store.setUppgiftLista(newUppgiftLista);
       goToItem(data.uppgift);
       return;

@@ -1,23 +1,22 @@
-import { FullmaktsControllerApi, Configuration } from "@forsakringskassan/template-api";
-
-export interface AlternativesModel {
-  id: string;
-  label: string;
-}
+import {
+  Configuration,
+  FullmaktsControllerApi,
+} from "@forsakringskassan/template-api";
+import type { AlternativesModel } from "./types";
 
 const DEFAULT_ALTERNATIVES: AlternativesModel[] = [
-    { id: "1", label: "Alternativ 1" },
-    { id: "2", label: "Alternativ 2" },
-    { id: "3", label: "Alternativ 3" },
-    { id: "4", label: "Alternativ 4" },
-    { id: "5", label: "Alternativ 5" },
-    { id: "6", label: "Alternativ 6" },
+  { id: "1", label: "Alternativ 1" },
+  { id: "2", label: "Alternativ 2" },
+  { id: "3", label: "Alternativ 3" },
+  { id: "4", label: "Alternativ 4" },
+  { id: "5", label: "Alternativ 5" },
+  { id: "6", label: "Alternativ 6" },
 ];
 
 const api = new FullmaktsControllerApi(
   new Configuration({
     basePath: window.location.origin,
-  })
+  }),
 );
 
 export async function getAlternatives(): Promise<AlternativesModel[]> {
@@ -33,9 +32,10 @@ export async function getAlternatives(): Promise<AlternativesModel[]> {
       ({ id, name }): AlternativesModel => ({
         id: String(id),
         label: name,
-      })
+      }),
     );
   } catch (error) {
+    console.error("Error fetching alternatives:", error);
     return DEFAULT_ALTERNATIVES;
   }
 }

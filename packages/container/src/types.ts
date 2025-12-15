@@ -19,3 +19,8 @@ export interface UppgiftItem {
   utford: string;
   regeltyp: string;
 }
+
+export interface AlternativesModel {
+  id: string;
+  label: string;
+}

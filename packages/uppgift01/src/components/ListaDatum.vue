@@ -11,7 +11,7 @@ const kundData = ref<KundData[]>(JSON.parse(JSON.stringify(mockKunduppgifter)));
 
 const filtreradKund = computed(() => {
   const kund = kundData.value.find(
-    (k) => k.kundbehovsflodeId === store.kundbehovsflodeId,
+    (k) => k.kundbehovsflodeId === store.uppgift?.kundbehovsflodeId,
   );
   console.log("filtreradKund", kund);
   return kund || null;

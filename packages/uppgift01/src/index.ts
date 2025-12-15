@@ -4,13 +4,12 @@ import { ValidationPlugin } from "@fkui/vue";
 import { createPinia } from "pinia";
 import "./style.css";
 import AppComponent from "./HuvudytaVAH.vue";
-import { router } from "./router";
 
 // createApp(App).mount('#app')
 
 export function init(
   selector: string,
-  params?: { kundbehovsflodeId?: string },
+  params?: { kundbehovsflodeId?: string; regeltyp?: string },
 ): App {
   const container = document.querySelector(selector);
 
@@ -30,10 +29,10 @@ export function init(
 
   const app = createApp(AppComponent, {
     kundbehovsflodeId: params?.kundbehovsflodeId ?? null,
+    regeltyp: params?.regeltyp ?? null,
   });
   app.use(ValidationPlugin);
   app.use(createPinia());
-  app.use(router);
   app.mount(selector);
 
   return app;

@@ -23,6 +23,9 @@ export default defineConfig({
     },
   },
   server: {
+    proxy: {
+      "/regel": "http://localhost:8890",
+    },
     port: 3032,
   },
   define: { "process.env": '"production"' },
