@@ -1,23 +1,38 @@
-import uppgiftListaMock from "../assets/uppgiftLista.json";
 import { router } from "../router/index.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
+import type { UppgiftItem } from "../types.js";
+import { transformUppgift } from "./transformUppgift.js";
 
-export function getNextUppgift() {
-  const store = useProductStore();
-  const uppgiftLista = store.uppgiftLista;
+export async function getNextUppgift() {
+  const mockHandlaggarId = "3f439f0d-a915-42cb-ba8f-6a4170c6011f";
+  try {
+    const response = await fetch(`/uppgifter/handlaggare/${mockHandlaggarId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  if (uppgiftLista.length >= uppgiftListaMock.length) {
-    return;
-  }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  for (const uppgift of uppgiftListaMock) {
-    const exists = uppgiftLista.find((u) => u.id === uppgift.id);
+    const data = await response.json();
+    const store = useProductStore();
+    const uppgiftLista = store.uppgiftLista;
+
+    const uppgift = transformUppgift(data.uppgift);
+    const exists = uppgiftLista.find(
+      (item: UppgiftItem) => item.uppgiftId === uppgift.uppgiftId,
+    );
     if (!exists) {
       const newUppgiftLista = [...uppgiftLista, uppgift];
       store.setUppgiftLista(newUppgiftLista);
-      goToItem(uppgift);
+      goToItem(data.uppgift);
       return;
     }
+  } catch (error) {
+    console.error("Error fetching next uppgift:", error);
   }
 }
 

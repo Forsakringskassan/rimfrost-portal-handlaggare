@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import("../components/IngenUppgiftVald.vue"),
       },
       {
-        path: "items/:id",
+        path: "items/:id/:regeltyp",
         name: "item",
         component: () => import("../components/OppnadUppgift.vue"),
         props: true,

@@ -1,28 +1,17 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { FStaticField, FTooltip } from "@fkui/vue";
-import kundUppgifter from "./assets/mockKunduppgifter-new.json";
 import ListaDatum from "./components/ListaDatum.vue";
 import { useProductStore } from "./stores/uppgiftStore";
+import { fetchUppgiftInformation } from "./utils/fetchUppgiftInformation";
 
-const { kundbehovsflodeId } = defineProps<{
+const { kundbehovsflodeId, regeltyp } = defineProps<{
   kundbehovsflodeId?: string | null;
+  regeltyp: string | null;
 }>();
 
 const store = useProductStore();
-store.setKundbehovsflodeId(kundbehovsflodeId ?? null);
 
-const selected = computed(() => {
-  let kund = null;
-
-  if (typeof store.kundbehovsflodeId === "string") {
-    kund =
-      kundUppgifter.find(
-        (kund) => kund.kundbehovsflodeId === store.kundbehovsflodeId,
-      ) ?? kundUppgifter[0];
-  }
-  return kund;
-});
+fetchUppgiftInformation(kundbehovsflodeId ?? "", regeltyp ?? "");
 </script>
 
 <template>
@@ -50,10 +39,18 @@ const selected = computed(() => {
   <div>
     <div class="arende-information">
       <f-static-field>
+        <template #label><span>Kund</span></template>
+        <template #default>
+          <span>{{
+            `${store.uppgift?.kund.fornamn} ${store.uppgift?.kund.efternamn}`
+          }}</span>
+        </template>
+      </f-static-field>
+      <f-static-field>
         <template #label><span>Organisationsnamn</span></template>
         <template #default>
           <span>{{
-            selected?.kund.anstallning?.organisationsnamn ?? "Missing"
+            store.uppgift?.kund.anstallning?.organisationsnamn ?? "Missing"
           }}</span>
         </template>
       </f-static-field>
@@ -69,28 +66,6 @@ const selected = computed(() => {
           <span>012 345 67 89</span>
         </template>
       </f-static-field>
-      <!-- <f-static-field>
-        <template #label><span>Adress</span></template>
-        <template #default>
-          <span>{{ selected?.anstallning?.adress ?? "" }}</span>
-        </template>
-      </f-static-field>
-      <f-static-field>
-        <template #label>
-          <span>Kontaktperson</span>
-        </template>
-        <template #default>
-          <span>{{ selected?.anstallning?.kontaktperson ?? "" }}</span>
-        </template>
-      </f-static-field>
-      <f-static-field>
-        <template #label>
-          <span>Telefonnummer</span>
-        </template>
-        <template #default>
-          <span>{{ selected?.anstallning?.telefon ?? "" }}</span>
-        </template>
-      </f-static-field> -->
     </div>
     <ListaDatum />
   </div>

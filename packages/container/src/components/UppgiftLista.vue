@@ -1,40 +1,52 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onBeforeMount } from "vue";
 import { FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
+import type { UppgiftItem } from "../types";
+import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
 
-export interface UppgiftItem {
-  id: string;
-  typ: string;
-  status: string;
-}
 const store = useProductStore();
 
 const router = useRouter();
 const route = useRoute();
 
+/*
+Här kommer vi skapa URLer med den information vi har,
+exempelvis regel och id. Vi skickar in den som id som
+param till router. Vi kan väl behöva regel-id i OUL
+för att bygga en korrekt URL?
+*/
 const routes = computed(() => {
-  return store.uppgiftLista.map((item) => ({
-    label: `${item.id}: ${item.typ}`,
-    route: `item-${item.id}`,
+  return store.uppgiftLista.map((item: UppgiftItem) => ({
+    label: `${item.kundbehovsflodeId.slice(-7)}: ${item.regeltyp}`,
+    route: `item-${item.kundbehovsflodeId}`,
   }));
 });
 
 function onSelectedRoute(routeId: string) {
   const itemId = routeId.replace("item-", "");
-  const item = store.uppgiftLista.find((i) => i.id === itemId);
+  const item = store.uppgiftLista.find(
+    (item: UppgiftItem) => item.kundbehovsflodeId === itemId,
+  );
   if (item) {
     router.push({
       name: "item",
-      params: { id: item.id.toString() },
-      query: { title: item.typ },
+      params: {
+        id: item.kundbehovsflodeId.toString(),
+        regeltyp: item.regeltyp,
+      },
+      query: { title: item.regeltyp },
     });
   }
 }
 
 const currentRoute = computed(() => {
   return route?.params?.id ? `item-${route.params.id}` : "";
+});
+
+onBeforeMount(async () => {
+  getTilldeladeUppgifter();
 });
 </script>
 

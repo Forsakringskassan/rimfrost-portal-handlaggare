@@ -11,7 +11,7 @@ const kundData = ref<KundData[]>(JSON.parse(JSON.stringify(mockKunduppgifter)));
 
 const filtreradKund = computed(() => {
   const kund = kundData.value.find(
-    (k) => k.kundbehovsflodeId === store.kundbehovsflodeId,
+    (k) => k.kundbehovsflodeId === store.uppgift?.kundbehovsflodeId,
   );
   console.log("filtreradKund", kund);
   return kund || null;
@@ -90,7 +90,7 @@ const selections = ref<Record<string, string>>({});
 <style scoped>
 .radio-container {
   min-width: 7rem;
-  max-width: 20rem;
+  max-width: 25rem;
   margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
@@ -121,6 +121,7 @@ const selections = ref<Record<string, string>>({});
 .ersattning-info-container {
   display: flex;
   flex-direction: column;
+  width: fit-content;
   & p {
     width: 6rem;
   }

@@ -75,8 +75,13 @@ async function loadUppgift() {
 
     const importedUppgift01 = await import(/* @vite-ignore */ moduleUrl);
 
+    /*
+    Vi skickar in route param id som kundbehovsflodeId
+    som kommer användas i micro FE för att hämta rätt uppgifter
+    */
     currentVueApp = importedUppgift01.init("#imported-uppgift-01", {
       kundbehovsflodeId: route.params.id ? route.params.id : null,
+      regeltyp: route.params.regeltyp ? route.params.regeltyp : null,
     });
 
     buttonVisible.value = true;
