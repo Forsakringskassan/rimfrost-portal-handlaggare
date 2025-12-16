@@ -1,4 +1,5 @@
 import { useProductStore } from "../stores/uppgiftStore";
+import { transformBackendResponse } from "./transformBackendResponse";
 
 export async function fetchUppgiftInformation(
   kundbehovsflodeId: string,
@@ -30,8 +31,9 @@ export async function fetchUppgiftInformation(
       throw new Error(`Response is not JSON. Got: ${text.substring(0, 100)}`);
     }
 
-    const data = await response.json();
-    store.setUppgift(data);
+    const backendData = await response.json();
+    const transformedData = transformBackendResponse(backendData);
+    store.setUppgift(transformedData);
   } catch (error) {
     console.error("Error fetching uppgift information:", error);
     return null;

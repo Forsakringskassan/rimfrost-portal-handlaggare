@@ -38,5 +38,5 @@ watch(() => route.params.id, loadUppgift);
 </script>
 
 <template>
-  <h1>{{ pageTitle }} - {{ pageId }}</h1>
+  <h1>{{ pageTitle }} - {{ pageId.slice(-7) }}</h1>
 </template>
