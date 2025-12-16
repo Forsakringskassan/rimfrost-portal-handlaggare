@@ -1,34 +1,3 @@
-// export interface Kund {
-//   fornamn: string;
-//   efternamn: string;
-//   personnummer: number;
-//   anstalld: boolean;
-//   harHund: boolean;
-//   kundbehovsflodeId: number;
-//   uppgiftsTyp: string;
-//   uppgiftsStatus: string;
-//   adress: {
-//     gata: string;
-//     nummer: string;
-//     postnummer: string;
-//     lagenhetsnummer: string;
-//     stad: string;
-//     folkbokford: boolean;
-//   };
-//   arbetsgivare: {
-//     id: number;
-//     namn: string;
-//     adress: string;
-//     kontaktperson: string;
-//     telefon: string;
-//     orgNummer?: undefined;
-//   };
-//   datum: Array<{
-//     datumVarde: string;
-//     rattTillForsakring: boolean;
-//   }>;
-// }
-
 export interface GetDataResponse {
   kundbehovsflodeId: string;
   kund: Kund;
@@ -92,6 +61,38 @@ export const Beslutsutfall = {
   NEJ: "NEJ",
   FU: "FU",
 };
+
+export interface BackendResponse {
+  kundbehovsflode_id: string;
+  kund: {
+    efternamn: string;
+    fornamn: string;
+    kon: string;
+    anstallning: {
+      organisationsnummer: string;
+      organisationsnamn: string;
+      arbetstid_procent: number;
+      anstallningsdag: string;
+      sista_anstallningsdag: string | null;
+      lon: {
+        lonesumma: number;
+        from: string;
+        tom: string | null;
+      };
+    };
+  };
+  ersattning: Array<{
+    ersattning_id: string;
+    ersattningstyp: string;
+    omfattning_procent: number;
+    belopp: number;
+    berakningsgrund: number;
+    beslutsutfall: string | null;
+    avslagsanledning: string | null;
+    from: string;
+    tom: string;
+  }>;
+}
 
 export type KonEnum = (typeof KonEnum)[keyof typeof KonEnum];
 export type Beslutsutfall = (typeof Beslutsutfall)[keyof typeof Beslutsutfall];

@@ -1,17 +1,34 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, watch } from "vue";
 import { FButton, FFieldset, FRadioField, FValidationForm } from "@fkui/vue";
 import { useProductStore } from "../stores/uppgiftStore";
-import { setKlar } from "../utils/setKlar";
 
 const store = useProductStore();
 
-const selections = ref<Record<string, string>>({});
+const selections = reactive<Record<string, "JA" | "NEJ" | undefined>>({});
+
+watch(
+  () => store.uppgift?.ersattning,
+  (ersattning) => {
+    if (ersattning) {
+      ersattning.forEach((item) => {
+        if (item.beslutsutfall) {
+          selections[item.ersattningId] = item.beslutsutfall as "JA" | "NEJ";
+        }
+      });
+    }
+  },
+  { immediate: true },
+);
+
+function handleSubmit() {
+  console.log("Selections:", selections);
+}
 </script>
 
 <template>
-  <div v-if="store.uppgift">
-    <f-validation-form>
+  <div v-if="store.uppgift?.ersattning">
+    <f-validation-form @submit.prevent="handleSubmit">
       <template #error-message>
         <p>Du har glömt fylla i något. Gå till fältet som är markerat.</p>
       </template>
@@ -23,13 +40,14 @@ const selections = ref<Record<string, string>>({});
       >
         <f-fieldset
           v-validation.required
-          :name="`arende-utfall-${item.ersattningId}`"
+          :name="`arende-utfall-${String(item.ersattningId)}`"
         >
           <template #label>
             <div class="ersattning-info-container">
               <div class="ersattning-info-item">
                 <p>Datum:</p>
-                <span>{{ item.from }} - {{ item.tom }}</span>
+                <span>{{ item.from }}</span
+                ><span v-if="item.from != item.tom"> - {{ item.tom }}</span>
               </div>
               <div v-if="item.omfattningProcent" class="ersattning-info-item">
                 <p>Omfattning:</p>
@@ -46,16 +64,19 @@ const selections = ref<Record<string, string>>({});
             </div>
           </template>
 
-          <template #default>
+          <template #default="{ sharedName }">
             <f-radio-field
-              v-model="selections[item.ersattningId]"
-              value="godkand"
+              v-model="selections[String(item.ersattningId)]"
+              :name="sharedName"
+              value="JA"
             >
               Godkänd
             </f-radio-field>
+
             <f-radio-field
-              v-model="selections[item.ersattningId]"
-              value="avslag"
+              v-model="selections[String(item.ersattningId)]"
+              :name="sharedName"
+              value="NEJ"
             >
               Avslag
             </f-radio-field>
@@ -63,7 +84,7 @@ const selections = ref<Record<string, string>>({});
         </f-fieldset>
       </div>
 
-      <f-button type="submit" @click="setKlar">Klarmarkera</f-button>
+      <f-button type="submit">Klarmarkera</f-button>
     </f-validation-form>
   </div>
 </template>

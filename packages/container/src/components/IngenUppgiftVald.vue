@@ -2,8 +2,8 @@
 
 <template>
   <div class="container">
-    <h1>Ingen uppgift valt</h1>
-    <p>Välj ett ärende i menyn till vänster</p>
+    <h1>Ingen uppgift vald</h1>
+    <p>Välj en uppgift i menyn till vänster</p>
   </div>
 </template>
 
