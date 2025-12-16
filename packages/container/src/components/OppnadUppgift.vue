@@ -106,5 +106,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div id="imported-uppgift-01" :key="mountKey"></div>
-  <FButton v-if="buttonVisible" @click="finishTask"> Klarmarkera </FButton>
+  <FButton v-if="buttonVisible" @click="finishTask">
+    Klarmarkera (old)
+  </FButton>
 </template>

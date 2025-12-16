@@ -12,6 +12,7 @@ const { kundbehovsflodeId, regeltyp } = defineProps<{
 const store = useProductStore();
 
 fetchUppgiftInformation(kundbehovsflodeId ?? "", regeltyp ?? "");
+store.setRegeltyp(regeltyp ?? "");
 </script>
 
 <template>

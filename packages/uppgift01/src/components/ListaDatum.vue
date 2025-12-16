@@ -1,34 +1,23 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { FFieldset, FRadioField, FValidationForm } from "@fkui/vue";
-import mockKunduppgifter from "../assets/mockKunduppgifter-new.json";
+import { ref } from "vue";
+import { FButton, FFieldset, FRadioField, FValidationForm } from "@fkui/vue";
 import { useProductStore } from "../stores/uppgiftStore";
-import type { KundData } from "../types";
+import { setKlar } from "../utils/setKlar";
 
 const store = useProductStore();
-
-const kundData = ref<KundData[]>(JSON.parse(JSON.stringify(mockKunduppgifter)));
-
-const filtreradKund = computed(() => {
-  const kund = kundData.value.find(
-    (k) => k.kundbehovsflodeId === store.uppgift?.kundbehovsflodeId,
-  );
-  console.log("filtreradKund", kund);
-  return kund || null;
-});
 
 const selections = ref<Record<string, string>>({});
 </script>
 
 <template>
-  <div v-if="filtreradKund">
+  <div v-if="store.uppgift">
     <f-validation-form>
       <template #error-message>
         <p>Du har glömt fylla i något. Gå till fältet som är markerat.</p>
       </template>
 
       <div
-        v-for="item in filtreradKund.ersattning"
+        v-for="item in store.uppgift?.ersattning"
         :key="item.ersattningId"
         class="radio-container"
       >
@@ -42,7 +31,7 @@ const selections = ref<Record<string, string>>({});
                 <p>Datum:</p>
                 <span>{{ item.from }} - {{ item.tom }}</span>
               </div>
-              <div class="ersattning-info-item">
+              <div v-if="item.omfattningProcent" class="ersattning-info-item">
                 <p>Omfattning:</p>
                 <span>{{ item.omfattningProcent }}%</span>
               </div>
@@ -70,19 +59,11 @@ const selections = ref<Record<string, string>>({});
             >
               Avslag
             </f-radio-field>
-            <f-radio-field
-              v-model="selections[item.ersattningId]"
-              value="utredning"
-            >
-              Utredning
-            </f-radio-field>
           </template>
         </f-fieldset>
       </div>
 
-      <!-- 
-      Commented out in mock
-      <f-button type="submit">Klarmarkera</f-button> -->
+      <f-button type="submit" @click="setKlar">Klarmarkera</f-button>
     </f-validation-form>
   </div>
 </template>
