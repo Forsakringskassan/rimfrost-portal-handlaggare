@@ -8,22 +8,23 @@ import AppComponent from "./HuvudytaVAH.vue";
 // createApp(App).mount('#app')
 
 export function init(
-  selector: string,
+  mount: string | Element,
   params?: { kundbehovsflodeId?: string; regeltyp?: string },
 ): App {
-  const container = document.querySelector(selector);
+  const container =
+    typeof mount === "string" ? document.querySelector(mount) : mount;
 
   if (!container) {
-    throw new Error(`Container element not found: ${selector}`);
+    throw new Error(
+      `Container element not found: ${typeof mount === "string" ? mount : "[Element]"}`,
+    );
   }
 
   container.addEventListener("component-validity", (event: Event) => {
-    console.log("App stoppar");
     event.stopPropagation();
   });
 
   container.addEventListener("component-unmount", (event: Event) => {
-    console.log("App stoppar");
     event.stopPropagation();
   });
 
@@ -31,9 +32,12 @@ export function init(
     kundbehovsflodeId: params?.kundbehovsflodeId ?? null,
     regeltyp: params?.regeltyp ?? null,
   });
+
   app.use(ValidationPlugin);
   app.use(createPinia());
-  app.mount(selector);
+
+  // Mount to the *element* if provided, otherwise selector
+  app.mount(container);
 
   return app;
 }

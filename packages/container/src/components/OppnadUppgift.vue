@@ -1,30 +1,30 @@
 <script setup lang="ts">
 import type { App } from "vue";
-import { onBeforeUnmount, ref, watch } from "vue";
-import { FButton } from "@fkui/vue";
+import { nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from "vue";
 import { useRoute } from "vue-router";
-import { router } from "../router";
-import removeUppgift from "../utils/removeUppgift";
+
+interface UppgiftModule {
+  init: (
+    mountSelector: string,
+    props: {
+      kundbehovsflodeId: string | null;
+      regeltyp: string | null;
+    },
+  ) => App;
+}
 
 const route = useRoute();
 
-let currentVueApp: App | null = null;
-const buttonVisible = ref(false);
+const containerEl = useTemplateRef<HTMLElement>("containerEl");
 const mountKey = ref(0);
 
-function goTo() {
-  router.push("/");
-}
+let currentVueApp: App | null = null;
+let activeCssLink: HTMLLinkElement | null = null;
 
-function finishTask() {
-  removeUppgift(route.params.id as string);
-  goTo();
-}
+// Cancels stale loads if route changes quickly
+let loadToken = 0;
 
-// This whole sections feels meh and hacky, needs proper refactoring
-// We might be able to get around all this with Module Federation
-async function loadUppgift() {
-  // Unmount previous Vue app instance if it exists
+function cleanupMicroFrontend() {
   if (currentVueApp) {
     try {
       currentVueApp.unmount();
@@ -34,79 +34,118 @@ async function loadUppgift() {
     currentVueApp = null;
   }
 
-  buttonVisible.value = false;
+  if (activeCssLink) {
+    activeCssLink.remove();
+    activeCssLink = null;
+  }
+}
 
-  // Force re-render of the container
+async function ensureCssLoaded(moduleUrl: string) {
+  const cssUrl = moduleUrl.replace(/\.js$/, ".css");
+
+  if (activeCssLink) {
+    activeCssLink.remove();
+    activeCssLink = null;
+  }
+
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = cssUrl;
+  link.dataset.microfe = "uppgift-01";
+  document.head.appendChild(link);
+
+  activeCssLink = link;
+}
+
+async function loadUppgift() {
+  const myToken = ++loadToken;
+
+  // Always clean up first (handles route changes + re-renders)
+  cleanupMicroFrontend();
+
+  // Force Vue to recreate the container node (fresh mount target)
   mountKey.value++;
+  await nextTick();
 
-  // Wait for next tick to ensure DOM is updated
-  await new Promise((resolve) => setTimeout(resolve, 0));
-
-  const container = document.getElementById("imported-uppgift-01");
-  if (!container) {
-    console.error("Container not found");
+  // Abort if a newer navigation/load started while we awaited
+  if (myToken !== loadToken) {
     return;
   }
 
+  const mountEl = containerEl.value;
+  if (!mountEl) {
+    console.error("Mount container ref is missing");
+    return;
+  }
+  if (!mountEl.id) {
+    console.error("Mount container has no id; init requires a selector");
+    return;
+  }
+
+  // Important: init() expects a selector string (it uses document.querySelector internally)
+  const mountSelector = `#${mountEl.id}`;
+
   try {
     const response = await fetch("/api/hamta-uppgifter");
-    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(`Failed to fetch uppgifter: ${response.status}`);
+    }
 
-    const moduleUrl = result?.[0]?.url;
-    if (!moduleUrl) {
+    const result = await response.json();
+    const moduleUrl: unknown = result?.[0]?.url;
+
+    if (typeof moduleUrl !== "string" || moduleUrl.length === 0) {
       return;
     }
 
-    // Load CSS file (replace .js with .css in the URL)
-    const cssUrl = moduleUrl.replace(/\.js$/, ".css");
-    const cssLinkId = "uppgift-css-link";
+    await ensureCssLoaded(moduleUrl);
 
-    const existingLink = document.getElementById(cssLinkId);
-    if (existingLink) {
-      existingLink.remove();
+    // Abort if route changed mid-flight
+    if (myToken !== loadToken) {
+      return;
     }
 
-    // Create new link element for CSS
-    const linkElement = document.createElement("link");
-    linkElement.id = cssLinkId;
-    linkElement.rel = "stylesheet";
-    linkElement.href = cssUrl;
-    document.head.appendChild(linkElement);
+    const imported = (await import(
+      /* @vite-ignore */ moduleUrl
+    )) as UppgiftModule;
 
-    const importedUppgift01 = await import(/* @vite-ignore */ moduleUrl);
+    if (typeof imported?.init !== "function") {
+      throw new Error("Imported module missing init()");
+    }
 
-    /*
-    Vi skickar in route param id som kundbehovsflodeId
-    som kommer användas i micro FE för att hämta rätt uppgifter
-    */
-    currentVueApp = importedUppgift01.init("#imported-uppgift-01", {
-      kundbehovsflodeId: route.params.id ? route.params.id : null,
-      regeltyp: route.params.regeltyp ? route.params.regeltyp : null,
+    const idParam = route.params.id;
+    const regeltypParam = route.params.regeltyp;
+
+    currentVueApp = imported.init("#imported-uppgift-01", {
+      kundbehovsflodeId:
+        typeof route.params.id === "string" ? route.params.id : undefined,
+      regeltyp:
+        typeof route.params.regeltyp === "string"
+          ? route.params.regeltyp
+          : undefined,
     });
-
-    buttonVisible.value = true;
   } catch (err) {
     console.error("Failed to load uppgift module:", err);
   }
 }
 
-watch(() => route.params.id, loadUppgift, { immediate: true });
+// Reload on any route change that could affect the micro FE
+watch(
+  () => route.fullPath,
+  () => {
+    void loadUppgift();
+  },
+  { immediate: true },
+);
 
 onBeforeUnmount(() => {
-  if (currentVueApp) {
-    try {
-      currentVueApp.unmount();
-    } catch (err) {
-      console.warn("Failed to unmount app:", err);
-    }
-    currentVueApp = null;
-  }
+  // Invalidate any in-flight load
+  loadToken++;
+  cleanupMicroFrontend();
 });
 </script>
 
 <template>
-  <div id="imported-uppgift-01" :key="mountKey"></div>
-  <FButton v-if="buttonVisible" @click="finishTask">
-    Klarmarkera (old)
-  </FButton>
+  <!-- This element is the micro-frontend mount target -->
+  <div id="imported-uppgift-01" ref="containerEl" :key="mountKey" />
 </template>
