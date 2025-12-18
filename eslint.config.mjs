@@ -40,8 +40,8 @@ export default [
           devDependencies: true,
           packageDir: [
             path.dirname(fileURLToPath(import.meta.url)),
-            "packages/container",
-            "packages/uppgift01",
+            path.resolve(path.dirname(fileURLToPath(import.meta.url)), "packages/container"),
+            path.resolve(path.dirname(fileURLToPath(import.meta.url)), "packages/uppgift01"),
           ],
         },
       ],

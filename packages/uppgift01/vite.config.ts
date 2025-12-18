@@ -1,7 +1,8 @@
 import { resolve } from "node:path";
 import { URL, fileURLToPath } from "node:url";
-
 import { defineConfig } from "vite";
+// eslint-disable-next-line import/no-extraneous-dependencies -- Ignored
+import federation from "@originjs/vite-plugin-federation";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 
@@ -9,7 +10,18 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueDevTools()],
+  plugins: [
+    vue(),
+    vueDevTools(),
+    federation({
+      name: "uppgift01",
+      filename: "remoteEntry.js",
+      exposes: {
+        "./Uppgift01App": "./src/components/Uppgift01App.vue",
+      },
+      shared: ["vue"],
+    }),
+  ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
