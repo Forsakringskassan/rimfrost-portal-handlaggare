@@ -116,13 +116,9 @@ async function loadUppgift() {
     const idParam = route.params.id;
     const regeltypParam = route.params.regeltyp;
 
-    currentVueApp = imported.init("#imported-uppgift-01", {
-      kundbehovsflodeId:
-        typeof route.params.id === "string" ? route.params.id : undefined,
-      regeltyp:
-        typeof route.params.regeltyp === "string"
-          ? route.params.regeltyp
-          : undefined,
+    currentVueApp = imported.init(mountSelector, {
+      kundbehovsflodeId: typeof idParam === "string" ? idParam : null,
+      regeltyp: typeof regeltypParam === "string" ? regeltypParam : null,
     });
   } catch (err) {
     console.error("Failed to load uppgift module:", err);
