@@ -2,11 +2,12 @@
 import { computed, onBeforeMount } from "vue";
 import { FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
-import { useProductStore } from "../stores/uppgiftListaStore";
-import type { UppgiftItem } from "../types";
+import uppgiftLista from "../assets/uppgiftLista.json";
+// import { useProductStore } from "../stores/uppgiftListaStore";
+// import type { UppgiftItem } from "../types";
 import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
 
-const store = useProductStore();
+// const store = useProductStore();
 
 const router = useRouter();
 const route = useRoute();
@@ -17,30 +18,68 @@ exempelvis regel och id. Vi skickar in den som id som
 param till router. Vi kan väl behöva regel-id i OUL
 för att bygga en korrekt URL?
 */
+// const routes = computed(() => {
+//   return store.uppgiftLista.map((item: UppgiftItem) => ({
+//     label: `${item.kundbehovsflodeId.slice(-7)}: ${item.regeltyp}`,
+//     route: `item-${item.kundbehovsflodeId}`,
+//   }));
+// });
+
+// function onSelectedRoute(routeId: string) {
+//   const itemId = routeId.replace("item-", "");
+//   const item = store.uppgiftLista.find(
+//     (item: UppgiftItem) => item.kundbehovsflodeId === itemId,
+//   );
+//   if (item) {
+//     router.push({
+//       name: "item",
+//       params: {
+//         id: item.kundbehovsflodeId.toString(),
+//         regeltyp: item.regeltyp,
+//       },
+//       query: { title: item.regeltyp },
+//     });
+//   }
+// }
+
+/* Mock data below, replace with commented out functions when BE works */
+
 const routes = computed(() => {
-  return store.uppgiftLista.map((item: UppgiftItem) => ({
-    label: `${item.kundbehovsflodeId.slice(-7)}: ${item.regeltyp}`,
-    route: `item-${item.kundbehovsflodeId}`,
+  return uppgiftLista.map((item) => ({
+    label: `${item.id.slice(-7)}: ${item.typ}`,
+    route: `item-${item.id}`,
   }));
 });
 
+// function onSelectedRoute(routeId: string) {
+//   const itemId = routeId.replace("item-", "");
+//   const item = uppgiftLista.find((item) => item.id === itemId);
+//   if (item) {
+//     router.push({
+//       name: "item",
+//       params: {
+//         id: item.id.toString(),
+//         regeltyp: item.typ,
+//       },
+//       query: { title: item.typ },
+//     });
+//   }
+// }
+
 function onSelectedRoute(routeId: string) {
   const itemId = routeId.replace("item-", "");
-  const item = store.uppgiftLista.find(
-    (item: UppgiftItem) => item.kundbehovsflodeId === itemId,
-  );
+  const item = uppgiftLista.find((item) => item.id === itemId);
   if (item) {
     router.push({
       name: "item",
       params: {
-        id: item.kundbehovsflodeId.toString(),
+        id: item.id.toString(),
         regeltyp: item.regeltyp,
       },
       query: { title: item.regeltyp },
     });
   }
 }
-
 const currentRoute = computed(() => {
   return route?.params?.id ? `item-${route.params.id}` : "";
 });

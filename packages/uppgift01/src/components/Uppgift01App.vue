@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { FStaticField, FTooltip } from "@fkui/vue";
-import uppgifter from "./assets/mockKunduppgifter-new.json";
-import ListaDatum from "./components/ListaDatum.vue";
-import { useProductStore } from "./stores/uppgiftStore";
-import type { GetDataResponse } from "./types";
+import uppgifter from "../assets/mockKunduppgifter-new.json";
+import { useProductStore } from "../stores/uppgiftStore";
+import type { GetDataResponse } from "../types";
+import ListaDatum from "./ListaDatum.vue";
 
 const { kundbehovsflodeId, regeltyp } = defineProps<{
   kundbehovsflodeId?: string | null;
