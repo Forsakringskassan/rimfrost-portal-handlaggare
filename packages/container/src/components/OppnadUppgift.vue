@@ -83,7 +83,8 @@ async function loadUppgift() {
   }
 
   // Important: init() expects a selector string (it uses document.querySelector internally)
-  const mountSelector = `#${mountEl.id}`;
+  // CSS.escape ensures the ID is valid even if it starts with a digit
+  const mountSelector = `#${CSS.escape(mountEl.id)}`;
 
   try {
     const response = await fetch("/api/hamta-uppgifter");

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onBeforeMount } from "vue";
+import { computed } from "vue";
 import { FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import uppgiftLista from "../assets/uppgiftLista.json";
 // import { useProductStore } from "../stores/uppgiftListaStore";
 // import type { UppgiftItem } from "../types";
-import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
+// import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
 
 // const store = useProductStore();
 
@@ -84,9 +84,9 @@ const currentRoute = computed(() => {
   return route?.params?.id ? `item-${route.params.id}` : "";
 });
 
-onBeforeMount(async () => {
-  getTilldeladeUppgifter();
-});
+// onBeforeMount(async () => {
+//   getTilldeladeUppgifter();
+// });
 </script>
 
 <template>
