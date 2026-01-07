@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { URL, fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
-// eslint-disable-next-line import/no-extraneous-dependencies -- Ignored
+
 import federation from "@originjs/vite-plugin-federation";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
@@ -14,12 +14,12 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     federation({
-      name: "uppgift01",
+      name: "remote_app",
       filename: "remoteEntry.js",
       exposes: {
         "./Uppgift01App": "./src/components/Uppgift01App.vue",
       },
-      shared: ["vue"],
+      shared: ["vue", "@fkui/vue", "pinia"],
     }),
   ],
   resolve: {
@@ -42,7 +42,7 @@ export default defineConfig({
   },
   define: { "process.env": '"production"' },
   build: {
-    cssCodeSplit: true,
+    cssCodeSplit: false,
     lib: {
       formats: ["es"],
       entry: resolve(__dirname, "src/index.ts"),
@@ -52,7 +52,7 @@ export default defineConfig({
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith(".css")) {
-            return "uppgift01.css";
+            return "assets/uppgift01.css";
           }
           return assetInfo.name ?? "assets/[name][extname]";
         },

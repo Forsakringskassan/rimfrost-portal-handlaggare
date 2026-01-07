@@ -19,8 +19,12 @@ const castToGetDataResponse = (data: any): GetDataResponse => {
 };
 
 const store = useProductStore();
-store.setUppgift(castToGetDataResponse(uppgifter[0]));
-
+store.setUppgift(
+  castToGetDataResponse(
+    // eslint-disable-next-line sonarjs/pseudo-random -- just for testing different data
+    uppgifter[Math.floor(Math.random() * uppgifter.length)],
+  ),
+);
 // fetchUppgiftInformation(kundbehovsflodeId ?? "", regeltyp ?? "");
 store.setRegeltyp(regeltyp ?? "");
 </script>
