@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { GetDataResponse } from "../types";
 
-export const useProductStore = defineStore("uppgiftStore", {
+export const useProductStore = defineStore("VAHStore", {
   state: () => ({
     uppgift: null as GetDataResponse | null,
     regeltyp: "",

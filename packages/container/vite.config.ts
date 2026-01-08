@@ -14,6 +14,9 @@ export default defineConfig({
         remoteApp: "http://localhost:3031/assets/remoteEntry.js",
       },
       shared: ["vue", "@fkui/vue", "pinia"],
+      exposes: {
+        "./pinia": "./src/pinia.ts",
+      },
     }),
     vue(),
     vueDevTools(),

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase -- API response fields use snake_case naming convention */
-import { useProductStore } from "../stores/uppgiftStore";
+import { useProductStore } from "../stores/VAHStore";
 
 export async function setKlar() {
   const store = useProductStore();
@@ -29,7 +29,6 @@ async function patchKundbehovsflode(id: string) {
     });
 
     if (!response.ok) {
-      // Try to get the error message from the response body
       let errorMessage = `HTTP error! status: ${response.status}`;
       try {
         const errorData = await response.json();

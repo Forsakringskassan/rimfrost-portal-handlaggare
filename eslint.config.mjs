@@ -41,7 +41,7 @@ export default [
           packageDir: [
             path.dirname(fileURLToPath(import.meta.url)),
             path.resolve(path.dirname(fileURLToPath(import.meta.url)), "packages/container"),
-            path.resolve(path.dirname(fileURLToPath(import.meta.url)), "packages/uppgift01"),
+            path.resolve(path.dirname(fileURLToPath(import.meta.url)), "packages/vardAvHusdjur"),
           ],
         },
       ],

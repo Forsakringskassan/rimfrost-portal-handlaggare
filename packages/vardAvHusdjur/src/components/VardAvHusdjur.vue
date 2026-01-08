@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { FStaticField, FTooltip } from "@fkui/vue";
-import uppgifter from "../assets/mockKunduppgifter-new.json";
-import { useProductStore } from "../stores/uppgiftStore";
-import type { GetDataResponse } from "../types";
+import { useProductStore } from "../stores/VAHStore";
+import { fetchUppgiftInformation } from "../utils/fetchUppgiftInformation";
 import ListaDatum from "./ListaDatum.vue";
 
 const { kundbehovsflodeId, regeltyp } = defineProps<{
@@ -10,23 +10,16 @@ const { kundbehovsflodeId, regeltyp } = defineProps<{
   regeltyp: string | null;
 }>();
 
-// import { fetchUppgiftInformation } from "./utils/fetchUppgiftInformation";
-
-// Temporary function to cast mockdata to GetDataResponse
-const castToGetDataResponse = (data: any): GetDataResponse => {
-  console.log("KundbehovsflodeID:", kundbehovsflodeId);
-  return data as GetDataResponse;
-};
-
 const store = useProductStore();
-store.setUppgift(
-  castToGetDataResponse(
-    // eslint-disable-next-line sonarjs/pseudo-random -- just for testing different data
-    uppgifter[Math.floor(Math.random() * uppgifter.length)],
-  ),
-);
-// fetchUppgiftInformation(kundbehovsflodeId ?? "", regeltyp ?? "");
+fetchUppgiftInformation(kundbehovsflodeId ?? "", regeltyp ?? "");
 store.setRegeltyp(regeltyp ?? "");
+
+onMounted(() => {
+  console.log(
+    "VardAvHusdjur mounted with kundbehovsflodeId:",
+    kundbehovsflodeId,
+  );
+});
 </script>
 
 <template>

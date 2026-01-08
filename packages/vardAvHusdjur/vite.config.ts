@@ -17,7 +17,7 @@ export default defineConfig({
       name: "remote_app",
       filename: "remoteEntry.js",
       exposes: {
-        "./Uppgift01App": "./src/components/Uppgift01App.vue",
+        "./VardAvHusdjur": "./src/components/VardAvHusdjur.vue",
       },
       shared: ["vue", "@fkui/vue", "pinia"],
     }),
@@ -45,14 +45,14 @@ export default defineConfig({
     cssCodeSplit: false,
     lib: {
       formats: ["es"],
-      entry: resolve(__dirname, "src/index.ts"),
-      name: "uppgift01",
+      entry: resolve(__dirname, "src/main.ts"),
+      name: "vardAvHusdjur",
     },
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith(".css")) {
-            return "assets/uppgift01.css";
+            return "assets/vardAvHusdjur.css";
           }
           return assetInfo.name ?? "assets/[name][extname]";
         },

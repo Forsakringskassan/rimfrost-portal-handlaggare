@@ -3,7 +3,7 @@ import { createApp } from "vue";
 import { ValidationPlugin } from "@fkui/vue";
 import { createPinia } from "pinia";
 import "./style.css";
-import AppComponent from "./HuvudytaVAH.vue";
+import AppComponent from "./App.vue";
 
 // createApp(App).mount('#app')
 

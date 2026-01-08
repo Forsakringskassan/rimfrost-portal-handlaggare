@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
 import { FButton, FFieldset, FRadioField, FValidationForm } from "@fkui/vue";
-import { useProductStore } from "../stores/uppgiftStore";
+import { useProductStore } from "../stores/VAHStore";
+import type { Ersattning } from "../types";
+import { setKlar } from "../utils/setKlar";
 
 const store = useProductStore();
 
@@ -11,7 +13,7 @@ watch(
   () => store.uppgift?.ersattning,
   (ersattning) => {
     if (ersattning) {
-      ersattning.forEach((item) => {
+      ersattning.forEach((item: Ersattning) => {
         if (item.beslutsutfall) {
           selections[item.ersattningId] = item.beslutsutfall as "JA" | "NEJ";
         }
@@ -22,7 +24,7 @@ watch(
 );
 
 function handleSubmit() {
-  console.log("Selections:", selections);
+  setKlar();
 }
 </script>
 

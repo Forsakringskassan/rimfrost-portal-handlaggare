@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import type { App } from "vue";
-import Uppgift01App from "remoteApp/Uppgift01App";
+import { computed, ref, watch } from "vue";
+import VardAvHusdjur from "remoteApp/VardAvHusdjur";
 import { useRoute } from "vue-router";
 
-// interface UppgiftModule {
-//   init: (
-//     mountSelector: string,
-//     props: {
-//       kundbehovsflodeId: string | null;
-//       regeltyp: string | null;
-//     },
-//   ) => App;
-// }
-
 const route = useRoute();
-console.log(route);
+const kundbehovsflodeId = computed(() => route.params.id as string | null);
+const regeltyp = computed(() => route.params.regeltyp as string | null);
+const componentKey = ref(0);
+
+watch(
+  () => route.params.id,
+  () => {
+    componentKey.value++;
+  },
+);
 </script>
 
 <template>
-  <!-- This element is the micro-frontend mount target -->
-  <div id="imported-uppgift-01" ref="containerEl">
-    <Uppgift01App />
+  <div>
+    <VardAvHusdjur :key="componentKey" :kundbehovsflode-id :regeltyp />
   </div>
 </template>
