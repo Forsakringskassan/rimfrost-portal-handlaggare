@@ -1,4 +1,4 @@
-import { useProductStore } from "../stores/uppgiftStore";
+import { useProductStore } from "../stores/VAHStore";
 import { transformBackendResponse } from "./transformBackendResponse";
 
 export async function fetchUppgiftInformation(

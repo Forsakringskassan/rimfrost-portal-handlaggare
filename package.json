@@ -11,9 +11,9 @@
     "lint:fix": "run-s eslint:fix prettier:write",
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write .",
-    "start": "run-p container uppgift*",
+    "start": "run-p container vardAvHusdjur",
     "test": "run-s eslint prettier:check",
-    "uppgift01": "npm --prefix packages/uppgift01 run build && npm --prefix packages/uppgift01 run preview"
+    "vardAvHusdjur": "npm --prefix packages/vardAvHusdjur run build && npm --prefix packages/vardAvHusdjur run preview"
   },
   "commitlint": {
     "extends": "@forsakringskassan/commitlint-config/no-jira"

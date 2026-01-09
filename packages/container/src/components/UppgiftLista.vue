@@ -52,7 +52,7 @@ onBeforeMount(async () => {
 
 <template>
   <f-navigation-menu
-    v-model:route="currentRoute"
+    :route="currentRoute"
     :routes
     vertical
     menu-aria-label="Uppgiftslista"

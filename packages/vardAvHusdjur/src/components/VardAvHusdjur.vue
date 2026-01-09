@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { FStaticField, FTooltip } from "@fkui/vue";
-import ListaDatum from "./components/ListaDatum.vue";
-import { useProductStore } from "./stores/uppgiftStore";
-import { fetchUppgiftInformation } from "./utils/fetchUppgiftInformation";
+import { useProductStore } from "../stores/VAHStore";
+import { fetchUppgiftInformation } from "../utils/fetchUppgiftInformation";
+import ListaDatum from "./ListaDatum.vue";
 
 const { kundbehovsflodeId, regeltyp } = defineProps<{
   kundbehovsflodeId?: string | null;
@@ -10,8 +11,15 @@ const { kundbehovsflodeId, regeltyp } = defineProps<{
 }>();
 
 const store = useProductStore();
-
 fetchUppgiftInformation(kundbehovsflodeId ?? "", regeltyp ?? "");
+store.setRegeltyp(regeltyp ?? "");
+
+onMounted(() => {
+  console.log(
+    "VardAvHusdjur mounted with kundbehovsflodeId:",
+    kundbehovsflodeId,
+  );
+});
 </script>
 
 <template>

@@ -14,8 +14,8 @@ export async function getTilldeladeUppgifter() {
     const data = await response.json();
     const store = useProductStore();
 
-    const transformedUppgifter = data.uppgifter.map((item: RawUppgift) =>
-      transformUppgift(item),
+    const transformedUppgifter = data.operativa_uppgifter.map(
+      (item: RawUppgift) => transformUppgift(item),
     );
 
     store.setUppgiftLista(transformedUppgifter);

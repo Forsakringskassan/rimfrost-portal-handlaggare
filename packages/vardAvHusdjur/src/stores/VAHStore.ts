@@ -1,17 +1,17 @@
 import { defineStore } from "pinia";
 import type { GetDataResponse } from "../types";
 
-export const useProductStore = defineStore("uppgiftStore", {
+export const useProductStore = defineStore("VAHStore", {
   state: () => ({
     uppgift: null as GetDataResponse | null,
-    errors: [] as string[],
+    regeltyp: "",
   }),
   actions: {
     setUppgift(uppgift: GetDataResponse | null) {
       this.uppgift = uppgift;
     },
-    setErrors(errors: string[]) {
-      this.errors = errors;
+    setRegeltyp(regeltyp: string) {
+      this.regeltyp = regeltyp;
     },
   },
 });

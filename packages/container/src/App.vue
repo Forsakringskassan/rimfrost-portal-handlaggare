@@ -31,7 +31,7 @@ import { getNextUppgift } from "./utils/getNextUppgift";
       <template #content>
         <div class="left-nav-custom">
           <div class="nav-content">
-            <p class="body">Välj en uppgift i listan.</p>
+            <p class="body">Välj en uppgift i listan</p>
             <div class="scrollable-list">
               <IdList />
             </div>
