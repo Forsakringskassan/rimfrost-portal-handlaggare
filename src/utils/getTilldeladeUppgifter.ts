@@ -1,9 +1,10 @@
+import { env } from "../config/env";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { RawOperativUppgift } from "../types";
 import { transformUppgift } from "./transformUppgift";
 
 export async function getTilldeladeUppgifter() {
-  const mockHandlaggarId = "469ddd20-6796-4e05-9e18-6a95953f6cb3";
+  const mockHandlaggarId = env.mockHandlaggareId;
   try {
     const response = await fetch(`/uppgifter/handlaggare/${mockHandlaggarId}`);
 

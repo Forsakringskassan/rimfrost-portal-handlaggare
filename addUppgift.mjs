@@ -3,6 +3,15 @@ const JSON_HEADERS = {
   Accept: "application/json",
 };
 
+// Environment variables (set these via command line or .env file)
+const KUNDBEHOV_API_URL =
+  process.env.VITE_KUNDBEHOV_API_URL || "http://localhost:8888";
+const UPPGIFTER_API_URL =
+  process.env.VITE_UPPGIFTER_API_URL || "http://localhost:8889";
+const HANDLAGGARE_ID =
+  process.env.VITE_MOCK_HANDLAGGARE_ID ||
+  "469ddd20-6796-4e05-9e18-6a95953f6cb3";
+
 async function fetchJson(url, options = {}) {
   const res = await fetch(url, options);
 
@@ -31,7 +40,7 @@ async function main() {
     },
   };
 
-  const kundbehovRes = await fetchJson("http://localhost:8888/kundbehov", {
+  const kundbehovRes = await fetchJson(`${KUNDBEHOV_API_URL}/kundbehov`, {
     method: "POST",
     headers: JSON_HEADERS,
     body: JSON.stringify(kundbehovBody),
@@ -46,7 +55,7 @@ async function main() {
 
   console.log("/kundbehov OK - kundbehovId:", kundbehovId);
 
-  const flodeRes = await fetchJson("http://localhost:8888/kundbehovsflode", {
+  const flodeRes = await fetchJson(`${KUNDBEHOV_API_URL}/kundbehovsflode`, {
     method: "POST",
     headers: JSON_HEADERS,
     body: JSON.stringify({ kundbehovId }),
@@ -54,8 +63,7 @@ async function main() {
 
   console.log("/kundbehovsflode OK - flodeId:", flodeRes?.kundbehovsflode?.id);
 
-  const handlaggareId = "3f439f0d-a915-42cb-ba8f-6a4170c6011f";
-  const uppgifterBase = `http://localhost:8889/uppgifter/handlaggare/${handlaggareId}`;
+  const uppgifterBase = `${UPPGIFTER_API_URL}/uppgifter/handlaggare/${HANDLAGGARE_ID}`;
 
   const thirdRes = await fetchJson(uppgifterBase, {
     method: "POST",
