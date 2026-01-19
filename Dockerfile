@@ -1,31 +1,56 @@
-# Build stage
-FROM node:20-alpine AS build
+FROM httpd:latest
+          USER 0
 
-WORKDIR /app
+          # Clean web root
+          RUN rm -rf /usr/local/apache2/htdocs/*
 
-# Copy package files
-COPY package*.json ./
+          # Copy built app
+          COPY dist/ /usr/local/apache2/htdocs/
 
-# Install dependencies
-RUN npm ci
+          # Pass version info and image name as build args
+          ARG NEXT_VERSION
+          ARG GIT_COMMIT
+          ARG IMAGE_NAME
+          ARG BUILD_DATE
+          ENV NEXT_VERSION=$NEXT_VERSION
+          ENV GIT_COMMIT=$GIT_COMMIT
+          ENV IMAGE_NAME=$IMAGE_NAME
+          ENV BUILD_DATE=$BUILD_DATE
 
-# Copy source code
-COPY . .
+          # Set default port
+          ENV HTTPD_PORT=8080
 
-# Build the application
-RUN npm run build
+          # Create writable directories and set permissions for OpenShift/CRC
+          RUN mkdir -p /tmp/apache2/logs /tmp/apache2/run && \
+              chown -R www-data:www-data /usr/local/apache2/htdocs /tmp/apache2 && \
+              chmod -R 755 /usr/local/apache2/htdocs && \
+              chmod -R 777 /tmp/apache2
 
-# Production stage with NGINX
-FROM nginx:alpine
+          # Create startup script that configures httpd with dynamic port and proper permissions
+          RUN echo '#!/bin/bash' > /usr/local/bin/start-httpd.sh && \
+              echo 'PORT=${HTTPD_PORT:-8080}' >> /usr/local/bin/start-httpd.sh && \
+              echo 'cp /usr/local/apache2/conf/httpd.conf /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+              echo 'sed -i "s/Listen 80/Listen $PORT/" /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+              echo 'sed -i "s|ErrorLog logs/error_log|ErrorLog /tmp/apache2/logs/error_log|" /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+              echo 'sed -i "s|CustomLog logs/access_log|CustomLog /tmp/apache2/logs/access_log|" /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+              echo 'sed -i "s|#PidFile logs/httpd.pid|PidFile /tmp/apache2/run/httpd.pid|" /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo "PidFile /tmp/apache2/run/httpd.pid" >> /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo "ServerName localhost" >> /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo "Starting container: $IMAGE_NAME"' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo "Version: $NEXT_VERSION"' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo "Commit: $GIT_COMMIT"' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo "Build date: $BUILD_DATE"' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo "Listening on port: $PORT"' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo ""' >> /usr/local/bin/start-httpd.sh && \
+              echo 'echo ""' >> /usr/local/bin/start-httpd.sh && \
+              echo 'httpd -D FOREGROUND -f /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+              chmod +x /usr/local/bin/start-httpd.sh
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+          # Switch to www-data user for security
+          USER www-data
 
-# Copy built application from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+          # Expose the configurable port
+          EXPOSE $HTTPD_PORT
 
-# Expose port 80
-EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+          # Use the startup script
+          CMD ["/usr/local/bin/start-httpd.sh"]
