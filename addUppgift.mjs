@@ -1,22 +1,24 @@
-const kundbehovUrl = "http://localhost:8888/kundbehov";
-const kundbehovsflodeUrl = "http://localhost:8888/kundbehovsflode";
-const uppgifterUrl =
-  "http://localhost:8889/uppgifter/handlaggare/3f439f0d-a915-42cb-ba8f-6a4170c6011f";
+const JSON_HEADERS = {
+  "Content-Type": "application/json",
+  Accept: "application/json",
+};
 
-async function postJson(url, body) {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: body ? { "Content-Type": "application/json" } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+async function fetchJson(url, options = {}) {
+  const res = await fetch(url, options);
 
-  const text = await res.text();
+  const contentType = res.headers.get("Content-Type") || "";
+  const isJson = contentType.includes("application/json");
 
-  try {
-    return { ok: res.ok, status: res.status, data: JSON.parse(text) };
-  } catch {
-    return { ok: res.ok, status: res.status, data: text };
+  const body = isJson ? await res.json().catch(() => null) : await res.text();
+
+  if (!res.ok) {
+    const details = isJson ? JSON.stringify(body, null, 2) : String(body);
+    throw new Error(
+      `HTTP ${res.status} ${res.statusText} for ${url}\n${details}`,
+    );
   }
+
+  return body;
 }
 
 async function main() {
@@ -29,23 +31,51 @@ async function main() {
     },
   };
 
-  const kundbehovRes = await postJson(kundbehovUrl, kundbehovBody);
-  const kundbehovId = kundbehovRes?.data?.kundbehov?.id;
+  const kundbehovRes = await fetchJson("http://localhost:8888/kundbehov", {
+    method: "POST",
+    headers: JSON_HEADERS,
+    body: JSON.stringify(kundbehovBody),
+  });
 
+  const kundbehovId = kundbehovRes?.kundbehov?.id;
   if (!kundbehovId) {
-    throw new Error("Could not find kundbehov.id in response");
+    throw new Error(
+      `Could not find kundbehov.id in response:\n${JSON.stringify(kundbehovRes, null, 2)}`,
+    );
   }
 
-  const flodeRes = await postJson(kundbehovsflodeUrl, {
-    kundbehovId,
-  });
-  console.log("Kundbehovsflode response:", flodeRes);
+  console.log("/kundbehov OK - kundbehovId:", kundbehovId);
 
-  const uppgifterRes = await fetch(uppgifterUrl, { method: "POST" });
-  console.log("Uppgifter response:", uppgifterRes);
+  const flodeRes = await fetchJson("http://localhost:8888/kundbehovsflode", {
+    method: "POST",
+    headers: JSON_HEADERS,
+    body: JSON.stringify({ kundbehovId }),
+  });
+
+  console.log("/kundbehovsflode OK - flodeId:", flodeRes?.kundbehovsflode?.id);
+
+  const handlaggareId = "3f439f0d-a915-42cb-ba8f-6a4170c6011f";
+  const uppgifterBase = `http://localhost:8889/uppgifter/handlaggare/${handlaggareId}`;
+
+  const thirdRes = await fetchJson(uppgifterBase, {
+    method: "POST",
+    headers: JSON_HEADERS,
+  });
+
+  console.log("POST /uppgifter/handlaggare response: ");
+  console.log(JSON.stringify(thirdRes, null, 2));
+
+  const fourthRes = await fetchJson(uppgifterBase, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+  });
+
+  console.log("GET /uppgifter/handlaggare response: ");
+  console.log(JSON.stringify(fourthRes, null, 2));
 }
 
 main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  console.error("❌ Chain failed:");
+  console.error(err?.stack || err);
+  process.exitCode = 1;
 });
