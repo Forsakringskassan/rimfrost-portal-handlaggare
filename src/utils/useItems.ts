@@ -1,5 +1,7 @@
-const USE_API = false; // flip to true when backend is ready
-const API_BASE = "https://api.example.com"; // future
+import { env } from "../config/env";
+
+const USE_API = env.useApi;
+const API_BASE = env.apiBaseUrl;
 
 export interface Uppgift {
   fornamn: string;

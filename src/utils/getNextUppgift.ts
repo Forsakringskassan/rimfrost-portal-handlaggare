@@ -1,10 +1,11 @@
+import { env } from "../config/env.js";
 import { router } from "../router/index.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
 import type { OperativUppgiftItem } from "../types.js";
 import { transformUppgift } from "./transformUppgift.js";
 
 export async function getNextUppgift() {
-  const mockHandlaggarId = "3f439f0d-a915-42cb-ba8f-6a4170c6011f";
+  const mockHandlaggarId = env.mockHandlaggareId;
   try {
     const response = await fetch(`/uppgifter/handlaggare/${mockHandlaggarId}`, {
       method: "POST",
