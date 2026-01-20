@@ -2,6 +2,20 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.0.2 (2026-01-20)
+
+### Bug Fixes
+
+-  replaces hard coded url values with envs ([741e2](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/741e2747146fe4f) Lisa Wedin)  
+
+### Other changes
+
+**Ups version**
+
+
+[58230](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/5823026cde7b567) LisaWedin-Ductus *2026-01-20 07:36:25*
+
+
 ## 0.0.1 (2026-01-19)
 
 ### Features
