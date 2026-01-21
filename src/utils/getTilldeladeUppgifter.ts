@@ -1,10 +1,11 @@
+import { env } from "../config/env";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { RawOperativUppgift } from "../types";
 import { getUppgifterApiUrl } from "./apiUrls";
 import { transformUppgift } from "./transformUppgift";
 
 export async function getTilldeladeUppgifter() {
-  const mockHandlaggarId = import.meta.env.VITE_MOCK_HANDLAGGARE_ID;
+  const mockHandlaggarId = env.mockHandlaggareId;
   try {
     const response = await fetch(
       getUppgifterApiUrl(`/handlaggare/${mockHandlaggarId}`),

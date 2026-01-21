@@ -1,6 +1,7 @@
+import { env } from "../config/env";
 import { getApiBaseUrl } from "./apiUrls";
 
-const USE_API = import.meta.env.VITE_USE_API === "true";
+const USE_API = env.useApi;
 const API_BASE = getApiBaseUrl();
 
 export interface Uppgift {
