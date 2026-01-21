@@ -5,14 +5,22 @@ import federation from "@originjs/vite-plugin-federation";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     apimockPlugin([{ url: "/api", dir: "mock" }]),
     federation({
       name: "app",
       remotes: {
-        remoteApp: "http://localhost:3031/assets/remoteEntry.js",
-        exampleApp: "http://localhost:3033/assets/remoteEntry.js",
+        remoteApp:
+          mode === "production"
+            ? process.env.VITE_REMOTE_APP_URL ||
+              "http://localhost:3031/assets/remoteEntry.js"
+            : "http://localhost:3031/assets/remoteEntry.js",
+        exampleApp:
+          mode === "production"
+            ? process.env.VITE_EXAMPLE_APP_URL ||
+              "http://localhost:8083/assets/remoteEntry.js"
+            : "http://localhost:8083/assets/remoteEntry.js",
       },
       shared: ["vue", "@fkui/vue", "pinia"],
       exposes: {
@@ -34,4 +42,4 @@ export default defineConfig({
     },
     port: 3030,
   },
-});
+}));

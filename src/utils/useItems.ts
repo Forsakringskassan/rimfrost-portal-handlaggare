@@ -1,5 +1,7 @@
-const USE_API = false; // flip to true when backend is ready
-const API_BASE = "https://api.example.com"; // future
+import { getApiBaseUrl } from "./apiUrls";
+
+const USE_API = import.meta.env.VITE_USE_API === "true";
+const API_BASE = getApiBaseUrl();
 
 export interface Uppgift {
   fornamn: string;

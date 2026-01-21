@@ -1,17 +1,21 @@
 import { router } from "../router/index.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
 import type { OperativUppgiftItem } from "../types.js";
+import { getUppgifterApiUrl } from "./apiUrls.js";
 import { transformUppgift } from "./transformUppgift.js";
 
 export async function getNextUppgift() {
-  const mockHandlaggarId = "3f439f0d-a915-42cb-ba8f-6a4170c6011f";
+  const mockHandlaggarId = import.meta.env.VITE_MOCK_HANDLAGGARE_ID;
   try {
-    const response = await fetch(`/uppgifter/handlaggare/${mockHandlaggarId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      getUppgifterApiUrl(`/handlaggare/${mockHandlaggarId}`),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

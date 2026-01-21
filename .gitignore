@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 
 .__mf_temp/*
+
+.env
+.env.local
+.env.local
+.env.development
+.env.test
+.env.production
