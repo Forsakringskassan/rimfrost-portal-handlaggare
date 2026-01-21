@@ -14,3 +14,14 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// Module Federation remote module declarations
+declare module "exampleApp/ExempelKomponent" {
+  const component: import("vue").Component;
+  export default component;
+}
+
+declare module "remoteApp/VardAvHusdjur" {
+  const component: import("vue").Component;
+  export default component;
+}
