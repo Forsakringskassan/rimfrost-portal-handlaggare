@@ -1,21 +1,4 @@
-# Stage 1: Build the Vite app with Node
-FROM node:23-alpine AS builder
 
-WORKDIR /app
-
-ENV CI=true
-ENV HUSKY=0
-
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN apk add --no-cache git
-RUN npm ci
-
-# Copy application source
-COPY . .
-
-# Build the application
-RUN npm run build
 
 # Stage 2: Serve with Apache HTTP Server and inject runtime environment variables
 FROM httpd:latest
@@ -26,10 +9,10 @@ USER 0
 RUN rm -rf /usr/local/apache2/htdocs/*
 
 # Copy built app from builder stage
-COPY --from=builder /app/dist/ /usr/local/apache2/htdocs/
+COPY dist/ /usr/local/apache2/htdocs/
 
-# Copy the runtime environment variable injection script
-COPY env.sh /usr/local/bin/env.sh
+# Copy the runtime environment variable injection script from dist folder
+COPY dist/env.sh /usr/local/bin/env.sh
 
 # Make script executable and ensure Unix line endings
 RUN chmod +x /usr/local/bin/env.sh && \
