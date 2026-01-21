@@ -11,6 +11,23 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+
+      # Runtime environment variable injection configuration
+      # ASSET_DIR: Where the built files are located in the container
+      - ASSET_DIR=/usr/local/apache2/htdocs
+      # APP_PREFIX: Prefix used to identify which env vars to inject
+      - APP_PREFIX=RUNTIME_
+
+      # Application runtime environment variables
+      # These will replace the RUNTIME_* placeholders in the built JavaScript files
+      - RUNTIME_API_BASE_URL=https://api.production.example.com
+      - RUNTIME_UPPGIFTER_API_URL=https://uppgifter.production.example.com
+      - RUNTIME_REGEL_API_URL=https://regel.production.example.com
+      - RUNTIME_KUNDBEHOV_API_URL=https://kundbehov.production.example.com
+      - RUNTIME_REMOTE_APP_URL=https://cdn.production.example.com/remoteApp/remoteEntry.js
+      - RUNTIME_EXAMPLE_APP_URL=https://cdn.production.example.com/exampleApp/remoteEntry.js
+      - RUNTIME_MOCK_HANDLAGGARE_ID=469ddd20-6796-4e05-9e18-6a95953f6cb3
+      - RUNTIME_USE_API=true
     networks:
       - rimfrost-network
     healthcheck:

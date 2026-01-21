@@ -10,6 +10,7 @@ export default [
   {
     name: "Ignored files",
     ignores: [
+      "**/OppnadUppgift.vue",
       "**/coverage/**",
       "**/dist/**",
       "**/node_modules/**",
@@ -40,8 +41,14 @@ export default [
           devDependencies: true,
           packageDir: [
             path.dirname(fileURLToPath(import.meta.url)),
-            path.resolve(path.dirname(fileURLToPath(import.meta.url)), "packages/container"),
-            path.resolve(path.dirname(fileURLToPath(import.meta.url)), "packages/vardAvHusdjur"),
+            path.resolve(
+              path.dirname(fileURLToPath(import.meta.url)),
+              "packages/container",
+            ),
+            path.resolve(
+              path.dirname(fileURLToPath(import.meta.url)),
+              "packages/vardAvHusdjur",
+            ),
           ],
         },
       ],

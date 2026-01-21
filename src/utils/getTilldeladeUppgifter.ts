@@ -1,12 +1,14 @@
-import { env } from "../config/env";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { RawOperativUppgift } from "../types";
+import { getUppgifterApiUrl } from "./apiUrls";
 import { transformUppgift } from "./transformUppgift";
 
 export async function getTilldeladeUppgifter() {
-  const mockHandlaggarId = env.mockHandlaggareId;
+  const mockHandlaggarId = import.meta.env.VITE_MOCK_HANDLAGGARE_ID;
   try {
-    const response = await fetch(`/uppgifter/handlaggare/${mockHandlaggarId}`);
+    const response = await fetch(
+      getUppgifterApiUrl(`/handlaggare/${mockHandlaggarId}`),
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
