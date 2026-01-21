@@ -2,6 +2,16 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.1.1 (2026-01-21)
+
+### Features
+
+-  Testing versioning
+
+### Bug Fixes
+
+- None
+
 ## 0.1.0 (2026-01-21)
 
 ### Features
