@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.2.0 (2026-01-22)
+
+### Features
+
+-  bumpar version ([47e2b](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/47e2bbdb1f2eabf) hannahanen)  
+
 ## 0.1.1 (2026-01-22)
 
 ### Bug Fixes
