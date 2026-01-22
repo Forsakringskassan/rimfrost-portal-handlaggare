@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.2.1 (2026-01-22)
+
+### Bug Fixes
+
+-  bumpar version med ny dockerfil ([0fcf8](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/0fcf8f214fcc1d9) hannahanen)  
+
 ## 0.2.0 (2026-01-22)
 
 ### Features
