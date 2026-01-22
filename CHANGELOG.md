@@ -2,15 +2,39 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
-## 0.1.1 (2026-01-21)
-
-### Features
-
--  Testing versioning
+## 0.1.1 (2026-01-22)
 
 ### Bug Fixes
 
-- None
+-  uppdaterar Pom med version ([5c049](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/5c0490cedbd3e7f) hannahanen)  
+
+### Other changes
+
+**Update package.json**
+
+
+[08cca](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/08ccab19fff88df) hannahanen *2026-01-21 14:36:10*
+
+**testing changelog version**
+
+
+[e22e0](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/e22e0b53aaa016d) LisaWedin-Ductus *2026-01-21 14:17:45*
+
+**adds dist to build**
+
+
+[5d0ba](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/5d0ba7a2511a458) Lisa Wedin *2026-01-21 14:01:35*
+
+**Update and rename bundle-app-npm-ci.yaml to bundle-app-npm-ci-runtime-env.yaml**
+
+
+[35ca5](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/35ca5690f40cc92) hannahanen *2026-01-21 13:56:01*
+
+**ups version**
+
+
+[035e3](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/035e3945018a54c) LisaWedin-Ductus *2026-01-21 13:22:03*
+
 
 ## 0.1.0 (2026-01-21)
 
