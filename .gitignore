@@ -28,3 +28,6 @@ dist-ssr
 *.sw?
 
 .__mf_temp/*
+
+# Used while creating fallback BFF locally
+bff-fallback-responses.json

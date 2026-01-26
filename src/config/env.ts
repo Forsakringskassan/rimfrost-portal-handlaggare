@@ -24,68 +24,107 @@ interface EnvConfig {
 
   // Server Configuration
   port: number;
+
+  bffUrl: string;
 }
 
 /**
- * Get environment variable with fallback
+ * Get runtime environment variable value
  */
-function getEnv(key: string, defaultValue: string): string {
-  return import.meta.env[key] || defaultValue;
-}
-
-/**
- * Get boolean environment variable
- */
-function getBoolEnv(key: string, defaultValue: boolean): boolean {
-  const value = import.meta.env[key];
-  if (value === undefined || value === null) {
-    return defaultValue;
+function getRuntimeEnv(key: string): string | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- testing
+  const runtimeValue = (window as any)._env_?.[key];
+  // Only use runtime value if it exists, is not empty, and is not the placeholder key itself
+  if (runtimeValue && runtimeValue !== "" && runtimeValue !== key) {
+    return runtimeValue;
   }
-  return value === "true" || value === true;
+  return undefined;
 }
 
 /**
- * Get number environment variable
- */
-function getNumberEnv(key: string, defaultValue: number): number {
-  const value = import.meta.env[key];
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
-  return parseInt(value, 10);
-}
-
-/**
- * Centralized environment configuration
+ * Centralized environment configuration with runtime override support
  */
 export const env: EnvConfig = {
   // API URLs
-  apiBaseUrl: getEnv("VITE_API_BASE_URL", "https://api.example.com"),
-  uppgifterApiUrl: getEnv("VITE_UPPGIFTER_API_URL", "http://localhost:8889"),
-  regelApiUrl: getEnv("VITE_REGEL_API_URL", "http://localhost:8890"),
-  kundbehovApiUrl: getEnv("VITE_KUNDBEHOV_API_URL", "http://localhost:8888"),
+  get apiBaseUrl() {
+    return (
+      getRuntimeEnv("RUNTIME_API_BASE_URL") ||
+      import.meta.env.VITE_API_BASE_URL ||
+      "https://api.example.com"
+    );
+  },
+  get uppgifterApiUrl() {
+    return (
+      getRuntimeEnv("RUNTIME_UPPGIFTER_API_URL") ||
+      import.meta.env.VITE_UPPGIFTER_API_URL ||
+      "http://localhost:8889"
+    );
+  },
+  get regelApiUrl() {
+    return (
+      getRuntimeEnv("RUNTIME_REGEL_API_URL") ||
+      import.meta.env.VITE_REGEL_API_URL ||
+      "http://localhost:8890"
+    );
+  },
+  get kundbehovApiUrl() {
+    return (
+      getRuntimeEnv("RUNTIME_KUNDBEHOV_API_URL") ||
+      import.meta.env.VITE_KUNDBEHOV_API_URL ||
+      "http://localhost:8888"
+    );
+  },
 
   // Remote Module Federation URLs
-  remoteAppUrl: getEnv(
-    "VITE_REMOTE_APP_URL",
-    "http://localhost:3031/assets/remoteEntry.js",
-  ),
-  exampleAppUrl: getEnv(
-    "VITE_EXAMPLE_APP_URL",
-    "http://localhost:3033/assets/remoteEntry.js",
-  ),
+  get remoteAppUrl() {
+    return (
+      getRuntimeEnv("RUNTIME_REMOTE_APP_URL") ||
+      import.meta.env.VITE_REMOTE_APP_URL ||
+      "http://localhost:3031/assets/remoteEntry.js"
+    );
+  },
+  get exampleAppUrl() {
+    return (
+      getRuntimeEnv("RUNTIME_EXAMPLE_APP_URL") ||
+      import.meta.env.VITE_EXAMPLE_APP_URL ||
+      "http://localhost:3033/assets/remoteEntry.js"
+    );
+  },
 
   // Mock Handläggare ID
-  mockHandlaggareId: getEnv(
-    "VITE_MOCK_HANDLAGGARE_ID",
-    "469ddd20-6796-4e05-9e18-6a95953f6cb3",
-  ),
+  get mockHandlaggareId() {
+    return (
+      getRuntimeEnv("RUNTIME_MOCK_HANDLAGGARE_ID") ||
+      import.meta.env.VITE_MOCK_HANDLAGGARE_ID ||
+      "469ddd20-6796-4e05-9e18-6a95953f6cb3"
+    );
+  },
+
+  get bffUrl() {
+    return (
+      getRuntimeEnv("RUNTIME_BFF_URL") ||
+      import.meta.env.VITE_BFF_URL ||
+      "http://localhost:9001/"
+    );
+  },
 
   // Feature Flags
-  useApi: getBoolEnv("VITE_USE_API", false),
+  get useApi() {
+    const runtimeValue = getRuntimeEnv("RUNTIME_USE_API");
+    if (runtimeValue !== undefined) {
+      return runtimeValue === "true";
+    }
+    return import.meta.env.VITE_USE_API === "true" || false;
+  },
 
   // Server Configuration
-  port: getNumberEnv("VITE_PORT", 8080),
+  get port() {
+    const runtimeValue = getRuntimeEnv("RUNTIME_PORT");
+    if (runtimeValue !== undefined) {
+      return parseInt(runtimeValue, 10);
+    }
+    return parseInt(import.meta.env.VITE_PORT || "8080", 10);
+  },
 };
 
 /**
