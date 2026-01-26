@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { env } from "../config/env";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { RawOperativUppgift } from "../types";
+import { getUppgifterApiUrl } from "./apiUrls";
 import { transformUppgift } from "./transformUppgift";
 
 export async function getTilldeladeUppgifter() {
@@ -24,7 +25,7 @@ export async function getTilldeladeUppgifter() {
 
   async function fetchAssignedTasks() {
     const response = await fetch(
-      `${env.bffUrl}uppgifter/handlaggare/${env.mockHandlaggareId}`,
+      getUppgifterApiUrl(`/handlaggare/${env.mockHandlaggareId}`),
     );
 
     if (!response.ok) {

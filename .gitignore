@@ -31,3 +31,9 @@ dist-ssr
 
 # Used while creating fallback BFF locally
 bff-fallback-responses.json
+.env
+.env.local
+.env.local
+.env.development
+.env.test
+.env.production

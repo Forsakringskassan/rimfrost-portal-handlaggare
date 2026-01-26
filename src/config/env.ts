@@ -28,6 +28,27 @@ interface EnvConfig {
   bffUrl: string;
 }
 
+// Build-time environment variable values (Vite will replace these at build time)
+// const BUILD_API_BASE_URL =
+//   import.meta.env.VITE_API_BASE_URL || "https://api.example.com";
+// const BUILD_UPPGIFTER_API_URL =
+//   import.meta.env.VITE_UPPGIFTER_API_URL || "http://localhost:8889";
+// const BUILD_REGEL_API_URL =
+//   import.meta.env.VITE_REGEL_API_URL || "http://localhost:8890";
+// const BUILD_KUNDBEHOV_API_URL =
+//   import.meta.env.VITE_KUNDBEHOV_API_URL || "http://localhost:8888";
+// const BUILD_REMOTE_APP_URL =
+//   import.meta.env.VITE_REMOTE_APP_URL ||
+//   "http://localhost:3031/assets/remoteEntry.js";
+// const BUILD_EXAMPLE_APP_URL =
+//   import.meta.env.VITE_EXAMPLE_APP_URL ||
+//   "http://localhost:3033/assets/remoteEntry.js";
+// const BUILD_MOCK_HANDLAGGARE_ID =
+//   import.meta.env.VITE_MOCK_HANDLAGGARE_ID ||
+//   "469ddd20-6796-4e05-9e18-6a95953f6cb3";
+// const BUILD_USE_API = import.meta.env.VITE_USE_API === "true";
+// const BUILD_PORT = parseInt(import.meta.env.VITE_PORT || "8080", 10);
+
 /**
  * Get runtime environment variable value
  */

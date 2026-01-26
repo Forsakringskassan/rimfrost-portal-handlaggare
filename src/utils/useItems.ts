@@ -1,7 +1,8 @@
 import { env } from "../config/env";
+import { getApiBaseUrl } from "./apiUrls";
 
 const USE_API = env.useApi;
-const API_BASE = env.apiBaseUrl;
+const API_BASE = getApiBaseUrl();
 
 export interface Uppgift {
   fornamn: string;

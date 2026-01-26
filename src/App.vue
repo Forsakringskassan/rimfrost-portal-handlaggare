@@ -5,8 +5,11 @@ import {
   FLayoutLeftPanel,
   FPageHeader,
 } from "@fkui/vue";
+import { useRouter } from "vue-router";
 import IdList from "./components/UppgiftLista.vue";
 import { getNextUppgift } from "./utils/getNextUppgift";
+
+const router = useRouter();
 </script>
 
 <template>
@@ -15,7 +18,7 @@ import { getNextUppgift } from "./utils/getNextUppgift";
       <f-page-header skip-link="main-title">
         <div
           style="cursor: pointer; font-weight: bold; font-size: 1.25rem"
-          @click="$router.push('/')"
+          @click="router.push('/')"
         >
           Rimfrost Demoapp
         </div>
