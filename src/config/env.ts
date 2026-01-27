@@ -24,28 +24,30 @@ interface EnvConfig {
 
   // Server Configuration
   port: number;
+
+  bffUrl: string;
 }
 
 // Build-time environment variable values (Vite will replace these at build time)
-const BUILD_API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://api.example.com";
-const BUILD_UPPGIFTER_API_URL =
-  import.meta.env.VITE_UPPGIFTER_API_URL || "http://localhost:8889";
-const BUILD_REGEL_API_URL =
-  import.meta.env.VITE_REGEL_API_URL || "http://localhost:8890";
-const BUILD_KUNDBEHOV_API_URL =
-  import.meta.env.VITE_KUNDBEHOV_API_URL || "http://localhost:8888";
-const BUILD_REMOTE_APP_URL =
-  import.meta.env.VITE_REMOTE_APP_URL ||
-  "http://localhost:3031/assets/remoteEntry.js";
-const BUILD_EXAMPLE_APP_URL =
-  import.meta.env.VITE_EXAMPLE_APP_URL ||
-  "http://localhost:3033/assets/remoteEntry.js";
-const BUILD_MOCK_HANDLAGGARE_ID =
-  import.meta.env.VITE_MOCK_HANDLAGGARE_ID ||
-  "469ddd20-6796-4e05-9e18-6a95953f6cb3";
-const BUILD_USE_API = import.meta.env.VITE_USE_API === "true";
-const BUILD_PORT = parseInt(import.meta.env.VITE_PORT || "8080", 10);
+// const BUILD_API_BASE_URL =
+//   import.meta.env.VITE_API_BASE_URL || "https://api.example.com";
+// const BUILD_UPPGIFTER_API_URL =
+//   import.meta.env.VITE_UPPGIFTER_API_URL || "http://localhost:8889";
+// const BUILD_REGEL_API_URL =
+//   import.meta.env.VITE_REGEL_API_URL || "http://localhost:8890";
+// const BUILD_KUNDBEHOV_API_URL =
+//   import.meta.env.VITE_KUNDBEHOV_API_URL || "http://localhost:8888";
+// const BUILD_REMOTE_APP_URL =
+//   import.meta.env.VITE_REMOTE_APP_URL ||
+//   "http://localhost:3031/assets/remoteEntry.js";
+// const BUILD_EXAMPLE_APP_URL =
+//   import.meta.env.VITE_EXAMPLE_APP_URL ||
+//   "http://localhost:3033/assets/remoteEntry.js";
+// const BUILD_MOCK_HANDLAGGARE_ID =
+//   import.meta.env.VITE_MOCK_HANDLAGGARE_ID ||
+//   "469ddd20-6796-4e05-9e18-6a95953f6cb3";
+// const BUILD_USE_API = import.meta.env.VITE_USE_API === "true";
+// const BUILD_PORT = parseInt(import.meta.env.VITE_PORT || "8080", 10);
 
 /**
  * Get runtime environment variable value
@@ -66,34 +68,64 @@ function getRuntimeEnv(key: string): string | undefined {
 export const env: EnvConfig = {
   // API URLs
   get apiBaseUrl() {
-    return getRuntimeEnv("RUNTIME_API_BASE_URL") || BUILD_API_BASE_URL;
+    return (
+      getRuntimeEnv("RUNTIME_API_BASE_URL") ||
+      import.meta.env.VITE_API_BASE_URL ||
+      "https://api.example.com"
+    );
   },
   get uppgifterApiUrl() {
     return (
-      getRuntimeEnv("RUNTIME_UPPGIFTER_API_URL") || BUILD_UPPGIFTER_API_URL
+      getRuntimeEnv("RUNTIME_UPPGIFTER_API_URL") ||
+      import.meta.env.VITE_UPPGIFTER_API_URL ||
+      "http://localhost:8889"
     );
   },
   get regelApiUrl() {
-    return getRuntimeEnv("RUNTIME_REGEL_API_URL") || BUILD_REGEL_API_URL;
+    return (
+      getRuntimeEnv("RUNTIME_REGEL_API_URL") ||
+      import.meta.env.VITE_REGEL_API_URL ||
+      "http://localhost:8890"
+    );
   },
   get kundbehovApiUrl() {
     return (
-      getRuntimeEnv("RUNTIME_KUNDBEHOV_API_URL") || BUILD_KUNDBEHOV_API_URL
+      getRuntimeEnv("RUNTIME_KUNDBEHOV_API_URL") ||
+      import.meta.env.VITE_KUNDBEHOV_API_URL ||
+      "http://localhost:8888"
     );
   },
 
   // Remote Module Federation URLs
   get remoteAppUrl() {
-    return getRuntimeEnv("RUNTIME_REMOTE_APP_URL") || BUILD_REMOTE_APP_URL;
+    return (
+      getRuntimeEnv("RUNTIME_REMOTE_APP_URL") ||
+      import.meta.env.VITE_REMOTE_APP_URL ||
+      "http://localhost:3031/assets/remoteEntry.js"
+    );
   },
   get exampleAppUrl() {
-    return getRuntimeEnv("RUNTIME_EXAMPLE_APP_URL") || BUILD_EXAMPLE_APP_URL;
+    return (
+      getRuntimeEnv("RUNTIME_EXAMPLE_APP_URL") ||
+      import.meta.env.VITE_EXAMPLE_APP_URL ||
+      "http://localhost:3033/assets/remoteEntry.js"
+    );
   },
 
   // Mock Handläggare ID
   get mockHandlaggareId() {
     return (
-      getRuntimeEnv("RUNTIME_MOCK_HANDLAGGARE_ID") || BUILD_MOCK_HANDLAGGARE_ID
+      getRuntimeEnv("RUNTIME_MOCK_HANDLAGGARE_ID") ||
+      import.meta.env.VITE_MOCK_HANDLAGGARE_ID ||
+      "469ddd20-6796-4e05-9e18-6a95953f6cb3"
+    );
+  },
+
+  get bffUrl() {
+    return (
+      getRuntimeEnv("RUNTIME_BFF_URL") ||
+      import.meta.env.VITE_BFF_URL ||
+      "http://localhost:9001/"
     );
   },
 
@@ -103,7 +135,7 @@ export const env: EnvConfig = {
     if (runtimeValue !== undefined) {
       return runtimeValue === "true";
     }
-    return BUILD_USE_API;
+    return import.meta.env.VITE_USE_API === "true" || false;
   },
 
   // Server Configuration
@@ -112,7 +144,7 @@ export const env: EnvConfig = {
     if (runtimeValue !== undefined) {
       return parseInt(runtimeValue, 10);
     }
-    return BUILD_PORT;
+    return parseInt(import.meta.env.VITE_PORT || "8080", 10);
   },
 };
 

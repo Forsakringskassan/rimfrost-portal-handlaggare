@@ -1,3 +1,4 @@
+import { ref } from "vue";
 import { env } from "../config/env";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { RawOperativUppgift } from "../types";
@@ -5,10 +6,26 @@ import { getUppgifterApiUrl } from "./apiUrls";
 import { transformUppgift } from "./transformUppgift";
 
 export async function getTilldeladeUppgifter() {
-  const mockHandlaggarId = env.mockHandlaggareId;
+  const loading = ref(false);
+  const tasks = ref();
+  const store = useProductStore();
+
   try {
+    loading.value = true;
+    const data = await fetchAssignedTasks();
+    tasks.value = data;
+  } catch (error) {
+    console.error("Error loading tasks:", error);
+  } finally {
+    loading.value = false;
+    store.setUppgiftLista(
+      tasks.value.map((item: RawOperativUppgift) => transformUppgift(item)),
+    );
+  }
+
+  async function fetchAssignedTasks() {
     const response = await fetch(
-      getUppgifterApiUrl(`/handlaggare/${mockHandlaggarId}`),
+      getUppgifterApiUrl(`/handlaggare/${env.mockHandlaggareId}`),
     );
 
     if (!response.ok) {
@@ -16,14 +33,6 @@ export async function getTilldeladeUppgifter() {
     }
 
     const data = await response.json();
-    const store = useProductStore();
-
-    const transformedUppgifter = data.operativa_uppgifter.map(
-      (item: RawOperativUppgift) => transformUppgift(item),
-    );
-
-    store.setUppgiftLista(transformedUppgifter);
-  } catch (error) {
-    console.error("Error fetching next uppgift:", error);
+    return data.operativa_uppgifter;
   }
 }
