@@ -35,3 +35,5 @@ dist-ssr
 .env.development
 .env.test
 .env.production
+
+.bff-fallback-responses.json
