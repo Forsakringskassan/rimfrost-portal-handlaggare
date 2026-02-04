@@ -1,26 +1,27 @@
+/* eslint-disable import/no-unresolved -- with module federation */
 /**
- * Dynamically load a remote module from a given URL
+ * Dynamically load a remote module using a route key
  * Works with originjs/vite-plugin-federation
- * @param remoteUrl - The URL of the remote module
- * @param moduleName - The name of the module to load
  */
 
-export async function loadRemoteModule(remoteUrl: string, moduleName: string) {
+// const isDev = import.meta.env.MODE === "development";
+
+export async function loadRemoteModule(
+  path: string,
+  kundbehovsflodeId: string,
+  moduleName: string,
+) {
   try {
-    const url = new URL(remoteUrl);
-    const remoteEntryUrl = `${url.origin}/assets/remoteEntry.js`;
+    console.log(`Loading remote module for path: ${path}`);
+    console.log(`KundbehovsflodeId: ${kundbehovsflodeId}`);
+    console.log(`ModuleName: ${moduleName}`);
 
-    const remoteContainer = await import(/* @vite-ignore */ remoteEntryUrl);
-
-    const moduleFactory = await remoteContainer.get(moduleName);
-    const module = moduleFactory();
+    // Use the pre-configured remote from vite.config
+    const module = await import("remoteApp/VardAvHusdjur");
 
     return module.default || module;
   } catch (error) {
-    console.error(
-      `Error loading remote module ${moduleName} from ${remoteUrl}:`,
-      error,
-    );
+    console.error(`Error loading remote module for path: ${path}`, error);
     throw error;
   }
 }

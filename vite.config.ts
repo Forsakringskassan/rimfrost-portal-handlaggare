@@ -11,16 +11,7 @@ export default defineConfig(({ mode }) => ({
     federation({
       name: "app",
       remotes: {
-        remoteApp:
-          mode === "production"
-            ? process.env.VITE_REMOTE_APP_URL ||
-              "http://localhost:3031/assets/remoteEntry.js"
-            : "http://localhost:3031/assets/remoteEntry.js",
-        exampleApp:
-          mode === "production"
-            ? process.env.VITE_EXAMPLE_APP_URL ||
-              "http://localhost:8083/assets/remoteEntry.js"
-            : "http://localhost:8083/assets/remoteEntry.js",
+        remoteApp: "http://localhost:3031/assets/remoteEntry.js",
       },
       shared: ["vue", "@fkui/vue", "pinia"],
       exposes: {

@@ -38,3 +38,21 @@ All build-time `VITE_*` variables can be overridden at runtime by using the `RUN
 1. At build time, Vite embeds `VITE_*` environment variables into the bundle
 2. At runtime, the `env.sh` script creates a `runtime-config.js` file with `RUNTIME_*` variables
 3. The application checks `window._env_` for runtime values before falling back to build-time values
+
+## Adding a New Micro Frontend
+
+1. Add your configuration to `public/route-manifest.json`:
+
+{
+  "your-route-key": {
+    "name": "yourAppName",
+    "dev_url": "http://localhost:YOUR_PORT",
+    "prod_url": "https://your-prod-url.example.com",
+    "moduleName": "./YourComponent",
+    "description": "What your MFE does"
+  }
+}
+
+2. Ensure your MFE exposes the component in its Module Federation config
+3. Backend team: Use "your-route-key" in the regeltyp_key field
+

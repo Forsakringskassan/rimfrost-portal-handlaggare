@@ -11,7 +11,7 @@ export interface RawOperativUppgift {
   beskrivning: string;
   verksamhetslogik: string;
   roll: string;
-  url: string;
+  path: string;
 }
 
 export interface OperativUppgiftItem {
@@ -27,7 +27,7 @@ export interface OperativUppgiftItem {
   beskrivning: string;
   verksamhetslogik: string;
   roll: string;
-  url: string;
+  path: string;
 }
 
 export interface AlternativesModel {
