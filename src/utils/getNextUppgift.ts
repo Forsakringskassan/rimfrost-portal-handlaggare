@@ -30,11 +30,11 @@ export async function getNextUppgift() {
     const exists = uppgiftLista.find(
       (item: OperativUppgiftItem) => item.uppgiftId === uppgift.uppgiftId,
     );
+
     if (!exists) {
       const newUppgiftLista = [...uppgiftLista, uppgift];
       store.setUppgiftLista(newUppgiftLista);
       goToItem(data.uppgift);
-      return;
     }
   } catch (error) {
     console.error("Error fetching next uppgift:", error);
