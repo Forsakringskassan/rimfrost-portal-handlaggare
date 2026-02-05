@@ -16,6 +16,6 @@ export function transformUppgift(
     beskrivning: rawOperativUppgift.beskrivning,
     verksamhetslogik: rawOperativUppgift.verksamhetslogik,
     roll: rawOperativUppgift.roll,
-    path: rawOperativUppgift.path,
+    url: rawOperativUppgift.url,
   };
 }
