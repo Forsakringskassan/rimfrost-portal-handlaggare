@@ -5,9 +5,9 @@ import federation from "@originjs/vite-plugin-federation";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   plugins: [
-    apimockPlugin([{ url: "/api", dir: "mock" }]),
+    apimockPlugin([{ url: "/api/uppgifter", dir: "mock" }]),
     federation({
       name: "app",
       remotes: {
@@ -28,8 +28,9 @@ export default defineConfig(({ mode }) => ({
   },
   server: {
     proxy: {
+      "/api/regel": "http://localhost:9002",
       "/uppgifter": "http://localhost:8889",
-      "/regel": "http://localhost:8890",
+      "/regel": "http://localhost:9002",
     },
     port: 3030,
   },
