@@ -37,3 +37,6 @@ bff-fallback-responses.json
 .env.development
 .env.test
 .env.production
+
+.bff-fallback-responses.json
+.__mf__temp

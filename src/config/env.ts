@@ -14,7 +14,6 @@ interface EnvConfig {
 
   // Remote Module Federation URLs
   remoteAppUrl: string;
-  exampleAppUrl: string;
 
   // Mock Handläggare ID
   mockHandlaggareId: string;
@@ -102,13 +101,6 @@ export const env: EnvConfig = {
       getRuntimeEnv("RUNTIME_REMOTE_APP_URL") ||
       import.meta.env.VITE_REMOTE_APP_URL ||
       "http://localhost:3031/assets/remoteEntry.js"
-    );
-  },
-  get exampleAppUrl() {
-    return (
-      getRuntimeEnv("RUNTIME_EXAMPLE_APP_URL") ||
-      import.meta.env.VITE_EXAMPLE_APP_URL ||
-      "http://localhost:3033/assets/remoteEntry.js"
     );
   },
 

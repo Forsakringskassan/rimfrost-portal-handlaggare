@@ -1,7 +1,7 @@
 import { env } from "../config/env";
 
 export function getUppgifterApiUrl(path: string): string {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env.MODE === "development";
   if (isDev) {
     return `/uppgifter${path}`;
   }
@@ -10,7 +10,7 @@ export function getUppgifterApiUrl(path: string): string {
 }
 
 export function getRegelApiUrl(path: string): string {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env.MODE === "development";
   if (isDev) {
     return `/regel${path}`;
   }
@@ -19,7 +19,7 @@ export function getRegelApiUrl(path: string): string {
 }
 
 export function getKundbehovApiUrl(path: string): string {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env.MODE === "development";
   if (isDev) {
     // Add proxy if needed in vite.config.ts
     const baseUrl = env.kundbehovApiUrl;
