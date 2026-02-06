@@ -29,6 +29,43 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Thi
 - Node.js (version 18 or higher recommended)
 - npm or yarn
 
+## System Architecture
+
+### Communication Flow
+
+This is the **Host Frontend** in a micro-frontend architecture with the following communication flow:
+
+```
+[Host FE] ←→ [Portal BFF] ←→ [Backend Services]
+    ↓
+[Micro FE (RTF Manual)] ←→ [Rule BFF] ←→ [Backend Services]
+```
+
+**Data Flow:**
+
+1. Host FE loads task list from Portal BFF (`/uppgifter/handlaggare/:id`)
+2. User selects a task → Host FE loads appropriate Micro FE via Module Federation
+3. Micro FE receives `kundbehovsflodeId` and `regeltyp` as props
+4. Micro FE calls its dedicated Rule BFF (`/api/regel/rtf-manuell/:id`)
+5. Each BFF handles backend communication with automatic fallback to mock data
+
+### Fallback System
+
+**Unified Fallback Strategy:**
+
+- All backend communication happens through BFFs
+- BFFs automatically fall back to mock data when backends are unavailable
+- Frontends never directly handle fallback logic
+- Development mode: Auto-fallback enabled
+- Production mode: Fallback disabled (fail fast)
+
+**Environment Configuration:**
+Both BFFs respect these environment variables:
+
+- `BACKEND_BASE_URL`: Target backend service URL
+- `FALLBACK_MODE`: `auto` | `always` | `never`
+- `FALLBACK_TIMEOUT_MS`: Request timeout before fallback
+
 ## Getting Started
 
 ### Installation
@@ -52,6 +89,27 @@ npm run dev
 The application will be available at `http://localhost:3030` (configurable via `VITE_PORT` environment variable).
 
 ### Build
+
+1. At build time, Vite embeds `VITE_*` environment variables into the bundle
+2. At runtime, the `env.sh` script creates a `runtime-config.js` file with `RUNTIME_*` variables
+3. The application checks `window._env_` for runtime values before falling back to build-time values
+
+## Adding a New Micro Frontend
+
+1. Add your configuration to `public/route-manifest.json`:
+
+{
+"your-route-key": {
+"name": "yourAppName",
+"dev_url": "http://localhost:YOUR_PORT",
+"prod_url": "https://your-prod-url.example.com",
+"moduleName": "./YourComponent",
+"description": "What your MFE does"
+}
+}
+
+2. Ensure your MFE exposes the component in its Module Federation config
+3. Backend team: Use "your-route-key" in the regeltyp_key field
 
 ```bash
 # Build for production
