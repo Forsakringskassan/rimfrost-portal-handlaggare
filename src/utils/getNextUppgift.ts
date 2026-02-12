@@ -1,15 +1,13 @@
-import { env } from "../config/env.js";
 import { router } from "../router/index.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
 import type { OperativUppgiftItem } from "../types.js";
-import { getUppgifterApiUrl } from "./apiUrls.js";
 import { transformUppgift } from "./transformUppgift.js";
 
 export async function getNextUppgift() {
-  const mockHandlaggarId = env.mockHandlaggareId;
+  const mockHandlaggarId = import.meta.env.VITE_MOCK_HANDLAGGARE_ID;
   try {
     const response = await fetch(
-      getUppgifterApiUrl(`/handlaggare/${mockHandlaggarId}`),
+      `${import.meta.env.VITE_BFF_URL}/uppgifter/handlaggare/${mockHandlaggarId}`,
       {
         method: "POST",
         headers: {
