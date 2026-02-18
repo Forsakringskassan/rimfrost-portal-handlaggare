@@ -26,7 +26,7 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Thi
 
 ## Prerequisites
 
-- Node.js (version 18 or higher recommended)
+- Node.js (version 18 or higher recommended).
 - npm or yarn
 
 ## System Architecture
