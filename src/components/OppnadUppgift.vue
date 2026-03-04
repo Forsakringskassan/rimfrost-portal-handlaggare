@@ -29,7 +29,7 @@ const regeltyp = computed(() => {
   return url.startsWith("/") ? url.slice(1) : url;
 });
 
-async function loadComponent(url: string, kundbehovsflodeIdValue: string) {
+async function loadComponent() {
   isLoading.value = true;
   error.value = null;
 
@@ -47,8 +47,7 @@ watch(
   currentUppgift,
   (uppgift) => {
     if (uppgift && kundbehovsflodeId.value) {
-      const url = (uppgift as any).url || "regel/rtf-manuell";
-      loadComponent(url, kundbehovsflodeId.value);
+      loadComponent();
     }
     componentKey.value++;
   },
