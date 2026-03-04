@@ -4,15 +4,24 @@ import { vitePlugin as apimockPlugin } from "@forsakringskassan/apimock-express"
 import federation from "@originjs/vite-plugin-federation";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
+import routeManifest from "./public/route-manifest.json";
+
+const isProd = process.env.NODE_ENV === "production";
+
+const remotes = Object.values(routeManifest.routes).reduce(
+  (acc, entry) => {
+    acc[entry.scope] = `${isProd ? entry.prodEntry : entry.devEntry}`;
+    return acc;
+  },
+  {} as Record<string, string>,
+);
 
 export default defineConfig(() => ({
   plugins: [
     apimockPlugin([{ url: "/api/uppgifter", dir: "mock" }]),
     federation({
       name: "app",
-      remotes: {
-        remoteApp: "http://localhost:3031/assets/remoteEntry.js",
-      },
+      remotes,
       shared: ["vue", "@fkui/vue", "pinia"],
       exposes: {
         "./pinia": "./src/pinia.ts",

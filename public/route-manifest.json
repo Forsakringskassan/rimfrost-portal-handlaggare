@@ -1,20 +1,16 @@
 {
   "routes": {
     "rtf-manuell": {
-      "name": "remoteApp",
-      "devUrl": "http://localhost:3031",
-      "prodUrl": "https://cdn.production.example.com",
-      "moduleName": "./VardAvHusdjur",
-      "description": "Hämtar VAH micro fe"
+      "scope": "remoteApp",
+      "module": "VardAvHusdjur",
+      "devEntry": "http://localhost:3031/assets/remoteEntry.js",
+      "prodEntry": "https://cdn.example.com/rtf-manuell/remoteEntry.js"
     },
     "exempel": {
-      "name": "exampleApp",
-      "dev_url": "http://localhost:8083",
-      "prod_url": "https://prod-example.example.com",
-      "moduleName": "./ExempelKomponent",
-      "description": "Example component"
+      "scope": "remoteExample",
+      "module": "ExempelKomponent",
+      "devEntry": "http://localhost:8083/assets/remoteEntry.js",
+      "prodEntry": "https://cdn.example.com/exempel/remoteEntry.js"
     }
-  },
-  "version": "0.0.1",
-  "lastUpdated": "2024-01-28"
+  }
 }
