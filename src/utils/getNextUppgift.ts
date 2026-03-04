@@ -4,10 +4,11 @@ import type { OperativUppgiftItem } from "../types.js";
 import { transformUppgift } from "./transformUppgift.js";
 
 export async function getNextUppgift() {
-  const mockHandlaggarId = import.meta.env.VITE_MOCK_HANDLAGGARE_ID;
+  const mockHandlaggarId = import.meta.env.VITE_MOCK_HANDLAGGARE_ID ?? "";
+  const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BFF_URL}/uppgifter/handlaggare/${mockHandlaggarId}`,
+      `${bffUrl}/uppgifter/handlaggare/${mockHandlaggarId}`,
       {
         method: "POST",
         headers: {

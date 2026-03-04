@@ -24,25 +24,17 @@ const currentUppgift = computed(() => {
 });
 
 const regeltyp = computed(() => {
-  return (currentUppgift.value as any)?.url || "regel/rtf-manuell";
+  const url = (currentUppgift.value as any)?.url || "regel/rtf-manuell";
+  // Remove leading slash if present to avoid double slashes in API paths
+  return url.startsWith("/") ? url.slice(1) : url;
 });
 
-async function loadComponent(url: string, kundbehovsflodeIdValue: string) {
-  console.log(
-    "Loading component for url:",
-    url,
-    "and kundbehovsflodeId:",
-    kundbehovsflodeIdValue,
-  );
+async function loadComponent() {
   isLoading.value = true;
   error.value = null;
 
   try {
-    const component = await loadRemoteModule(
-      url,
-      kundbehovsflodeIdValue,
-      "./VardAvHusdjur",
-    );
+    const component = await loadRemoteModule("rtf-manuell");
     RemoteComponent.value = component;
   } catch (err) {
     error.value = `Failed to load component: ${err}`;
@@ -55,9 +47,7 @@ watch(
   currentUppgift,
   (uppgift) => {
     if (uppgift && kundbehovsflodeId.value) {
-      const url = (uppgift as any).url || "regel/rtf-manuell";
-      console.log("Uppgift found, loading component for url:", url);
-      loadComponent(url, kundbehovsflodeId.value);
+      loadComponent();
     }
     componentKey.value++;
   },

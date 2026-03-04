@@ -16,14 +16,17 @@ export async function getTilldeladeUppgifter() {
     console.error("Error loading tasks:", error);
   } finally {
     loading.value = false;
-    store.setUppgiftLista(
-      tasks.value.map((item: RawOperativUppgift) => transformUppgift(item)),
-    );
+    if (tasks.value) {
+      store.setUppgiftLista(
+        tasks.value.map((item: RawOperativUppgift) => transformUppgift(item)),
+      );
+    }
   }
 
   async function fetchAssignedTasks() {
+    const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
     const response = await fetch(
-      `${import.meta.env.VITE_BFF_URL}/uppgifter/handlaggare/${import.meta.env.VITE_MOCK_HANDLAGGARE_ID}`,
+      `${bffUrl}/uppgifter/handlaggare/${import.meta.env.VITE_MOCK_HANDLAGGARE_ID}`,
     );
 
     if (!response.ok) {

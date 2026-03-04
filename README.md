@@ -9,7 +9,6 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Thi
 - **Module Federation** - Micro-frontend architecture supporting remote applications
 - **FK UI Components** - Built with Försäkringskassan's design system (@fkui/vue)
 - **Type Safety** - Full TypeScript support with strict type checking
-- **Mock API** - Built-in API mocking for development
 - **State Management** - Pinia for reactive state management
 - **Routing** - Vue Router for navigation
 
@@ -22,7 +21,6 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Thi
 - **Vue Router** - Official router for Vue.js
 - **Module Federation** - Micro-frontend architecture via @originjs/vite-plugin-federation
 - **FKUI Design System** - Försäkringskassan's UI component library
-- **SCSS** - Advanced styling capabilities
 
 ## Prerequisites
 
@@ -48,23 +46,6 @@ This is the **Host Frontend** in a micro-frontend architecture with the followin
 3. Micro FE receives `kundbehovsflodeId` and `regeltyp` as props
 4. Micro FE calls its dedicated Rule BFF (`/api/regel/rtf-manuell/:id`)
 5. Each BFF handles backend communication with automatic fallback to mock data
-
-### Fallback System
-
-**Unified Fallback Strategy:**
-
-- All backend communication happens through BFFs
-- BFFs automatically fall back to mock data when backends are unavailable
-- Frontends never directly handle fallback logic
-- Development mode: Auto-fallback enabled
-- Production mode: Fallback disabled (fail fast)
-
-**Environment Configuration:**
-Both BFFs respect these environment variables:
-
-- `BACKEND_BASE_URL`: Target backend service URL
-- `FALLBACK_MODE`: `auto` | `always` | `never`
-- `FALLBACK_TIMEOUT_MS`: Request timeout before fallback
 
 ## Getting Started
 
@@ -94,22 +75,74 @@ The application will be available at `http://localhost:3030` (configurable via `
 2. At runtime, the `env.sh` script creates a `runtime-config.js` file with `RUNTIME_*` variables
 3. The application checks `window._env_` for runtime values before falling back to build-time values
 
-## Adding a New Micro Frontend
+## Module Federation (Micro Frontends)
 
-1. Add your configuration to `public/route-manifest.json`:
+### Dynamic Remote Loading
 
+This app uses **Module Federation** to dynamically load micro frontends based on task data. The system is fully data-driven—each task carries a `url` field that points to a registered micro frontend entry.
+
+### How It Works
+
+1. **Task arrives with a `url` field** (e.g., `"url": "rtf-manuell"`)
+2. **Host loads manifest** from `public/route-manifest.json` to look up the remote's scope, module, and entry URLs
+3. **Host calls `loadRemoteModule()`** with the route key → loads the remote entry script and imports the module
+4. **Micro frontend renders** with props: `kundbehovsflodeId` and `regeltyp`
+
+### Adding a New Micro Frontend
+
+Follow these three steps to register a new remote:
+
+#### Step 1: Register in `public/route-manifest.json`
+
+```json
 {
-"your-route-key": {
-"name": "yourAppName",
-"dev_url": "http://localhost:YOUR_PORT",
-"prod_url": "https://your-prod-url.example.com",
-"moduleName": "./YourComponent",
-"description": "What your MFE does"
+  "routes": {
+    "your-route-key": {
+      "scope": "yourRemoteApp",
+      "module": "YourComponent",
+      "devEntry": "http://localhost:YOUR_PORT/assets/remoteEntry.js",
+      "prodEntry": "https://your-prod-url.example.com/assets/remoteEntry.js"
+    }
+  }
 }
-}
+```
 
-2. Ensure your MFE exposes the component in its Module Federation config
-3. Backend team: Use "your-route-key" in the regeltyp_key field
+- **scope**: The Module Federation container name (must match your remote's `federation({ name: ... })`)
+- **module**: The exposed component path (e.g., `"./YourComponent"`)
+- **devEntry**: Dev server remote entry URL
+- **prodEntry**: Production remote entry URL
+
+#### Step 2: Update `vite.config.ts` remotes map
+
+The remotes map is auto-generated from the manifest:
+
+```typescript
+const remotes = Object.entries(routeManifest.routes).reduce(
+  (acc, [key, entry]) => {
+    acc[entry.scope] = `${isProd ? entry.prodEntry : entry.devEntry}`;
+    return acc;
+  },
+  {} as Record<string, string>,
+);
+```
+
+This runs automatically at build time, so you don't need to manually edit it.
+
+#### Step 3: Add to `src/utils/loadRemoteModule.ts` importer lookup
+
+```typescript
+const remoteImporters: Record<string, () => Promise<any>> = {
+  "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
+  "your-route-key": () => import("yourRemoteApp/YourComponent"),
+};
+```
+
+Add your route key and the corresponding import statement. The import path must follow the pattern `${scope}/${module}` from your manifest.
+
+#### Step 4: Backend/BFF updates
+
+- Have the backend set the task's `url` field to your route key (e.g., `"url": "your-route-key"`)
+- Ensure your micro frontend has a similar structure to `rimfrost-regel-rtf-manuell-fe`, accepting `kundbehovsflodeId` and `regeltyp` props
 
 ```bash
 # Build for production
@@ -142,59 +175,99 @@ The project uses environment variables for configuration. See [ENV_SETUP.md](ENV
 ### Key Environment Variables
 
 - `VITE_PORT` - Development server port (default: 3030)
-- `VITE_UPPGIFTER_API_URL` - Uppgifter service URL
-- `VITE_REGEL_API_URL` - Regel service URL
-- `VITE_REMOTE_APP_URL` - Remote module federation URL
-- `VITE_EXAMPLE_APP_URL` - Example app module federation URL
-- `VITE_USE_API` - Toggle between mock and real API
+- `VITE_BFF_URL` - Portal BFF base URL (must start with `/` for relative or `http://` for absolute)
+- `VITE_MOCK_HANDLAGGARE_ID` - Mock handler ID for development
+
+Micro frontend entry URLs are configured in `public/route-manifest.json` under `devEntry` and `prodEntry`, not via environment variables. This allows changing remotes without rebuilding the host.
 
 See [ENV_SETUP.md](ENV_SETUP.md) for the complete list of available variables.
 
 ## Project Structure
 
 ```
-rimfrost-fe/
+rimfrost-portal-handlaggare/
 ├── src/
-│   ├── components/        # Vue components
-│   │   ├── AppLank.vue
-│   │   ├── HuvudytaUppgift.vue
-│   │   ├── IngenUppgiftVald.vue
-│   │   ├── OppnadUppgift.vue
-│   │   └── UppgiftLista.vue
-│   ├── router/           # Vue Router configuration
-│   ├── stores/           # Pinia stores
-│   ├── utils/            # Utility functions
-│   ├── config/           # Configuration files
-│   ├── assets/           # Static assets and mock data
-│   ├── App.vue           # Root component
-│   ├── main.ts           # Application entry point
-│   ├── pinia.ts          # Pinia store setup
-│   └── types.ts          # TypeScript type definitions
-├── mock/                 # API mock responses
-├── public/               # Public static assets
-├── vite.config.ts        # Vite configuration
-└── package.json          # Dependencies and scripts
+│   ├── components/
+│   │   ├── HuvudytaUppgift.vue      # Page header component
+│   │   ├── IngenUppgiftVald.vue     # Empty state view
+│   │   ├── OppnadUppgift.vue        # Micro FE loader & container
+│   │   └── UppgiftLista.vue         # Task list navigation
+│   ├── router/                      # Vue Router configuration
+│   ├── stores/                      # Pinia stores (task list)
+│   ├── utils/
+│   │   ├── loadRemoteModule.ts      # Dynamic MFE loader
+│   │   ├── getTilldeladeUppgifter.ts # Fetch assigned tasks
+│   │   ├── getNextUppgift.ts        # Fetch next task
+│   │   └── transformUppgift.ts      # Data transformation
+│   ├── config/
+│   │   └── remoteRegistry.ts        # MFE manifest loader
+│   ├── App.vue                      # Root layout
+│   ├── main.ts                      # Entry point
+│   ├── pinia.ts                     # Store setup
+│   └── types.ts                     # Type definitions
+├── public/
+│   └── route-manifest.json          # MFE registry (scope, module, entry URLs)
+├── mock/                            # API mock responses
+├── vite.config.ts                   # Vite & Module Federation config
+└── package.json                     # Dependencies & scripts
 ```
 
-## Module Federation
+### Key Files
 
-This application uses Module Federation to support micro-frontend architecture:
+- **`public/route-manifest.json`**: Central registry of all available micro frontends
+- **`src/utils/loadRemoteModule.ts`**: Loads and instantiates remotes dynamically
+- **`src/config/remoteRegistry.ts`**: Reads manifest and validates route keys
+- **`src/components/OppnadUppgift.vue`**: Container that renders the loaded micro frontend
 
-- **Host App**: Rimfrost FE (this app)
-- **Remote Apps**:
-  - `remoteApp` - Configurable via `VITE_REMOTE_APP_URL`
-  - `exampleApp` - Configurable via `VITE_EXAMPLE_APP_URL`
-- **Shared Dependencies**: Vue, @fkui/vue, Pinia
-- **Exposed Modules**: `./pinia` - Shared Pinia store instance
+## Remote Micro Frontend Development
+
+### Prerequisites for Your Remote
+
+Your micro frontend must:
+
+1. **Use Module Federation** with `@originjs/vite-plugin-federation`
+2. **Declare a unique name** in `vite.config.ts` (e.g., `federation({ name: "yourRemoteApp" })`)
+3. **Expose a component** (e.g., `exposes: { "./YourComponent": "./src/components/YourComponent.vue" }`)
+4. **Share dependencies** with the host (Vue, @fkui/vue, Pinia):
+   ```typescript
+   federation({
+     shared: ["vue", "@fkui/vue", "pinia"],
+   });
+   ```
+5. **Accept props**: `kundbehovsflodeId` (string) and `regeltyp` (string)
+
+### Shared Dependencies
+
+Both host and remotes share these libraries to avoid duplication:
+
+- **Vue** - Core framework
+- **@fkui/vue** - Design system components
+- **Pinia** - Global state management
+
+### Local Development with Multiple Repos
+
+If developing the host and remote simultaneously:
+
+1. Start remote dev server: `npm run dev` (e.g., port 3032)
+2. Start host dev server: `npm run dev` (e.g., port 3030)
+3. Host automatically loads from remote's dev entry URL
+4. Hot-reload works on both sides
 
 ## API Integration
 
-The application proxies requests to backend services:
+This host app communicates only with the **Portal BFF**:
 
-- `/uppgifter` → Uppgifter API (tasks service)
-- `/regel` → Regel API (rules service)
+- `GET /uppgifter/handlaggare/:handlaggarId` - Fetch all tasks assigned to a handler
+- `POST /uppgifter/handlaggare/:handlaggarId` - Fetch the next available task
 
-For development, you can use the built-in API mocks located in the `mock/` directory.
+The Portal BFF fetches from backend services and returns mock data when unavailable.
+
+**Each micro frontend** has its own dedicated Rule BFF (e.g., rimfrost-regel-rtf-manuell-bff) for rule-specific calls:
+
+- `GET /api/:regel/:regeltyp/:kundbehovsflodeId` - Fetch decision data
+- `POST /api/:regel/:regeltyp/:kundbehovsflodeId/patchErsattning` - Submit decisions
+
+Micro frontends communicate with their BFF using the `regeltyp` prop received from the host.
 
 ## Docker Deployment
 
