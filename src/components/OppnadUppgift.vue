@@ -9,7 +9,7 @@ const route = useRoute();
 const store = useProductStore();
 const { uppgiftLista } = storeToRefs(store);
 
-const kundbehovsflodeId = computed(() => route.params.id as string | null);
+const handlaggningId = computed(() => route.params.id as string | null);
 const componentKey = ref(0);
 
 const RemoteComponent = shallowRef<any>(null);
@@ -17,9 +17,9 @@ const isLoading = ref(false);
 const error = ref<string | null>(null);
 
 const currentUppgift = computed(() => {
-  if (!kundbehovsflodeId.value) return null;
+  if (!handlaggningId.value) return null;
   return uppgiftLista.value.find(
-    (item) => item.kundbehovsflodeId === kundbehovsflodeId.value,
+    (item) => item.handlaggningId === handlaggningId.value,
   );
 });
 
@@ -46,7 +46,7 @@ async function loadComponent() {
 watch(
   currentUppgift,
   (uppgift) => {
-    if (uppgift && kundbehovsflodeId.value) {
+    if (uppgift && handlaggningId.value) {
       loadComponent();
     }
     componentKey.value++;
@@ -70,7 +70,7 @@ watch(
       v-else-if="RemoteComponent"
       :is="RemoteComponent"
       :key="componentKey"
-      :kundbehovsflode-id="kundbehovsflodeId"
+      :handlaggning-id="handlaggningId"
       :regeltyp="regeltyp"
     />
     <div v-else>Ingen uppgift vald</div>

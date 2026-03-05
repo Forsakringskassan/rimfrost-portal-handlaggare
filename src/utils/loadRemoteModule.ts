@@ -4,7 +4,7 @@ const remoteImporters: Record<string, () => Promise<any>> = {
   // eslint-disable-next-line import/no-unresolved -- Handled by Vite Module Federation plugin
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
   // Add more as needed:
-  // "exempel": () => import("remoteExample/ExempelKomponent"),
+  // "exempel": () => import("remoteExample/ExampleComponent"),
 };
 
 export async function loadRemoteModule(routeKey: string) {
