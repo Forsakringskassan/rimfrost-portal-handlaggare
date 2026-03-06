@@ -5,7 +5,7 @@ export function transformUppgift(
 ): OperativUppgiftItem {
   return {
     uppgiftId: rawOperativUppgift.uppgift_id,
-    kundbehovsflodeId: rawOperativUppgift.kundbehovsflode_id,
+    handlaggningId: rawOperativUppgift.handlaggning_id,
     skapad: rawOperativUppgift.skapad,
     status: rawOperativUppgift.status,
     handlaggarId: rawOperativUppgift.handlaggar_id,

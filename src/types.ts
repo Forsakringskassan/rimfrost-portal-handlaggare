@@ -1,6 +1,6 @@
 export interface RawOperativUppgift {
   uppgift_id: string;
-  kundbehovsflode_id: string;
+  handlaggning_id: string;
   skapad: string;
   status: string;
   handlaggar_id: string;
@@ -16,7 +16,7 @@ export interface RawOperativUppgift {
 
 export interface OperativUppgiftItem {
   uppgiftId: string;
-  kundbehovsflodeId: string;
+  handlaggningId: string;
   skapad: string;
   status: string;
   handlaggarId: string;

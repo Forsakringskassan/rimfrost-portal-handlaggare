@@ -43,7 +43,7 @@ This is the **Host Frontend** in a micro-frontend architecture with the followin
 
 1. Host FE loads task list from Portal BFF (`/uppgifter/handlaggare/:id`)
 2. User selects a task → Host FE loads appropriate Micro FE via Module Federation
-3. Micro FE receives `kundbehovsflodeId` and `regeltyp` as props
+3. Micro FE receives `handlaggningId` and `regeltyp` as props
 4. Micro FE calls its dedicated Rule BFF (`/api/regel/rtf-manuell/:id`)
 5. Each BFF handles backend communication with automatic fallback to mock data
 
@@ -86,7 +86,7 @@ This app uses **Module Federation** to dynamically load micro frontends based on
 1. **Task arrives with a `url` field** (e.g., `"url": "rtf-manuell"`)
 2. **Host loads manifest** from `public/route-manifest.json` to look up the remote's scope, module, and entry URLs
 3. **Host calls `loadRemoteModule()`** with the route key → loads the remote entry script and imports the module
-4. **Micro frontend renders** with props: `kundbehovsflodeId` and `regeltyp`
+4. **Micro frontend renders** with props: `handlaggningId` and `regeltyp`
 
 ### Adding a New Micro Frontend
 
@@ -142,7 +142,7 @@ Add your route key and the corresponding import statement. The import path must 
 #### Step 4: Backend/BFF updates
 
 - Have the backend set the task's `url` field to your route key (e.g., `"url": "your-route-key"`)
-- Ensure your micro frontend has a similar structure to `rimfrost-regel-rtf-manuell-fe`, accepting `kundbehovsflodeId` and `regeltyp` props
+- Ensure your micro frontend has a similar structure to `rimfrost-regel-rtf-manuell-fe`, accepting `handlaggningId` and `regeltyp` props
 
 ```bash
 # Build for production
@@ -234,7 +234,7 @@ Your micro frontend must:
      shared: ["vue", "@fkui/vue", "pinia"],
    });
    ```
-5. **Accept props**: `kundbehovsflodeId` (string) and `regeltyp` (string)
+5. **Accept props**: `handlaggningId` (string) and `regeltyp` (string)
 
 ### Shared Dependencies
 
@@ -264,8 +264,8 @@ The Portal BFF fetches from backend services and returns mock data when unavaila
 
 **Each micro frontend** has its own dedicated Rule BFF (e.g., rimfrost-regel-rtf-manuell-bff) for rule-specific calls:
 
-- `GET /api/:regel/:regeltyp/:kundbehovsflodeId` - Fetch decision data
-- `POST /api/:regel/:regeltyp/:kundbehovsflodeId/patchErsattning` - Submit decisions
+- `GET /api/:regel/:regeltyp/:handlaggningId` - Fetch decision data
+- `POST /api/:regel/:regeltyp/:handlaggningId/patchErsattning` - Submit decisions
 
 Micro frontends communicate with their BFF using the `regeltyp` prop received from the host.
 
