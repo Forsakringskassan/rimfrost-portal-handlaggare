@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeMount } from "vue";
-import { FNavigationMenu } from "@fkui/vue";
+import { FButton, FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../types";
@@ -41,6 +41,17 @@ function onSelectedRoute(routeId: string) {
   }
 }
 
+function openExample() {
+  router.push({
+    name: "item",
+    params: {
+      id: "remoteExample",
+      regeltyp: "remoteExample",
+    },
+    query: { title: "Exempel" },
+  });
+}
+
 const currentRoute = computed(() => {
   return route?.params?.id ? `item-${route.params.id}` : "";
 });
@@ -58,6 +69,7 @@ onBeforeMount(async () => {
     menu-aria-label="Uppgiftslista"
     @selected-route="onSelectedRoute"
   ></f-navigation-menu>
+  <FButton @click="openExample">Öppna exempel</FButton>
 </template>
 
 <style scoped>

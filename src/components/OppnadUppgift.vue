@@ -24,7 +24,7 @@ const currentUppgift = computed(() => {
 });
 
 const regeltyp = computed(() => {
-  const url = (currentUppgift.value as any)?.url || "regel/rtf-manuell";
+  const url = (currentUppgift.value as any)?.url || "remoteExample";
   // Remove leading slash if present to avoid double slashes in API paths
   return url.startsWith("/") ? url.slice(1) : url;
 });
@@ -34,7 +34,7 @@ async function loadComponent() {
   error.value = null;
 
   try {
-    const component = await loadRemoteModule("rtf-manuell");
+    const component = await loadRemoteModule("remoteExample");
     RemoteComponent.value = component;
   } catch (err) {
     error.value = `Failed to load component: ${err}`;

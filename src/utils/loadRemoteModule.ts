@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- for promise */
+/* eslint-disable import/no-unresolved -- Handled by Vite Module Federation plugin */
+
 // Static imports - Vite/federation plugin rewrites these at build time
 const remoteImporters: Record<string, () => Promise<any>> = {
-  // eslint-disable-next-line import/no-unresolved -- Handled by Vite Module Federation plugin
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
+  remoteExample: () => import("remoteExample/ExampleComponent"),
   // Add more as needed:
   // "exempel": () => import("remoteExample/ExampleComponent"),
 };
