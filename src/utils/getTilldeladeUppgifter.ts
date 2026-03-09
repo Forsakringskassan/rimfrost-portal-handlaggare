@@ -1,7 +1,5 @@
 import { ref } from "vue";
 import { useProductStore } from "../stores/uppgiftListaStore";
-import type { RawOperativUppgift } from "../types";
-import { transformUppgift } from "./transformUppgift";
 
 export async function getTilldeladeUppgifter() {
   const loading = ref(false);
@@ -17,9 +15,7 @@ export async function getTilldeladeUppgifter() {
   } finally {
     loading.value = false;
     if (tasks.value) {
-      store.setUppgiftLista(
-        tasks.value.map((item: RawOperativUppgift) => transformUppgift(item)),
-      );
+      store.setUppgiftLista(tasks.value);
     }
   }
 
