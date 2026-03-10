@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- for promise */
+/* eslint-disable import/no-unresolved -- Handled by Vite Module Federation plugin */
 // Static imports - Vite/federation plugin rewrites these at build time
 const remoteImporters: Record<string, () => Promise<any>> = {
-  // eslint-disable-next-line import/no-unresolved -- Handled by Vite Module Federation plugin
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
+  example: () => import("remoteExample/ExampleComponent"),
   // Add more as needed:
   // "exempel": () => import("remoteExample/ExampleComponent"),
 };
 
-export async function loadRemoteModule(routeKey: string) {
-  const normalizedKey = routeKey.replace(/^\/?(regel\/)?/, ""); // normalize "regel/rtf-manuell" → "rtf-manuell"
-  const importer = remoteImporters[normalizedKey];
+export async function loadRemoteModule(remoteName: string) {
+  const importer = remoteImporters[remoteName];
 
   if (!importer) {
-    throw new Error(`No remote module registered for route key: "${routeKey}"`);
+    throw new Error(`No importer found for remote: ${remoteName}`);
   }
 
   const module = await importer();
