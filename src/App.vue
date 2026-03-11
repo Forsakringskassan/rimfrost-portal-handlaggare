@@ -6,7 +6,7 @@ import {
   FPageHeader,
 } from "@fkui/vue";
 import { useRouter } from "vue-router";
-import IdList from "./components/UppgiftLista.vue";
+import UppgiftLista from "./components/UppgiftLista.vue";
 import { getNextUppgift } from "./utils/getNextUppgift";
 
 const router = useRouter();
@@ -36,7 +36,7 @@ const router = useRouter();
           <div class="nav-content">
             <p class="body">Välj en uppgift i listan</p>
             <div class="scrollable-list">
-              <IdList />
+              <UppgiftLista />
             </div>
           </div>
           <div class="nav-footer">

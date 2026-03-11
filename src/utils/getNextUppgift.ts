@@ -7,7 +7,7 @@ export async function getNextUppgift() {
   const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
   try {
     const response = await fetch(
-      `${bffUrl}/uppgifter/handlaggare/${mockHandlaggarId}`,
+      `${bffUrl}/tasks/getNext/${mockHandlaggarId}`,
       {
         method: "POST",
         headers: {

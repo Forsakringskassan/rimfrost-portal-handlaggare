@@ -45,7 +45,10 @@ const currentRoute = computed(() => {
 });
 
 onBeforeMount(async () => {
-  getTilldeladeUppgifter();
+  console.log(
+    "[UppgiftLista] Component mounted, calling getTilldeladeUppgifter...",
+  );
+  await getTilldeladeUppgifter();
 });
 </script>
 
