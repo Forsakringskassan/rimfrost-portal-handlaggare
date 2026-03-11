@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { computed, onBeforeMount } from "vue";
-import { FNavigationMenu } from "@fkui/vue";
+import { computed, onBeforeMount, ref } from "vue";
+import { FLoader, FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../types";
 import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
 
 const store = useProductStore();
+const isLoading = ref(false);
 
 const router = useRouter();
 const route = useRoute();
@@ -46,18 +47,29 @@ const currentRoute = computed(() => {
 });
 
 onBeforeMount(async () => {
-  getTilldeladeUppgifter();
+  isLoading.value = true;
+  try {
+    await getTilldeladeUppgifter();
+  } finally {
+    isLoading.value = false;
+  }
 });
 </script>
 
 <template>
-  <f-navigation-menu
-    :route="currentRoute"
-    :routes
-    vertical
-    menu-aria-label="Uppgiftslista"
-    @selected-route="onSelectedRoute"
-  ></f-navigation-menu>
+  <div>
+    <div style="margin-top: 30px"></div>
+    <f-loader :show="isLoading" :delay="true"> Vänligen vänta </f-loader>
+
+    <f-navigation-menu
+      v-if="!isLoading"
+      :route="currentRoute"
+      :routes
+      vertical
+      menu-aria-label="Uppgiftslista"
+      @selected-route="onSelectedRoute"
+    ></f-navigation-menu>
+  </div>
 </template>
 
 <style scoped>

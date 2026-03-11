@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, shallowRef } from "vue";
+import { FLoader } from "@fkui/vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
@@ -24,7 +25,7 @@ const currentUppgift = computed(() => {
 });
 
 const regeltyp = computed(() => {
-  const url = (currentUppgift.value as any)?.url || "regel/rtf-manuell";
+  const url = (currentUppgift.value as any)?.url || "remoteExample";
   // Remove leading slash if present to avoid double slashes in API paths
   return url.startsWith("/") ? url.slice(1) : url;
 });
@@ -34,7 +35,7 @@ async function loadComponent() {
   error.value = null;
 
   try {
-    const component = await loadRemoteModule("rtf-manuell");
+    const component = await loadRemoteModule(regeltyp.value);
     RemoteComponent.value = component;
   } catch (err) {
     error.value = `Failed to load component: ${err}`;
@@ -64,8 +65,18 @@ watch(
 
 <template>
   <div>
-    <div v-if="isLoading">Laddar komponent...</div>
-    <div v-else-if="error">{{ error }}</div>
+    <div
+      v-if="isLoading"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+      "
+    >
+      <f-loader :show="isLoading" :delay="true"> Vänligen vänta </f-loader>
+    </div>
+    <div v-if="error">{{ error }}</div>
     <component
       v-else-if="RemoteComponent"
       :is="RemoteComponent"
@@ -73,6 +84,5 @@ watch(
       :handlaggning-id="handlaggningId"
       :regeltyp="regeltyp"
     />
-    <div v-else>Ingen uppgift vald</div>
   </div>
 </template>
