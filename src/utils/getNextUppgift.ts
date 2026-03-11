@@ -1,7 +1,6 @@
 import { router } from "../router/index.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
 import type { OperativUppgiftItem } from "../types.js";
-import { transformUppgift } from "./transformUppgift.js";
 
 export async function getNextUppgift() {
   const mockHandlaggarId = import.meta.env.VITE_MOCK_HANDLAGGARE_ID ?? "";
@@ -25,7 +24,7 @@ export async function getNextUppgift() {
     const store = useProductStore();
     const uppgiftLista = store.uppgiftLista;
 
-    const uppgift = transformUppgift(data.uppgift);
+    const uppgift = data.uppgift;
     const exists = uppgiftLista.find(
       (item: OperativUppgiftItem) => item.uppgiftId === uppgift.uppgiftId,
     );
