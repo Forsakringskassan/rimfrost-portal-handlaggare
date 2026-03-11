@@ -23,10 +23,9 @@ const currentUppgift = computed(() => {
   );
 });
 
-const regeltyp = computed(() => {
-  const url = (currentUppgift.value as any)?.url || "regel/rtf-manuell";
-  // Remove leading slash if present to avoid double slashes in API paths
-  return url.startsWith("/") ? url.slice(1) : url;
+const remoteName = computed(() => {
+  const url = (currentUppgift.value as any)?.url || "rtf-manuell";
+  return url.split('/').pop() || "rtf-manuell";
 });
 
 async function loadComponent() {
@@ -34,7 +33,7 @@ async function loadComponent() {
   error.value = null;
 
   try {
-    const component = await loadRemoteModule("rtf-manuell");
+    const component = await loadRemoteModule(remoteName.value);
     RemoteComponent.value = component;
   } catch (err) {
     error.value = `Failed to load component: ${err}`;
@@ -71,7 +70,6 @@ watch(
       :is="RemoteComponent"
       :key="componentKey"
       :handlaggning-id="handlaggningId"
-      :regeltyp="regeltyp"
     />
     <div v-else>Ingen uppgift vald</div>
   </div>

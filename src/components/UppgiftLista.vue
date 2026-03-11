@@ -34,7 +34,6 @@ function onSelectedRoute(routeId: string) {
       name: "item",
       params: {
         id: item.handlaggningId.toString(),
-        regeltyp: "rtf-manuell",
       },
       query: { title: item.kundbehov },
     });
