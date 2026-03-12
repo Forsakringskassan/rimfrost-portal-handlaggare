@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, shallowRef } from "vue";
+import { FLoader } from "@fkui/vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
@@ -63,14 +64,26 @@ watch(
 
 <template>
   <div>
-    <div v-if="isLoading">Laddar komponent...</div>
-    <div v-else-if="error">{{ error }}</div>
+    <f-loader
+      :show="isLoading"
+      :delay="true"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 18.75rem;
+        margin-top: 10vh !important;
+      "
+    >
+      Vänligen vänta
+    </f-loader>
+
+    <div v-if="error">{{ error }}</div>
     <component
       v-else-if="RemoteComponent"
       :is="RemoteComponent"
       :key="componentKey"
       :handlaggning-id="handlaggningId"
     />
-    <div v-else>Ingen uppgift vald</div>
   </div>
 </template>
