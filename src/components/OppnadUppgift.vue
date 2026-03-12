@@ -24,8 +24,8 @@ const currentUppgift = computed(() => {
 });
 
 const remoteName = computed(() => {
-  const url = (currentUppgift.value as any)?.url || "rtf-manuell";
-  return url.split('/').pop() || "rtf-manuell";
+  const url = (currentUppgift.value as any)?.url || "";
+  return url.split("/").pop() || "";
 });
 
 async function loadComponent() {
