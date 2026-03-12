@@ -3,7 +3,6 @@
 // Static imports - Vite/federation plugin rewrites these at build time
 const remoteImporters: Record<string, () => Promise<any>> = {
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
-  example: () => import("remoteExample/ExampleComponent"),
   // Add more as needed:
   // "exempel": () => import("remoteExample/ExampleComponent"),
 };
