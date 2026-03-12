@@ -35,9 +35,6 @@ async function loadComponent() {
   error.value = null;
 
   try {
-    // Delay to view loader (remove before production)
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const component = await loadRemoteModule(regeltyp.value);
     RemoteComponent.value = component;
   } catch (err) {
@@ -76,7 +73,7 @@ watch(
         justify-content: center;
         align-items: center;
         min-height: 18.75rem;
-        margin-top: 9.375rem !important;
+        margin-top: 10vh !important;
       "
     >
       Vänligen vänta

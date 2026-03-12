@@ -49,9 +49,6 @@ const currentRoute = computed(() => {
 onBeforeMount(async () => {
   isLoading.value = true;
   try {
-    // Delay to view loader (remove before production)
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
     await getTilldeladeUppgifter();
   } finally {
     isLoading.value = false;
@@ -64,7 +61,7 @@ onBeforeMount(async () => {
     <f-loader
       :show="isLoading"
       :delay="true"
-      style="margin-top: 9.375rem !important; display: block"
+      style="margin-top: 10vh !important; display: block"
     >
       Vänligen vänta
     </f-loader>
