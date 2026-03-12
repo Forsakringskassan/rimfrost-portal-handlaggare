@@ -35,6 +35,9 @@ async function loadComponent() {
   error.value = null;
 
   try {
+    // Delay to view loader (remove before production)
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     const component = await loadRemoteModule(regeltyp.value);
     RemoteComponent.value = component;
   } catch (err) {
@@ -65,17 +68,20 @@ watch(
 
 <template>
   <div>
-    <div
-      v-if="isLoading"
+    <f-loader
+      :show="isLoading"
+      :delay="true"
       style="
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 300px;
+        min-height: 18.75rem;
+        margin-top: 9.375rem !important;
       "
     >
-      <f-loader :show="isLoading" :delay="true"> Vänligen vänta </f-loader>
-    </div>
+      Vänligen vänta
+    </f-loader>
+
     <div v-if="error">{{ error }}</div>
     <component
       v-else-if="RemoteComponent"

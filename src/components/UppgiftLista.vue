@@ -49,6 +49,9 @@ const currentRoute = computed(() => {
 onBeforeMount(async () => {
   isLoading.value = true;
   try {
+    // Delay to view loader (remove before production)
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     await getTilldeladeUppgifter();
   } finally {
     isLoading.value = false;
@@ -58,8 +61,13 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <div style="margin-top: 30px"></div>
-    <f-loader :show="isLoading" :delay="true"> Vänligen vänta </f-loader>
+    <f-loader
+      :show="isLoading"
+      :delay="true"
+      style="margin-top: 9.375rem !important; display: block"
+    >
+      Vänligen vänta
+    </f-loader>
 
     <f-navigation-menu
       v-if="!isLoading"
@@ -77,8 +85,8 @@ onBeforeMount(async () => {
   background-color: white;
   margin-bottom: 0.5rem;
   padding: 0.75rem 1rem;
-  border-radius: 4px;
-  border: 1px solid rgb(201, 201, 201);
+  border-radius: 0.25rem;
+  border: 0.0625rem solid rgb(201, 201, 201);
   cursor: pointer;
   list-style: none;
   &:hover {
