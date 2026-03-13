@@ -12,12 +12,6 @@ const isLoading = ref(false);
 const router = useRouter();
 const route = useRoute();
 
-/*
-Här kommer vi skapa URLer med den information vi har,
-exempelvis regel och id. Vi skickar in den som id som
-param till router. Vi kan väl behöva regel-id i OUL
-för att bygga en korrekt URL?
-*/
 const routes = computed(() => {
   return store.uppgiftLista.map((item: OperativUppgiftItem) => ({
     label: `${item.handlaggningId.slice(-7)}: ${item.kundbehov}`,
@@ -35,7 +29,6 @@ function onSelectedRoute(routeId: string) {
       name: "item",
       params: {
         id: item.handlaggningId.toString(),
-        regeltyp: "rtf-manuell",
       },
       query: { title: item.kundbehov },
     });

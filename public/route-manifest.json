@@ -9,7 +9,7 @@
     "exempel": {
       "scope": "remoteExample",
       "module": "ExampleComponent",
-      "devEntry": "http://localhost:8083/assets/remoteEntry.js",
+      "devEntry": "http://localhost:3033/assets/remoteEntry.js",
       "prodEntry": "https://cdn.example.com/exempel/remoteEntry.js"
     }
   }
