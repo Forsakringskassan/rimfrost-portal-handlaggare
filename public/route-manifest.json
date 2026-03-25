@@ -6,11 +6,11 @@
       "devEntry": "http://localhost:3031/assets/remoteEntry.js",
       "prodEntry": "https://cdn.example.com/rtf-manuell/remoteEntry.js"
     },
-    "bekrafta-beslut": {
+    "bekraftabeslut": {
       "scope": "bekraftaBeslutApp",
       "module": "BekraftaBeslut",
       "devEntry": "http://localhost:3033/assets/remoteEntry.js",
-      "prodEntry": "https://cdn.example.com/bekrafta-beslut/remoteEntry.js"
+      "prodEntry": "https://cdn.example.com/bekraftabeslut/remoteEntry.js"
     }
   }
 }
