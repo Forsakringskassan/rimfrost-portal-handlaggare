@@ -14,14 +14,12 @@ import { getNextUppgift } from "./utils/getNextUppgift";
 
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
+const valdId = ref("");
 
 onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
-  console.log("valdHandlaggare:", handlaggareStore.valdHandlaggare);
-  console.log("handlaggarId:", handlaggareStore.valdHandlaggare.handlaggarId);
+  valdId.value = handlaggareStore.valdHandlaggare?.handlaggarId ?? "";
 });
-
-const valdId = ref(handlaggareStore.valdHandlaggare?.handlaggarId ?? "");
 
 function onHandlaggareChange(handlaggarId: string) {
   if (handlaggarId === "logga-ut") {
@@ -34,7 +32,7 @@ function onHandlaggareChange(handlaggarId: string) {
 
 function loggaUt() {
   // TODO: implementera utloggning när backend är redo
-  console.log("Logga ut:", handlaggareStore.valdHandlaggare.handlaggarId);
+  console.log("Logga ut:", handlaggareStore.valdHandlaggare?.handlaggarId);
 }
 </script>
 
@@ -55,7 +53,6 @@ function loggaUt() {
             inline
             @update:model-value="onHandlaggareChange"
           >
-            <template #label>Handläggare</template>
             <option
               v-for="h in handlaggareStore.handlaggare"
               :key="h.handlaggarId"
