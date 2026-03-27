@@ -1,15 +1,41 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import {
   FButton,
   FLayoutApplicationTemplate,
   FLayoutLeftPanel,
   FPageHeader,
+  FSelectField,
 } from "@fkui/vue";
 import { useRouter } from "vue-router";
 import UppgiftLista from "./components/UppgiftLista.vue";
+import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
 
 const router = useRouter();
+const handlaggareStore = useHandlaggareStore();
+
+onMounted(async () => {
+  await handlaggareStore.fetchHandlaggare();
+  console.log("valdHandlaggare:", handlaggareStore.valdHandlaggare);
+  console.log("handlaggarId:", handlaggareStore.valdHandlaggare.handlaggarId);
+});
+
+const valdId = ref(handlaggareStore.valdHandlaggare?.handlaggarId ?? "");
+
+function onHandlaggareChange(handlaggarId: string) {
+  if (handlaggarId === "logga-ut") {
+    loggaUt();
+    return;
+  }
+  valdId.value = handlaggarId;
+  handlaggareStore.setValdHandlaggare(handlaggarId);
+}
+
+function loggaUt() {
+  // TODO: implementera utloggning när backend är redo
+  console.log("Logga ut:", handlaggareStore.valdHandlaggare.handlaggarId);
+}
 </script>
 
 <template>
@@ -22,7 +48,24 @@ const router = useRouter();
         >
           Rimfrost Demoapp
         </div>
-        <template #right>Handläggare Handläggaresson</template>
+        <template #right>
+          <f-select-field
+            id="handlaggare-dropdown"
+            v-model="valdId"
+            inline
+            @update:model-value="onHandlaggareChange"
+          >
+            <template #label>Handläggare</template>
+            <option
+              v-for="h in handlaggareStore.handlaggare"
+              :key="h.handlaggarId"
+              :value="h.handlaggarId"
+            >
+              {{ h.fornamn }} {{ h.efternamn }}
+            </option>
+            <option value="logga-ut" @click.prevent="loggaUt">Logga ut</option>
+          </f-select-field>
+        </template>
       </f-page-header>
     </template>
 
@@ -90,6 +133,7 @@ div:has(.left-nav-custom) {
   padding: 0.75rem 0;
   border-top: 1px solid #e0e0e0;
   width: 100%;
+
   & button {
     width: 100%;
   }

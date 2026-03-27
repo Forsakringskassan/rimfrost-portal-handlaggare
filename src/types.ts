@@ -30,7 +30,8 @@ export interface OperativUppgiftItem {
   url: string;
 }
 
-export interface AlternativesModel {
-  id: string;
-  label: string;
+export interface Handlaggare {
+  handlaggarId: string;
+  fornamn: string;
+  efternamn: string;
 }
