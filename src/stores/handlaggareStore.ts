@@ -4,14 +4,14 @@ import type { Handlaggare } from "../types";
 
 export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const handlaggare = ref<Handlaggare[]>([]);
-  const valdHandlaggare = ref<Handlaggare | null>(null);
+  const selectedHandlaggare = ref<Handlaggare | null>(null);
 
-  function setValdHandlaggare(handlaggarId: string) {
-    const hittad = handlaggare.value.find(
-      (h) => h.handlaggarId === handlaggarId,
+  function setSelectedHandlaggare(handlaggarId: string) {
+    const found = handlaggare.value.find(
+      (handlaggare) => handlaggare.handlaggarId === handlaggarId,
     );
-    if (hittad) {
-      valdHandlaggare.value = hittad;
+    if (found) {
+      selectedHandlaggare.value = found;
     }
   }
 
@@ -24,9 +24,7 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
       }
       const data = await response.json();
       handlaggare.value = data.handlaggare;
-      if (handlaggare.value.length > 0) {
-        valdHandlaggare.value = handlaggare.value[0];
-      }
+      selectedHandlaggare.value = handlaggare.value[0] ?? null;
     } catch (error) {
       console.error("Fel vid hämtning av handläggare:", error);
     }
@@ -34,8 +32,8 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
 
   return {
     handlaggare,
-    valdHandlaggare,
-    setValdHandlaggare,
+    selectedHandlaggare,
+    setSelectedHandlaggare,
     fetchHandlaggare,
   };
 });

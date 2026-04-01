@@ -14,11 +14,11 @@ import { getNextUppgift } from "./utils/getNextUppgift";
 
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
-const valdId = ref("");
+const selectedId = ref("");
 
 onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
-  valdId.value = handlaggareStore.valdHandlaggare?.handlaggarId ?? "";
+  selectedId.value = handlaggareStore.selectedHandlaggare?.handlaggarId ?? "";
 });
 
 function onHandlaggareChange(handlaggarId: string) {
@@ -26,13 +26,13 @@ function onHandlaggareChange(handlaggarId: string) {
     loggaUt();
     return;
   }
-  valdId.value = handlaggarId;
-  handlaggareStore.setValdHandlaggare(handlaggarId);
+  selectedId.value = handlaggarId;
+  handlaggareStore.setSelectedHandlaggare(handlaggarId);
 }
 
 function loggaUt() {
   // TODO: implementera utloggning när backend är redo
-  console.log("Logga ut:", handlaggareStore.valdHandlaggare?.handlaggarId);
+  console.log("Logga ut:", handlaggareStore.selectedHandlaggare?.handlaggarId);
 }
 </script>
 
@@ -49,16 +49,16 @@ function loggaUt() {
         <template #right>
           <f-select-field
             id="handlaggare-dropdown"
-            v-model="valdId"
+            v-model="selectedId"
             inline
             @update:model-value="onHandlaggareChange"
           >
             <option
-              v-for="h in handlaggareStore.handlaggare"
-              :key="h.handlaggarId"
-              :value="h.handlaggarId"
+              v-for="handlaggare in handlaggareStore.handlaggare"
+              :key="handlaggare.handlaggarId"
+              :value="handlaggare.handlaggarId"
             >
-              {{ h.fornamn }} {{ h.efternamn }}
+              {{ handlaggare.fornamn }} {{ handlaggare.efternamn }}
             </option>
             <option value="logga-ut" @click.prevent="loggaUt">Logga ut</option>
           </f-select-field>
