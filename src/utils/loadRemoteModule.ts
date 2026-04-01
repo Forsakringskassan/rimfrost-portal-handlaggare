@@ -2,7 +2,7 @@
 
 const remoteImporters: Record<string, () => Promise<{ default: unknown }>> = {
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
-  "bekrafta-beslut": () => import("bekraftaBeslutApp/BekraftaBeslut"),
+  bekraftabeslut: () => import("bekraftaBeslutApp/BekraftaBeslut"),
 };
 
 export async function loadRemoteModule(remoteName: string) {

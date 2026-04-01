@@ -68,7 +68,7 @@ const API_URL = process.env.VITE_UPPGIFTER_API_URL || "http://localhost:8889";
 1. Copy `.env.example` to `.env.local` for personal overrides:
 
    ```bash
-   cp .env.example .env.local
+   cp .env .env.local
    ```
 
 2. Edit `.env.local` with your local settings
