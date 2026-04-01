@@ -92,6 +92,29 @@ This app uses **Module Federation** to dynamically load micro frontends based on
 
 Follow these three steps to register a new remote:
 
+### TypeScript Type Declarations for Remotes
+
+Module Federation imports are not recognized by TypeScript at compile time since they are resolved dynamically by Vite. To avoid TypeScript errors, all remote module imports are declared in `src/federation.d.ts`.
+
+#### `src/federation.d.ts`
+
+This file tells the TypeScript compiler that the remote modules exist and what they export. Without it, imports like `import("bekraftaBeslutApp/BekraftaBeslut")` would cause TypeScript errors since the modules are not real npm packages.
+
+**When to update this file:**
+
+Every time you add a new micro frontend, add a corresponding declaration:
+
+```typescript
+declare module "yourRemoteApp/YourComponent" {
+  const component: import("vue").Component;
+  export default component;
+}
+```
+
+The pattern is `${scope}/${module}` — the same values you used in `route-manifest.json` and `loadRemoteModule.ts`.
+
+> **Note:** The `import('vue').Component` syntax is required due to `erasableSyntaxOnly: true` in `tsconfig.app.json`. Standard `import { Component } from 'vue'` inside declare blocks is not allowed.
+
 #### Step 1: Register in `public/route-manifest.json`
 
 ```json
@@ -135,6 +158,15 @@ const remoteImporters: Record<string, () => Promise<any>> = {
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
   "your-route-key": () => import("yourRemoteApp/YourComponent"),
 };
+```
+
+And add a type declaration in `src/federation.d.ts`:
+
+```typescript
+declare module "yourRemoteApp/YourComponent" {
+  const component: import("vue").Component;
+  export default component;
+}
 ```
 
 Add your route key and the corresponding import statement. The import path must follow the pattern `${scope}/${module}` from your manifest.

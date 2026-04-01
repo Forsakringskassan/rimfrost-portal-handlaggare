@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.2.2 (2026-03-23)
+
+### Features
+
+- ny federation.d.ts fil dör declare module (https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/pull/37)
+
 ## 0.2.2 (2026-01-22)
 
 ### Bug Fixes

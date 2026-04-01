@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- for promise */
 /* eslint-disable import/no-unresolved -- Handled by Vite Module Federation plugin */
-// Static imports - Vite/federation plugin rewrites these at build time
-const remoteImporters: Record<string, () => Promise<any>> = {
+
+const remoteImporters: Record<string, () => Promise<{ default: unknown }>> = {
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
-  "bekrafta-beslut": () => import("bekraftaBeslutApp/BekraftaBeslut"),
+  bekraftabeslut: () => import("bekraftaBeslutApp/BekraftaBeslut"),
 };
 
 export async function loadRemoteModule(remoteName: string) {
