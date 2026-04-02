@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import {
   FButton,
   FLayoutApplicationTemplate,
@@ -14,11 +14,15 @@ import { getNextUppgift } from "./utils/getNextUppgift";
 
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
-const selectedId = ref("");
+const getNextUppgiftFel = ref<string | null>(null);
+
+const selectedId = computed({
+  get: () => handlaggareStore.selectedHandlaggare?.handlaggarId ?? "",
+  set: (value) => handlaggareStore.setSelectedHandlaggare(value),
+});
 
 onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
-  selectedId.value = handlaggareStore.selectedHandlaggare?.handlaggarId ?? "";
 });
 
 function onHandlaggareChange(handlaggarId: string) {
@@ -26,13 +30,23 @@ function onHandlaggareChange(handlaggarId: string) {
     loggaUt();
     return;
   }
-  selectedId.value = handlaggarId;
   handlaggareStore.setSelectedHandlaggare(handlaggarId);
 }
 
 function loggaUt() {
   // TODO: implementera utloggning när backend är redo
   console.log("Logga ut:", handlaggareStore.selectedHandlaggare?.handlaggarId);
+}
+
+async function handleGetNextUppgift() {
+  getNextUppgiftFel.value = null;
+  try {
+    await getNextUppgift();
+  } catch (err) {
+    getNextUppgiftFel.value =
+      "Kunde inte hämta ny uppgift. Försök igen senare.";
+    console.error(err);
+  }
 }
 </script>
 
@@ -48,6 +62,7 @@ function loggaUt() {
         </div>
         <template #right>
           <f-select-field
+            v-if="handlaggareStore.handlaggare.length > 0"
             id="handlaggare-dropdown"
             v-model="selectedId"
             inline
@@ -80,7 +95,10 @@ function loggaUt() {
             </div>
           </div>
           <div class="nav-footer">
-            <FButton @click="getNextUppgift">Hämta ny uppgift</FButton>
+            <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
+            <p v-if="getNextUppgiftFel" class="error-message">
+              {{ getNextUppgiftFel }}
+            </p>
           </div>
         </div>
       </template>
@@ -134,5 +152,11 @@ div:has(.left-nav-custom) {
   & button {
     width: 100%;
   }
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  padding: 0.25rem 0;
 }
 </style>

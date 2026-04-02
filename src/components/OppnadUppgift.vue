@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, shallowRef } from "vue";
+import type { Component } from "vue";
 import { FLoader } from "@fkui/vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -13,7 +14,7 @@ const { uppgiftLista } = storeToRefs(store);
 const handlaggningId = computed(() => route.params.id as string | null);
 const componentKey = ref(0);
 
-const RemoteComponent = shallowRef<any>(null);
+const RemoteComponent = shallowRef<Component | null>(null);
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 
@@ -25,11 +26,16 @@ const currentUppgift = computed(() => {
 });
 
 const remoteName = computed(() => {
-  const url = (currentUppgift.value as any)?.url || "";
-  return url.split("/").pop() || "";
+  const url = currentUppgift.value?.url ?? "";
+  return url.split("/").pop() ?? "";
 });
 
 async function loadComponent() {
+  if (!remoteName.value) {
+    error.value = "Uppgiften saknar en giltig url — kan inte ladda komponent";
+    return;
+  }
+
   isLoading.value = true;
   error.value = null;
 
@@ -37,7 +43,8 @@ async function loadComponent() {
     const component = await loadRemoteModule(remoteName.value);
     RemoteComponent.value = component;
   } catch (err) {
-    error.value = `Failed to load component: ${err}`;
+    error.value = `Kunde inte ladda komponent för "${remoteName.value}". Kontrollera att micro-frontenden körs.`;
+    console.error(err);
   } finally {
     isLoading.value = false;
   }
@@ -78,7 +85,8 @@ watch(
       Vänligen vänta
     </f-loader>
 
-    <div v-if="error">{{ error }}</div>
+    <div v-if="error" class="error-message">{{ error }}</div>
+
     <component
       v-else-if="RemoteComponent"
       :is="RemoteComponent"
@@ -87,3 +95,10 @@ watch(
     />
   </div>
 </template>
+
+<style scoped>
+.error-message {
+  color: red;
+  padding: 1rem;
+}
+</style>

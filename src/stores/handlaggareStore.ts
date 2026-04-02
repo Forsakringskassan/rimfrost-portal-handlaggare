@@ -23,8 +23,15 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
         throw new Error(`HTTP ${response.status}`);
       }
       const data = await response.json();
+
+      if (!Array.isArray(data.handlaggare)) {
+        throw new Error(
+          "Oväntat format från backend — handlaggare är inte en array",
+        );
+      }
+
       handlaggare.value = data.handlaggare;
-      selectedHandlaggare.value = handlaggare.value[0] ?? null;
+      selectedHandlaggare.value = handlaggare.value.at(0) ?? null;
     } catch (error) {
       console.error("Fel vid hämtning av handläggare:", error);
     }
