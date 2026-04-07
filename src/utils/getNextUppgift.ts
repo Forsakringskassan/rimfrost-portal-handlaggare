@@ -32,18 +32,18 @@ export async function getNextUppgift() {
     if (!exists) {
       const newUppgiftLista = [...uppgiftLista, uppgift];
       store.setUppgiftLista(newUppgiftLista);
-      goToItem(data.uppgift);
+      goToItem(data.uppgift.handlaggningId, data.uppgift.regel);
     }
   } catch (error) {
     console.error("Error fetching next uppgift:", error);
   }
 }
 
-function goToItem(item: { id: string; typ: string }) {
+function goToItem(id: string, type: string) {
   const routeName = "item";
   router.push({
     name: routeName,
-    params: { id: item.id.toString() },
-    query: { title: item.typ },
+    params: { id: id.toString() },
+    query: { title: type },
   });
 }

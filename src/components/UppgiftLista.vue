@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
 import { FLoader, FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
@@ -14,7 +14,7 @@ const route = useRoute();
 
 const routes = computed(() => {
   return store.uppgiftLista.map((item: OperativUppgiftItem) => ({
-    label: `${item.handlaggningId.slice(-7)}: ${item.kundbehov}`,
+    label: `${item.handlaggningId.slice(-7)}: ${item.yrkande}`,
     route: `item-${item.handlaggningId}`,
   }));
 });
@@ -30,7 +30,7 @@ function onSelectedRoute(routeId: string) {
       params: {
         id: item.handlaggningId.toString(),
       },
-      query: { title: item.kundbehov },
+      query: { title: item.yrkande },
     });
   }
 }
@@ -46,6 +46,23 @@ onBeforeMount(async () => {
   } finally {
     isLoading.value = false;
   }
+});
+
+async function onTaskDone() {
+  isLoading.value = true;
+  try {
+    await getTilldeladeUppgifter();
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+onMounted(() => {
+  window.addEventListener("rtf-manuell-task-done", onTaskDone);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("rtf-manuell-task-done", onTaskDone);
 });
 </script>
 

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch, shallowRef } from "vue";
 import { FLoader } from "@fkui/vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
 
 const route = useRoute();
+const router = useRouter();
 const store = useProductStore();
 const { uppgiftLista } = storeToRefs(store);
 
@@ -48,6 +49,8 @@ watch(
   (uppgift) => {
     if (uppgift && handlaggningId.value) {
       loadComponent();
+    } else if (!uppgift && handlaggningId.value) {
+      router.push("/");
     }
     componentKey.value++;
   },
