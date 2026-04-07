@@ -6,7 +6,6 @@ export interface RawOperativUppgift {
   handlaggar_id: string;
   planerad_till: string | null;
   utford: string | null;
-  kundbehov: string;
   regel: string;
   beskrivning: string;
   verksamhetslogik: string;
@@ -22,12 +21,16 @@ export interface OperativUppgiftItem {
   handlaggarId: string;
   planeradTill: string;
   utford: string;
-  kundbehov: string;
   regel: string;
   beskrivning: string;
   verksamhetslogik: string;
   roll: string;
   url: string;
+}
+
+export interface AlternativesModel {
+  id: string;
+  label: string;
 }
 
 export interface Handlaggare {

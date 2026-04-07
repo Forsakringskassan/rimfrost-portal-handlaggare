@@ -16,7 +16,7 @@ const routes = computed(() => {
   return store.uppgiftLista
     .filter((item: OperativUppgiftItem) => !!item.handlaggningId)
     .map((item: OperativUppgiftItem) => ({
-      label: `${item.handlaggningId.slice(-7)}: ${item.kundbehov}`,
+      label: `${item.handlaggningId.slice(-7)}`,
       route: `item-${item.handlaggningId}`,
     }));
 });
@@ -32,7 +32,6 @@ function onSelectedRoute(routeId: string) {
       params: {
         id: item.handlaggningId.toString(),
       },
-      query: { title: item.kundbehov },
     });
   }
 }

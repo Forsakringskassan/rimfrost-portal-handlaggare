@@ -48,6 +48,5 @@ function goToItem(item: OperativUppgiftItem) {
   router.push({
     name: "item",
     params: { id: item.handlaggningId.toString() },
-    query: { title: item.kundbehov },
   });
 }
