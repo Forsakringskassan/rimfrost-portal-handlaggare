@@ -159,4 +159,8 @@ div:has(.left-nav-custom) {
   font-size: 0.875rem;
   padding: 0.25rem 0;
 }
+
+.layout-navigation__navigation {
+  top: var(--fkui-header-height, 91px) !important;
+}
 </style>
