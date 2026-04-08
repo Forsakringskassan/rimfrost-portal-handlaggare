@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
 import { FLoader, FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
@@ -50,6 +50,23 @@ onBeforeMount(async () => {
   } finally {
     isLoading.value = false;
   }
+});
+
+async function onTaskDone() {
+  isLoading.value = true;
+  try {
+    await getTilldeladeUppgifter();
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+onMounted(() => {
+  window.addEventListener("rtf-manuell-task-done", onTaskDone);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("rtf-manuell-task-done", onTaskDone);
 });
 </script>
 

@@ -79,7 +79,10 @@ async function handleGetNextUppgift() {
       <template #content>
         <div class="left-nav-custom">
           <div class="nav-content">
-            <p class="body">Välj en uppgift i listan</p>
+            <p v-if="store.uppgiftLista.length > 0" class="body">
+              Välj en uppgift i listan
+            </p>
+            <p v-else class="body">Inga tilldelade uppgifter hittades</p>
             <div class="scrollable-list">
               <UppgiftLista />
             </div>
