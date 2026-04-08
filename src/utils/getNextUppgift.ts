@@ -1,42 +1,52 @@
 import { router } from "../router/index.js";
-import { getTilldeladeUppgifter } from "./getTilldeladeUppgifter.js";
+import { useHandlaggareStore } from "../stores/handlaggareStore.js";
+import { useProductStore } from "../stores/uppgiftListaStore.js";
+import type { OperativUppgiftItem } from "../types.js";
 
-export async function getNextUppgift() {
-  const mockHandlaggarId = import.meta.env.VITE_MOCK_HANDLAGGARE_ID ?? "";
+export async function getNextUppgift(): Promise<void> {
+  const handlaggareStore = useHandlaggareStore();
   const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
-  try {
-    const response = await fetch(
-      `${bffUrl}/tasks/getNext/${mockHandlaggarId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
+  const handlaggarId = handlaggareStore.selectedHandlaggare?.handlaggarId ?? "";
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+  if (!handlaggarId) {
+    throw new Error("Ingen handläggare vald");
+  }
 
-    const data = await response.json();
-    const task = data.uppgift;
+  const response = await fetch(`${bffUrl}/tasks/getNext/${handlaggarId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-    await getTilldeladeUppgifter();
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-    if (task?.handlaggningId) {
-      goToItem(task.handlaggningId, task.yrkande);
-    }
-  } catch (error) {
-    console.error("Error fetching next uppgift:", error);
+  const data = await response.json();
+  const store = useProductStore();
+  const uppgiftLista = store.uppgiftLista;
+
+  const uppgift = data.uppgift;
+
+  if (!uppgift) {
+    throw new Error("Ingen uppgift i svaret från backend");
+  }
+
+  const exists = uppgiftLista.find(
+    (item: OperativUppgiftItem) => item.uppgiftId === uppgift.uppgiftId,
+  );
+
+  if (!exists) {
+    const newUppgiftLista = [...uppgiftLista, uppgift];
+    store.setUppgiftLista(newUppgiftLista);
+    goToItem(uppgift);
   }
 }
 
-function goToItem(id: string, type: string) {
-  const routeName = "item";
+function goToItem(item: OperativUppgiftItem) {
   router.push({
-    name: routeName,
-    params: { id: id.toString() },
-    query: { title: type },
+    name: "item",
+    params: { id: item.handlaggningId.toString() },
   });
 }

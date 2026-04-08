@@ -1,17 +1,46 @@
 <script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import {
   FButton,
   FLayoutApplicationTemplate,
   FLayoutLeftPanel,
   FPageHeader,
+  FSelectField,
 } from "@fkui/vue";
 import { useRouter } from "vue-router";
 import UppgiftLista from "./components/UppgiftLista.vue";
+import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { useProductStore } from "./stores/uppgiftListaStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
 
-const router = useRouter();
 const store = useProductStore();
+const router = useRouter();
+const handlaggareStore = useHandlaggareStore();
+const getNextUppgiftFel = ref<string | null>(null);
+
+const selectedId = computed({
+  get: () => handlaggareStore.selectedHandlaggare?.handlaggarId ?? "",
+  set: (value) => handlaggareStore.setSelectedHandlaggare(value),
+});
+
+onMounted(async () => {
+  await handlaggareStore.fetchHandlaggare();
+});
+
+function onHandlaggareChange(handlaggarId: string) {
+  handlaggareStore.setSelectedHandlaggare(handlaggarId);
+}
+
+async function handleGetNextUppgift() {
+  getNextUppgiftFel.value = null;
+  try {
+    await getNextUppgift();
+  } catch (err) {
+    getNextUppgiftFel.value =
+      "Kunde inte hämta ny uppgift. Försök igen senare.";
+    console.error(err);
+  }
+}
 </script>
 
 <template>
@@ -24,7 +53,23 @@ const store = useProductStore();
         >
           Rimfrost Demoapp
         </div>
-        <template #right>Handläggare Handläggaresson</template>
+        <template #right>
+          <f-select-field
+            v-if="handlaggareStore.handlaggare.length > 0"
+            id="handlaggare-dropdown"
+            v-model="selectedId"
+            inline
+            @update:model-value="onHandlaggareChange"
+          >
+            <option
+              v-for="handlaggare in handlaggareStore.handlaggare"
+              :key="handlaggare.handlaggarId"
+              :value="handlaggare.handlaggarId"
+            >
+              {{ handlaggare.fornamn }} {{ handlaggare.efternamn }}
+            </option>
+          </f-select-field>
+        </template>
       </f-page-header>
     </template>
 
@@ -45,7 +90,10 @@ const store = useProductStore();
             </div>
           </div>
           <div class="nav-footer">
-            <FButton @click="getNextUppgift">Hämta ny uppgift</FButton>
+            <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
+            <p v-if="getNextUppgiftFel" class="error-message">
+              {{ getNextUppgiftFel }}
+            </p>
           </div>
         </div>
       </template>
@@ -95,8 +143,19 @@ div:has(.left-nav-custom) {
   padding: 0.75rem 0;
   border-top: 1px solid #e0e0e0;
   width: 100%;
+
   & button {
     width: 100%;
   }
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  padding: 0.25rem 0;
+}
+
+.layout-navigation__navigation {
+  top: var(--fkui-header-height, 5.688rem) !important;
 }
 </style>

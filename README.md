@@ -6,6 +6,7 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Thi
 
 - **Task Management** - View, manage and process operational tasks
 - **Task Assignment** - Fetch and assign new tasks to case handlers
+- **Handläggare Selection** - Dropdown in header to switch between case handlers (dev only)
 - **Module Federation** - Micro-frontend architecture supporting remote applications
 - **FK UI Components** - Built with Försäkringskassan's design system (@fkui/vue)
 - **Type Safety** - Full TypeScript support with strict type checking
@@ -41,7 +42,7 @@ This is the **Host Frontend** in a micro-frontend architecture with the followin
 
 **Data Flow:**
 
-1. Host FE loads task list from Portal BFF (`/uppgifter/handlaggare/:id`)
+1. Host FE loads task list from Portal BFF (`/tasks/:handlaggarId`)
 2. User selects a task → Host FE loads appropriate Micro FE via Module Federation
 3. Micro FE receives `handlaggningId` and `regeltyp` as props
 4. Micro FE calls its dedicated Rule BFF (`/api/regel/rtf-manuell/:id`)
@@ -74,6 +75,12 @@ The application will be available at `http://localhost:3030` (configurable via `
 1. At build time, Vite embeds `VITE_*` environment variables into the bundle
 2. At runtime, the `env.sh` script creates a `runtime-config.js` file with `RUNTIME_*` variables
 3. The application checks `window._env_` for runtime values before falling back to build-time values
+
+## Handläggare Selection (Dev Only)
+
+A dropdown in the application header allows switching between case handlers during development. Handlers are fetched from Portal BFF (`GET /handlaggare`) with automatic mock fallback.
+
+To add or modify mock handlers, update `utils/mockDataService.ts` in `rimfrost-portal-bff`.
 
 ## Module Federation (Micro Frontends)
 
@@ -151,10 +158,12 @@ const remotes = Object.entries(routeManifest.routes).reduce(
 
 This runs automatically at build time, so you don't need to manually edit it.
 
-#### Step 3: Add to `src/utils/loadRemoteModule.ts` importer lookup
+#### Step 3: Add to `src/utils/loadRemoteModule.ts` and `src/federation.d.ts`
+
+Add your route key to the importer lookup in `loadRemoteModule.ts`:
 
 ```typescript
-const remoteImporters: Record<string, () => Promise<any>> = {
+const remoteImporters: Record<string, () => Promise<{ default: unknown }>> = {
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
   "your-route-key": () => import("yourRemoteApp/YourComponent"),
 };
@@ -168,8 +177,6 @@ declare module "yourRemoteApp/YourComponent" {
   export default component;
 }
 ```
-
-Add your route key and the corresponding import statement. The import path must follow the pattern `${scope}/${module}` from your manifest.
 
 #### Step 4: Backend/BFF updates
 
@@ -198,9 +205,9 @@ The project uses environment variables for configuration. See [ENV_SETUP.md](ENV
 
 1. Copy `.env.example` to `.env.local`:
 
-   ```bash
-   cp .env.example .env.local
-   ```
+```bash
+   cp .env .env.local
+```
 
 2. Configure your local settings in `.env.local`
 
@@ -208,7 +215,7 @@ The project uses environment variables for configuration. See [ENV_SETUP.md](ENV
 
 - `VITE_PORT` - Development server port (default: 3030)
 - `VITE_BFF_URL` - Portal BFF base URL (must start with `/` for relative or `http://` for absolute)
-- `VITE_MOCK_HANDLAGGARE_ID` - Mock handler ID for development
+- `VITE_MOCK_HANDLAGGARE_ID` - Fallback handler ID if store is empty
 
 Micro frontend entry URLs are configured in `public/route-manifest.json` under `devEntry` and `prodEntry`, not via environment variables. This allows changing remotes without rebuilding the host.
 
@@ -225,7 +232,9 @@ rimfrost-portal-handlaggare/
 │   │   ├── OppnadUppgift.vue        # Micro FE loader & container
 │   │   └── UppgiftLista.vue         # Task list navigation
 │   ├── router/                      # Vue Router configuration
-│   ├── stores/                      # Pinia stores (task list)
+│   ├── stores/
+│   │   ├── uppgiftListaStore.ts     # Task list state
+│   │   └── handlaggareStore.ts      # Case handler selection state
 │   ├── utils/
 │   │   ├── loadRemoteModule.ts      # Dynamic MFE loader
 │   │   ├── getTilldeladeUppgifter.ts # Fetch assigned tasks
@@ -236,10 +245,10 @@ rimfrost-portal-handlaggare/
 │   ├── App.vue                      # Root layout
 │   ├── main.ts                      # Entry point
 │   ├── pinia.ts                     # Store setup
+│   ├── federation.d.ts              # TypeScript declarations for remote modules
 │   └── types.ts                     # Type definitions
 ├── public/
 │   └── route-manifest.json          # MFE registry (scope, module, entry URLs)
-├── mock/                            # API mock responses
 ├── vite.config.ts                   # Vite & Module Federation config
 └── package.json                     # Dependencies & scripts
 ```
@@ -248,7 +257,8 @@ rimfrost-portal-handlaggare/
 
 - **`public/route-manifest.json`**: Central registry of all available micro frontends
 - **`src/utils/loadRemoteModule.ts`**: Loads and instantiates remotes dynamically
-- **`src/config/remoteRegistry.ts`**: Reads manifest and validates route keys
+- **`src/federation.d.ts`**: TypeScript type declarations for remote modules
+- **`src/stores/handlaggareStore.ts`**: Manages selected case handler state
 - **`src/components/OppnadUppgift.vue`**: Container that renders the loaded micro frontend
 
 ## Remote Micro Frontend Development
@@ -261,11 +271,13 @@ Your micro frontend must:
 2. **Declare a unique name** in `vite.config.ts` (e.g., `federation({ name: "yourRemoteApp" })`)
 3. **Expose a component** (e.g., `exposes: { "./YourComponent": "./src/components/YourComponent.vue" }`)
 4. **Share dependencies** with the host (Vue, @fkui/vue, Pinia):
-   ```typescript
-   federation({
-     shared: ["vue", "@fkui/vue", "pinia"],
-   });
-   ```
+
+```typescript
+federation({
+  shared: ["vue", "@fkui/vue", "pinia"],
+});
+```
+
 5. **Accept props**: `handlaggningId` (string) and `regeltyp` (string)
 
 ### Shared Dependencies
@@ -289,8 +301,9 @@ If developing the host and remote simultaneously:
 
 This host app communicates only with the **Portal BFF**:
 
-- `GET /uppgifter/handlaggare/:handlaggarId` - Fetch all tasks assigned to a handler
-- `POST /uppgifter/handlaggare/:handlaggarId` - Fetch the next available task
+- `GET /handlaggare` - Fetch available case handlers
+- `GET /tasks/:handlaggarId` - Fetch all tasks assigned to a handler
+- `POST /tasks/getNext/:handlaggarId` - Fetch the next available task
 
 The Portal BFF fetches from backend services and returns mock data when unavailable.
 

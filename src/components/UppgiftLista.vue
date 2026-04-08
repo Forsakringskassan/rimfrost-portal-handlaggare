@@ -8,15 +8,17 @@ import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
 
 const store = useProductStore();
 const isLoading = ref(false);
-
+const error = ref<string | null>(null);
 const router = useRouter();
 const route = useRoute();
 
 const routes = computed(() => {
-  return store.uppgiftLista.map((item: OperativUppgiftItem) => ({
-    label: `${item.handlaggningId.slice(-7)}: ${item.yrkande}`,
-    route: `item-${item.handlaggningId}`,
-  }));
+  return store.uppgiftLista
+    .filter((item: OperativUppgiftItem) => !!item.handlaggningId)
+    .map((item: OperativUppgiftItem) => ({
+      label: `${item.handlaggningId.slice(-7)}`,
+      route: `item-${item.handlaggningId}`,
+    }));
 });
 
 function onSelectedRoute(routeId: string) {
@@ -30,7 +32,6 @@ function onSelectedRoute(routeId: string) {
       params: {
         id: item.handlaggningId.toString(),
       },
-      query: { title: item.yrkande },
     });
   }
 }
@@ -41,8 +42,11 @@ const currentRoute = computed(() => {
 
 onBeforeMount(async () => {
   isLoading.value = true;
+  error.value = null;
   try {
     await getTilldeladeUppgifter();
+  } catch {
+    error.value = "Kunde inte ladda uppgiftslistan. Försök igen senare.";
   } finally {
     isLoading.value = false;
   }
@@ -76,8 +80,10 @@ onBeforeUnmount(() => {
       Vänligen vänta
     </f-loader>
 
+    <p v-if="error" class="error-message">{{ error }}</p>
+
     <f-navigation-menu
-      v-if="!isLoading"
+      v-if="!isLoading && !error"
       :route="currentRoute"
       :routes
       vertical
@@ -88,6 +94,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.error-message {
+  color: red;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
 .id-list__item {
   background-color: white;
   margin-bottom: 0.5rem;
@@ -100,6 +112,7 @@ onBeforeUnmount(() => {
     background-color: rgb(201, 201, 201);
   }
 }
+
 .id-list__item--active {
   background-color: rgb(207, 235, 218);
   font-weight: bold;
