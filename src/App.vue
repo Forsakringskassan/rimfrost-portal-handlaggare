@@ -7,9 +7,11 @@ import {
 } from "@fkui/vue";
 import { useRouter } from "vue-router";
 import UppgiftLista from "./components/UppgiftLista.vue";
+import { useProductStore } from "./stores/uppgiftListaStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
 
 const router = useRouter();
+const store = useProductStore();
 </script>
 
 <template>
@@ -34,7 +36,10 @@ const router = useRouter();
       <template #content>
         <div class="left-nav-custom">
           <div class="nav-content">
-            <p class="body">Välj en uppgift i listan</p>
+            <p v-if="store.uppgiftLista.length > 0" class="body">
+              Välj en uppgift i listan
+            </p>
+            <p v-else class="body">Inga tilldelade uppgifter hittades</p>
             <div class="scrollable-list">
               <UppgiftLista />
             </div>
