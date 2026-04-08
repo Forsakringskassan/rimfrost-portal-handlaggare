@@ -12,7 +12,6 @@ export interface OperativUppgiftItem {
   verksamhetslogik: string;
   roll: string;
   url: string;
-  yrkande: string;
 }
 
 export interface AlternativesModel {

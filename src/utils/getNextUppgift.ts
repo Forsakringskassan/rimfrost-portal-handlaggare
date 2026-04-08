@@ -25,7 +25,7 @@ export async function getNextUppgift() {
     await getTilldeladeUppgifter();
 
     if (task?.handlaggningId) {
-      goToItem(task.handlaggningId, task.yrkande);
+      goToItem(task.handlaggningId, task.regel);
     }
   } catch (error) {
     console.error("Error fetching next uppgift:", error);
