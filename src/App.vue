@@ -26,16 +26,7 @@ onMounted(async () => {
 });
 
 function onHandlaggareChange(handlaggarId: string) {
-  if (handlaggarId === "logga-ut") {
-    loggaUt();
-    return;
-  }
   handlaggareStore.setSelectedHandlaggare(handlaggarId);
-}
-
-function loggaUt() {
-  // TODO: implementera utloggning när backend är redo
-  console.log("Logga ut:", handlaggareStore.selectedHandlaggare?.handlaggarId);
 }
 
 async function handleGetNextUppgift() {
@@ -75,7 +66,6 @@ async function handleGetNextUppgift() {
             >
               {{ handlaggare.fornamn }} {{ handlaggare.efternamn }}
             </option>
-            <option value="logga-ut" @click.prevent="loggaUt">Logga ut</option>
           </f-select-field>
         </template>
       </f-page-header>
@@ -161,6 +151,6 @@ div:has(.left-nav-custom) {
 }
 
 .layout-navigation__navigation {
-  top: var(--fkui-header-height, 91px) !important;
+  top: var(--fkui-header-height, 5.688rem) !important;
 }
 </style>
