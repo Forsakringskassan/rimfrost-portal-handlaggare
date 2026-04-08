@@ -10,8 +10,10 @@ import {
 import { useRouter } from "vue-router";
 import UppgiftLista from "./components/UppgiftLista.vue";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
+import { useProductStore } from "./stores/uppgiftListaStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
 
+const store = useProductStore();
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
 const getNextUppgiftFel = ref<string | null>(null);
