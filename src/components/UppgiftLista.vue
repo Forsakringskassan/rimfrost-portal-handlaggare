@@ -8,7 +8,7 @@ import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
 
 const store = useProductStore();
 const isLoading = ref(false);
-
+const error = ref<string | null>(null);
 const router = useRouter();
 const route = useRoute();
 
@@ -41,28 +41,33 @@ const currentRoute = computed(() => {
 
 onBeforeMount(async () => {
   isLoading.value = true;
+  error.value = null;
   try {
     await getTilldeladeUppgifter();
+  } catch {
+    error.value = "Kunde inte ladda uppgiftslistan. Försök igen senare.";
   } finally {
     isLoading.value = false;
   }
 });
 
-async function onTaskDone() {
-  isLoading.value = true;
-  try {
-    await getTilldeladeUppgifter();
-  } finally {
-    isLoading.value = false;
+function onTaskDone(event: Event) {
+  const handlaggningId = (event as CustomEvent).detail?.handlaggningId;
+  if (handlaggningId) {
+    store.setUppgiftLista(
+      store.uppgiftLista.filter(
+        (item) => item.handlaggningId !== handlaggningId,
+      ),
+    );
   }
 }
 
 onMounted(() => {
-  window.addEventListener("rtf-manuell-task-done", onTaskDone);
+  window.addEventListener("task-done", onTaskDone);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("rtf-manuell-task-done", onTaskDone);
+  window.removeEventListener("task-done", onTaskDone);
 });
 </script>
 
@@ -76,8 +81,10 @@ onBeforeUnmount(() => {
       Vänligen vänta
     </f-loader>
 
+    <p v-if="error" class="error-message">{{ error }}</p>
+
     <f-navigation-menu
-      v-if="!isLoading"
+      v-if="!isLoading && !error"
       :route="currentRoute"
       :routes
       vertical
@@ -88,6 +95,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.error-message {
+  color: red;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
 .id-list__item {
   background-color: white;
   margin-bottom: 0.5rem;
@@ -100,6 +113,7 @@ onBeforeUnmount(() => {
     background-color: rgb(201, 201, 201);
   }
 }
+
 .id-list__item--active {
   background-color: rgb(207, 235, 218);
   font-weight: bold;
