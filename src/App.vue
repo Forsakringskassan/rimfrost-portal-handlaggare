@@ -12,6 +12,7 @@ import UppgiftLista from "./components/UppgiftLista.vue";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { useProductStore } from "./stores/uppgiftListaStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
+import { getTilldeladeUppgifter } from "./utils/getTilldeladeUppgifter";
 
 const store = useProductStore();
 const router = useRouter();
@@ -27,8 +28,9 @@ onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
 });
 
-function onHandlaggareChange(handlaggarId: string) {
+async function onHandlaggareChange(handlaggarId: string) {
   handlaggareStore.setSelectedHandlaggare(handlaggarId);
+  await getTilldeladeUppgifter();
 }
 
 async function handleGetNextUppgift() {
