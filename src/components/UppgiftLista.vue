@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { FLoader, FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../types";
-import { getTilldeladeUppgifter } from "../utils/getTilldeladeUppgifter";
 
 const store = useProductStore();
 const isLoading = ref(false);
@@ -37,18 +36,6 @@ function onSelectedRoute(routeId: string) {
 
 const currentRoute = computed(() => {
   return route?.params?.id ? `item-${route.params.id}` : "";
-});
-
-onBeforeMount(async () => {
-  isLoading.value = true;
-  error.value = null;
-  try {
-    await getTilldeladeUppgifter();
-  } catch {
-    error.value = "Kunde inte ladda uppgiftslistan. Försök igen senare.";
-  } finally {
-    isLoading.value = false;
-  }
 });
 
 function onTaskDone(event: Event) {

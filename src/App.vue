@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import {
   FButton,
   FLayoutApplicationTemplate,
@@ -12,6 +12,7 @@ import UppgiftLista from "./components/UppgiftLista.vue";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { useProductStore } from "./stores/uppgiftListaStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
+import { getTilldeladeUppgifter } from "./utils/getTilldeladeUppgifter";
 
 const store = useProductStore();
 const router = useRouter();
@@ -23,13 +24,19 @@ const selectedId = computed({
   set: (value) => handlaggareStore.setSelectedHandlaggare(value),
 });
 
+watch(
+  () => handlaggareStore.selectedHandlaggare,
+  async (newHandlaggare) => {
+    if (!newHandlaggare) {
+      return;
+    }
+    await getTilldeladeUppgifter(newHandlaggare.handlaggarId);
+  },
+);
+
 onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
 });
-
-function onHandlaggareChange(handlaggarId: string) {
-  handlaggareStore.setSelectedHandlaggare(handlaggarId);
-}
 
 async function handleGetNextUppgift() {
   getNextUppgiftFel.value = null;
@@ -59,7 +66,6 @@ async function handleGetNextUppgift() {
             id="handlaggare-dropdown"
             v-model="selectedId"
             inline
-            @update:model-value="onHandlaggareChange"
           >
             <option
               v-for="handlaggare in handlaggareStore.handlaggare"

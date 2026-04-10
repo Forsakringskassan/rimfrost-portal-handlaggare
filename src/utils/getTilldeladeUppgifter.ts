@@ -1,16 +1,10 @@
-import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { useProductStore } from "../stores/uppgiftListaStore";
 
-export async function getTilldeladeUppgifter() {
+export async function getTilldeladeUppgifter(handlaggarId: string) {
   const store = useProductStore();
-  const handlaggareStore = useHandlaggareStore();
 
   try {
     const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
-    const handlaggarId =
-      handlaggareStore.selectedHandlaggare?.handlaggarId ??
-      import.meta.env.VITE_MOCK_HANDLAGGARE_ID ??
-      "";
 
     const response = await fetch(`${bffUrl}/tasks/${handlaggarId}`);
 
@@ -19,11 +13,9 @@ export async function getTilldeladeUppgifter() {
     }
 
     const data = await response.json();
-    const tasks = data.operativa_uppgifter;
-
-    if (Array.isArray(tasks)) {
-      store.setUppgiftLista(tasks);
-    }
+    store.setUppgiftLista(
+      Array.isArray(data.operativa_uppgifter) ? data.operativa_uppgifter : [],
+    );
   } catch (error) {
     console.error("Error loading tasks:", error);
   }
