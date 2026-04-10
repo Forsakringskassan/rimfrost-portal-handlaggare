@@ -13,12 +13,10 @@ const router = useRouter();
 const route = useRoute();
 
 const routes = computed(() => {
-  return store.uppgiftLista
-    .filter((item: OperativUppgiftItem) => !!item.handlaggningId)
-    .map((item: OperativUppgiftItem) => ({
-      label: `${item.handlaggningId.slice(-7)}`,
-      route: `item-${item.handlaggningId}`,
-    }));
+  return store.uppgiftLista.map((item: OperativUppgiftItem) => ({
+    label: `${item.handlaggningId.slice(-7)}: ${item.regel}`,
+    route: `item-${item.handlaggningId}`,
+  }));
 });
 
 function onSelectedRoute(routeId: string) {
@@ -32,6 +30,7 @@ function onSelectedRoute(routeId: string) {
       params: {
         id: item.handlaggningId.toString(),
       },
+      query: { title: item.regel },
     });
   }
 }
@@ -52,21 +51,23 @@ onBeforeMount(async () => {
   }
 });
 
-async function onTaskDone() {
-  isLoading.value = true;
-  try {
-    await getTilldeladeUppgifter();
-  } finally {
-    isLoading.value = false;
+function onTaskDone(event: Event) {
+  const handlaggningId = (event as CustomEvent).detail?.handlaggningId;
+  if (handlaggningId) {
+    store.setUppgiftLista(
+      store.uppgiftLista.filter(
+        (item) => item.handlaggningId !== handlaggningId,
+      ),
+    );
   }
 }
 
 onMounted(() => {
-  window.addEventListener("rtf-manuell-task-done", onTaskDone);
+  window.addEventListener("task-done", onTaskDone);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("rtf-manuell-task-done", onTaskDone);
+  window.removeEventListener("task-done", onTaskDone);
 });
 </script>
 

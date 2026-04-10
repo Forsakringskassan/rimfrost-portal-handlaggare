@@ -14,6 +14,7 @@ const { uppgiftLista } = storeToRefs(store);
 
 const handlaggningId = computed(() => route.params.id as string | null);
 const componentKey = ref(0);
+const loadedHandlaggningId = ref<string | null>(null);
 
 const RemoteComponent = shallowRef<Component | null>(null);
 const isLoading = ref(false);
@@ -55,11 +56,13 @@ watch(
   currentUppgift,
   (uppgift) => {
     if (uppgift && handlaggningId.value) {
-      loadComponent();
+      if (handlaggningId.value !== loadedHandlaggningId.value) {
+        loadedHandlaggningId.value = handlaggningId.value;
+        loadComponent();
+      }
     } else if (!uppgift && handlaggningId.value) {
       router.push("/");
     }
-    componentKey.value++;
   },
   { immediate: true },
 );
