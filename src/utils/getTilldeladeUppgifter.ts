@@ -1,10 +1,11 @@
+import { env } from "../config/env";
 import { useProductStore } from "../stores/uppgiftListaStore";
 
 export async function getTilldeladeUppgifter(handlaggarId: string) {
   const store = useProductStore();
 
   try {
-    const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
+    const bffUrl = env.bffUrl;
 
     const response = await fetch(`${bffUrl}/tasks/${handlaggarId}`);
 

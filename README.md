@@ -316,30 +316,58 @@ Micro frontends communicate with their BFF using the `regeltyp` prop received fr
 
 ## Docker Deployment
 
-### Using Docker Compose
+### Full stack (all services)
+
+The `docker-compose.yml` in this repo wires together all six services. Each service builds its own image from the sibling repos.
 
 ```bash
-# Build and run the container
-docker-compose up -d
+# 1. Copy the example env file and fill in your internal URLs
+cp .env.docker.example .env.docker
 
-# Stop the container
-docker-compose down
+# 2. Build and start all services
+docker compose --env-file .env.docker up --build -d
+
+# 3. Open http://localhost:8080
 ```
 
-The application will be available at `http://localhost:8080`.
+See [.env.docker.example](.env.docker.example) for a description of every required variable.
 
-### Building Docker Image Manually
+**Port mapping:**
+
+| Service | External port |
+|---|---|
+| rimfrost-portal-fe | 8080 |
+| rimfrost-portal-bff | 9001 |
+| rimfrost-rtf-manuell-fe | 8081 |
+| rimfrost-rtf-manuell-bff | 9002 |
+| rimfrost-bekraftabeslut-fe | 8082 |
+| rimfrost-bekraftabeslut-bff | 9003 |
+
+### Single service (this FE only)
 
 ```bash
-# Build the production app
-npm run build
-
-# Build Docker image
-docker build -t rimfrost-fe .
-
-# Run container
-docker run -p 8080:8080 rimfrost-fe
+docker build -t rimfrost-portal-fe .
+docker run -p 8080:8080 \
+  -e RUNTIME_BFF_URL=https://bff.example.com \
+  -e RUNTIME_REMOTE_APP_URL=https://rtf-manuell.example.com/assets/remoteEntry.js \
+  -e RUNTIME_EXAMPLE_APP_URL=https://bekraftabeslut.example.com/assets/remoteEntry.js \
+  rimfrost-portal-fe
 ```
+
+### How runtime environment injection works
+
+1. At container start, `env.sh` reads every `RUNTIME_*` environment variable.
+2. It writes them into `/usr/local/apache2/htdocs/runtime-config.js` as `window._env_ = { ... }`.
+3. `index.html` has a `<script src="/runtime-config.js">` tag injected, so the values are available before the app boots.
+4. `src/config/env.ts` checks `window._env_.RUNTIME_*` first, then falls back to build-time `VITE_*` values (used in dev).
+
+**Required `RUNTIME_*` variables:**
+
+| Variable | Purpose |
+|---|---|
+| `RUNTIME_BFF_URL` | URL of the portal BFF, as seen from the **browser** |
+| `RUNTIME_REMOTE_APP_URL` | `remoteEntry.js` URL of the RTF Manuell micro-FE, as seen from the **browser** |
+| `RUNTIME_EXAMPLE_APP_URL` | `remoteEntry.js` URL of the Bekräfta Beslut micro-FE, as seen from the **browser** |
 
 ## Code Quality
 

@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import { env } from "../config/env";
 import type { Handlaggare } from "../types";
 
 export const useHandlaggareStore = defineStore("handlaggareStore", () => {
@@ -16,7 +17,7 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   }
 
   async function fetchHandlaggare() {
-    const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
+    const bffUrl = env.bffUrl;
     try {
       const response = await fetch(`${bffUrl}/handlaggare`);
       if (!response.ok) {

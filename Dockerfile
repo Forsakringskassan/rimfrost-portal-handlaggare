@@ -1,4 +1,13 @@
 
+# Stage 1: Build the Vite application
+FROM node:22-alpine AS builder
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
 
 # Stage 2: Serve with Apache HTTP Server and inject runtime environment variables
 FROM httpd:latest
@@ -9,10 +18,10 @@ USER 0
 RUN rm -rf /usr/local/apache2/htdocs/*
 
 # Copy built app from builder stage
-COPY dist/ /usr/local/apache2/htdocs/
+COPY --from=builder /app/dist/ /usr/local/apache2/htdocs/
 
 # Copy the runtime environment variable injection script from dist folder
-COPY dist/env.sh /usr/local/bin/env.sh
+COPY --from=builder /app/dist/env.sh /usr/local/bin/env.sh
 
 # Make script executable and ensure Unix line endings
 RUN chmod +x /usr/local/bin/env.sh && \
@@ -70,8 +79,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/start-httpd.sh && \
 # Switch to www-data user for security
 USER www-data
 
-          # Expose the configurable port
-          EXPOSE $HTTPD_PORT
+EXPOSE $HTTPD_PORT
 
-          # Use the startup script
-          CMD ["/usr/local/bin/start-httpd.sh"]
+CMD ["/usr/local/bin/start-httpd.sh"]

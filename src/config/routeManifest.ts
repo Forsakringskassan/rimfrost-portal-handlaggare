@@ -12,6 +12,8 @@ interface RouteManifestData {
   lastUpdated: string;
 }
 
+import { env } from "./env";
+
 let manifestCache: RouteManifestData | null = null;
 
 const isDev = import.meta.env.MODE === "development";
@@ -26,8 +28,8 @@ export async function loadManifest(): Promise<RouteManifestData> {
   }
 
   try {
-    const endpoint = import.meta.env.VITE_BFF_URL
-      ? `${import.meta.env.VITE_BFF_URL}/api/route-manifest.json`
+    const endpoint = env.bffUrl
+      ? `${env.bffUrl}/api/route-manifest.json`
       : "/route-manifest.json";
 
     const response = await fetch(endpoint);
