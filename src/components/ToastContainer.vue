@@ -37,7 +37,7 @@ const { toasts } = useToast();
   font-size: 1.125rem;
   min-width: 25rem;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
   animation: slideIn 0.3s ease;
 }
 
