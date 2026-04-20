@@ -12,6 +12,7 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Thi
 - **Type Safety** - Full TypeScript support with strict type checking
 - **State Management** - Pinia for reactive state management
 - **Routing** - Vue Router for navigation
+- **Toast Notifications** - User feedback on task completion via `task-done` custom event
 
 ## Tech Stack
 
@@ -81,6 +82,34 @@ The application will be available at `http://localhost:3030` (configurable via `
 A dropdown in the application header allows switching between case handlers during development. Handlers are fetched from Portal BFF (`GET /handlaggare`) with automatic mock fallback.
 
 To add or modify mock handlers, update `utils/mockDataService.ts` in `rimfrost-portal-bff`.
+
+## Toast Notifications
+
+Toast notifications are displayed in the portal when a task is completed or fails.
+
+- **Settings** (timeout, animation, styling): `src/utils/useToast.ts` and `src/components/ToastContainer.vue`
+- **Triggered by**: `task-done` custom event dispatched via `window.dispatchEvent`
+- **Listened to in**: `src/App.vue`
+
+Each micro frontend dispatches `task-done` with a `success` field and an optional `message`:
+
+```typescript
+window.dispatchEvent(
+  new CustomEvent("task-done", {
+    detail: {
+      handlaggningId: "...",
+      success: true,
+      message: "Uppgift slutförd!",
+    },
+  }),
+);
+```
+
+| Field            | Type              | Description                                      |
+| ---------------- | ----------------- | ------------------------------------------------ |
+| `handlaggningId` | string            | ID för handläggningsärendet                      |
+| `success`        | boolean           | `true` = grön toast, `false` = röd toast         |
+| `message`        | string (optional) | Visas i toasten, annars visas standardmeddelande |
 
 ## Module Federation (Micro Frontends)
 
@@ -231,6 +260,7 @@ rimfrost-portal-handlaggare/
 │   │   ├── IngenUppgiftVald.vue     # Empty state view
 │   │   ├── OppnadUppgift.vue        # Micro FE loader & container
 │   │   └── UppgiftLista.vue         # Task list navigation
+│   │   ├── ToastContainer.vue       # Toast notification display
 │   ├── router/                      # Vue Router configuration
 │   ├── stores/
 │   │   ├── uppgiftListaStore.ts     # Task list state
@@ -240,6 +270,7 @@ rimfrost-portal-handlaggare/
 │   │   ├── getTilldeladeUppgifter.ts # Fetch assigned tasks
 │   │   ├── getNextUppgift.ts        # Fetch next task
 │   │   └── transformUppgift.ts      # Data transformation
+│   │   ├── useToast.ts              # Toast notification logic
 │   ├── config/
 │   │   └── remoteRegistry.ts        # MFE manifest loader
 │   ├── App.vue                      # Root layout

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import {
   FButton,
   FLayoutApplicationTemplate,
@@ -8,16 +8,19 @@ import {
   FSelectField,
 } from "@fkui/vue";
 import { useRouter } from "vue-router";
+import ToastContainer from "./components/ToastContainer.vue";
 import UppgiftLista from "./components/UppgiftLista.vue";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { useProductStore } from "./stores/uppgiftListaStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
 import { getTilldeladeUppgifter } from "./utils/getTilldeladeUppgifter";
+import { useToast } from "./utils/useToast";
 
 const store = useProductStore();
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
 const getNextUppgiftFel = ref<string | null>(null);
+const toast = useToast();
 
 const selectedId = computed({
   get: () => handlaggareStore.selectedHandlaggare?.handlaggarId ?? "",
@@ -34,8 +37,18 @@ watch(
   },
 );
 
+function handleTaskDone(event: Event) {
+  const customEvent = event as CustomEvent;
+  toast.success(customEvent.detail.message || "Uppgift slutförd");
+}
+
 onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
+  window.addEventListener("task-done", handleTaskDone);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("task-done", handleTaskDone);
 });
 
 async function handleGetNextUppgift() {
@@ -51,6 +64,7 @@ async function handleGetNextUppgift() {
 </script>
 
 <template>
+  <ToastContainer />
   <f-layout-application-template>
     <template #header>
       <f-page-header skip-link="main-title">
@@ -160,7 +174,6 @@ div:has(.left-nav-custom) {
   font-size: 0.875rem;
   padding: 0.25rem 0;
 }
-
 .layout-navigation__navigation {
   top: var(--fkui-header-height, 5.688rem) !important;
 }
