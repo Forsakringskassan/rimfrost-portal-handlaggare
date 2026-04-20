@@ -39,11 +39,7 @@ watch(
 
 function handleTaskDone(event: Event) {
   const customEvent = event as CustomEvent;
-  if (customEvent.detail.success === false) {
-    toast.error(customEvent.detail.message || "Något gick fel");
-  } else {
-    toast.success(customEvent.detail.message || "Uppgift slutförd!");
-  }
+  toast.success(customEvent.detail.message || "Uppgift slutförd");
 }
 
 onMounted(async () => {
