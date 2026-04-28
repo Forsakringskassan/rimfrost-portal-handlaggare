@@ -1,3 +1,4 @@
+import { env } from "../config/env.js";
 import { router } from "../router/index.js";
 import { useHandlaggareStore } from "../stores/handlaggareStore.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
@@ -5,7 +6,7 @@ import type { OperativUppgiftItem } from "../types.js";
 
 export async function getNextUppgift(): Promise<void> {
   const handlaggareStore = useHandlaggareStore();
-  const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
+  const bffUrl = env.bffUrl;
   const handlaggarId = handlaggareStore.selectedHandlaggare?.handlaggarId ?? "";
 
   if (!handlaggarId) {

@@ -69,13 +69,7 @@ npm install
 npm run dev
 ```
 
-The application will be available at `http://localhost:3030` (configurable via `VITE_PORT` environment variable).
-
-### Build
-
-1. At build time, Vite embeds `VITE_*` environment variables into the bundle
-2. At runtime, the `env.sh` script creates a `runtime-config.js` file with `RUNTIME_*` variables
-3. The application checks `window._env_` for runtime values before falling back to build-time values
+The application will be available at `http://localhost:3030`.
 
 ## Handläggare Selection (Dev Only)
 
@@ -228,27 +222,29 @@ npm run preview
 
 ## Environment Configuration
 
-The project uses environment variables for configuration. See [ENV_SETUP.md](ENV_SETUP.md) for detailed documentation.
+Config is split between local development and container deployments. See [ENV_SETUP.md](ENV_SETUP.md) for full details including the OpenShift ConfigMap setup.
 
-### Quick Setup
+### Local development
 
-1. Copy `.env.example` to `.env.local`:
+Set variables in `.env`. These are baked into the bundle at build time and are **not configurable** after the image is built.
 
-```bash
-   cp .env .env.local
+```env
+VITE_BFF_URL=http://localhost:9001
 ```
 
-2. Configure your local settings in `.env.local`
+### Docker and OpenShift
 
-### Key Environment Variables
+Mount a `runtime-config.js` file at `/usr/local/apache2/htdocs/runtime-config.js` inside the container:
 
-- `VITE_PORT` - Development server port (default: 3030)
-- `VITE_BFF_URL` - Portal BFF base URL (must start with `/` for relative or `http://` for absolute)
-- `VITE_MOCK_HANDLAGGARE_ID` - Fallback handler ID if store is empty
+```js
+window._env_ = {
+  RUNTIME_BFF_URL: "https://your-bff.internal.example.com",
+};
+```
 
-Micro frontend entry URLs are configured in `public/route-manifest.json` under `devEntry` and `prodEntry`, not via environment variables. This allows changing remotes without rebuilding the host.
+In OpenShift this is done via a ConfigMap mounted with `subPath`. See [ENV_SETUP.md](ENV_SETUP.md).
 
-See [ENV_SETUP.md](ENV_SETUP.md) for the complete list of available variables.
+Micro frontend entry URLs are configured in `public/route-manifest.json` under `devEntry` and `prodEntry`, not via environment variables.
 
 ## Project Structure
 
