@@ -11,6 +11,8 @@ export interface RawOperativUppgift {
   verksamhetslogik: string;
   roll: string;
   url: string;
+  skyddad_identitet: boolean;
+  behorigheter: string[];
 }
 
 export interface OperativUppgiftItem {
@@ -26,6 +28,7 @@ export interface OperativUppgiftItem {
   verksamhetslogik: string;
   roll: string;
   url: string;
+  skyddadIdentitet: boolean;
 }
 
 export interface AlternativesModel {
@@ -37,4 +40,5 @@ export interface Handlaggare {
   handlaggarId: string;
   fornamn: string;
   efternamn: string;
+  harSIDBehorighet: boolean;
 }

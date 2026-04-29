@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed, ref, watch, shallowRef } from "vue";
 import type { Component } from "vue";
-import { FLoader } from "@fkui/vue";
+import { FLoader, FIcon } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
+import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
 
 const route = useRoute();
 const router = useRouter();
 const store = useProductStore();
 const { uppgiftLista } = storeToRefs(store);
+const handlaggareStore = useHandlaggareStore();
 
 const handlaggningId = computed(() => route.params.id as string | null);
 const componentKey = ref(0);
@@ -56,6 +58,13 @@ watch(
   currentUppgift,
   (uppgift) => {
     if (uppgift && handlaggningId.value) {
+      if (
+        uppgift.skyddadIdentitet &&
+        !handlaggareStore.selectedHandlaggareHarSIDBehorighet
+      ) {
+        router.push("/");
+        return;
+      }
       if (handlaggningId.value !== loadedHandlaggningId.value) {
         loadedHandlaggningId.value = handlaggningId.value;
         loadComponent();
@@ -93,12 +102,20 @@ watch(
 
     <div v-if="error" class="error-message">{{ error }}</div>
 
-    <component
-      v-else-if="RemoteComponent"
-      :is="RemoteComponent"
-      :key="componentKey"
-      :handlaggning-id="handlaggningId"
-    />
+    <div v-else-if="RemoteComponent" class="uppgift-wrapper">
+      <div v-if="currentUppgift?.skyddadIdentitet" class="sid-varning">
+        <strong style="cursor: pointer; font-weight: bold; color: #e8700a"
+          ><f-icon name="error" /> Denna handläggning behandlar en person med
+          skyddad identitet.</strong
+        ><br />
+        Endast handläggare med SID behörighet får hantera det här ärendet.
+      </div>
+      <component
+        :is="RemoteComponent"
+        :key="componentKey"
+        :handlaggning-id="handlaggningId"
+      />
+    </div>
   </div>
 </template>
 
@@ -106,5 +123,16 @@ watch(
 .error-message {
   color: red;
   padding: 1rem;
+}
+
+.uppgift-wrapper {
+  position: relative;
+}
+
+.sid-varning {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: right;
 }
 </style>

@@ -1,10 +1,14 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import type { Handlaggare } from "../types";
 
 export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const handlaggare = ref<Handlaggare[]>([]);
   const selectedHandlaggare = ref<Handlaggare | null>(null);
+
+  const selectedHandlaggareHarSIDBehorighet = computed(
+    () => selectedHandlaggare.value?.harSIDBehorighet ?? false,
+  );
 
   function setSelectedHandlaggare(handlaggarId: string) {
     const found = handlaggare.value.find(
@@ -40,6 +44,7 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   return {
     handlaggare,
     selectedHandlaggare,
+    selectedHandlaggareHarSIDBehorighet,
     setSelectedHandlaggare,
     fetchHandlaggare,
   };

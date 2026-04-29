@@ -2,20 +2,33 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { FLoader, FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
+import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../types";
 
 const store = useProductStore();
+const handlaggareStore = useHandlaggareStore();
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 const router = useRouter();
 const route = useRoute();
 
 const routes = computed(() => {
-  return store.uppgiftLista.map((item: OperativUppgiftItem) => ({
-    label: `${item.handlaggningId.slice(-7)}: ${item.regel}`,
-    route: `item-${item.handlaggningId}`,
-  }));
+  return (
+    store.uppgiftLista
+      // SID: hide tasks involving protected identity from handlers without SID clearance.
+      // The BFF already filters these out, but the frontend enforces it independently
+      // so that access control does not rely on a single point of failure.
+      .filter(
+        (item: OperativUppgiftItem) =>
+          !item.skyddadIdentitet ||
+          handlaggareStore.selectedHandlaggareHarSIDBehorighet,
+      )
+      .map((item: OperativUppgiftItem) => ({
+        label: `${item.handlaggningId.slice(-7)}: ${item.regel}`,
+        route: `item-${item.handlaggningId}`,
+      }))
+  );
 });
 
 function onSelectedRoute(routeId: string) {
