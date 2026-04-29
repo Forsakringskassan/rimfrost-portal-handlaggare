@@ -7,9 +7,9 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const handlaggare = ref<Handlaggare[]>([]);
   const selectedHandlaggare = ref<Handlaggare | null>(null);
 
-  function setSelectedHandlaggare(handlaggarId: string) {
+  function setSelectedHandlaggare(typId: string) {
     const found = handlaggare.value.find(
-      (handlaggare) => handlaggare.handlaggarId === handlaggarId,
+      (handlaggare) => handlaggare.handlaggarId.typId === typId,
     );
     if (found) {
       selectedHandlaggare.value = found;

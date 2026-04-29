@@ -1,11 +1,17 @@
+export interface HandlaggarId {
+  typId: string;
+  varde: string;
+}
+
 export interface RawOperativUppgift {
   uppgift_id: string;
   handlaggning_id: string;
   skapad: string;
   status: string;
-  handlaggar_id: string;
+  handlaggar_id: HandlaggarId;
   planerad_till: string | null;
   utford: string | null;
+  individer: HandlaggarId[];
   regel: string;
   beskrivning: string;
   verksamhetslogik: string;
@@ -18,9 +24,10 @@ export interface OperativUppgiftItem {
   handlaggningId: string;
   skapad: string;
   status: string;
-  handlaggarId: string;
+  handlaggarId: HandlaggarId;
   planeradTill: string;
   utford: string;
+  individer: HandlaggarId[];
   regel: string;
   beskrivning: string;
   verksamhetslogik: string;
@@ -34,7 +41,7 @@ export interface AlternativesModel {
 }
 
 export interface Handlaggare {
-  handlaggarId: string;
+  handlaggarId: HandlaggarId;
   fornamn: string;
   efternamn: string;
 }
