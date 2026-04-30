@@ -1,3 +1,4 @@
+import { env } from "../config/env.js";
 import { router } from "../router/index.js";
 import { useHandlaggareStore } from "../stores/handlaggareStore.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
@@ -5,18 +6,21 @@ import type { OperativUppgiftItem } from "../types.js";
 
 export async function getNextUppgift(): Promise<void> {
   const handlaggareStore = useHandlaggareStore();
-  const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
-  const handlaggarId = handlaggareStore.selectedHandlaggare?.handlaggarId ?? "";
+  const bffUrl = env.bffUrl;
+  const handlaggarId =
+    handlaggareStore.selectedHandlaggare?.handlaggarId ?? null;
 
   if (!handlaggarId) {
     throw new Error("Ingen handläggare vald");
   }
 
-  const response = await fetch(`${bffUrl}/tasks/getNext/${handlaggarId}`, {
+  const response = await fetch(`${bffUrl}/tasks/getNext`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      typId: handlaggarId.typId,
+      varde: handlaggarId.varde,
+    }),
   });
 
   if (!response.ok) {

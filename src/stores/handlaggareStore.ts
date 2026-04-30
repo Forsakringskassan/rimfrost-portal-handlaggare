@@ -1,14 +1,15 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import { env } from "../config/env";
 import type { Handlaggare } from "../types";
 
 export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const handlaggare = ref<Handlaggare[]>([]);
   const selectedHandlaggare = ref<Handlaggare | null>(null);
 
-  function setSelectedHandlaggare(handlaggarId: string) {
+  function setSelectedHandlaggare(typId: string) {
     const found = handlaggare.value.find(
-      (handlaggare) => handlaggare.handlaggarId === handlaggarId,
+      (handlaggare) => handlaggare.handlaggarId.typId === typId,
     );
     if (found) {
       selectedHandlaggare.value = found;
@@ -16,7 +17,7 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   }
 
   async function fetchHandlaggare() {
-    const bffUrl = import.meta.env.VITE_BFF_URL ?? "";
+    const bffUrl = env.bffUrl;
     try {
       const response = await fetch(`${bffUrl}/handlaggare`);
       if (!response.ok) {

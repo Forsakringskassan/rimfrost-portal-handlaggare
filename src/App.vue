@@ -23,7 +23,7 @@ const getNextUppgiftFel = ref<string | null>(null);
 const toast = useToast();
 
 const selectedId = computed({
-  get: () => handlaggareStore.selectedHandlaggare?.handlaggarId ?? "",
+  get: () => handlaggareStore.selectedHandlaggare?.handlaggarId.typId ?? "",
   set: (value) => handlaggareStore.setSelectedHandlaggare(value),
 });
 
@@ -83,8 +83,8 @@ async function handleGetNextUppgift() {
           >
             <option
               v-for="handlaggare in handlaggareStore.handlaggare"
-              :key="handlaggare.handlaggarId"
-              :value="handlaggare.handlaggarId"
+              :key="handlaggare.handlaggarId.typId"
+              :value="handlaggare.handlaggarId.typId"
             >
               {{ handlaggare.fornamn }} {{ handlaggare.efternamn }}
             </option>
