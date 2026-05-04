@@ -20,6 +20,7 @@ const store = useProductStore();
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
 const getNextUppgiftFel = ref<string | null>(null);
+const isLoadingHandlaggare = ref(true);
 const toast = useToast();
 
 const selectedId = computed({
@@ -44,6 +45,7 @@ function handleTaskDone(event: Event) {
 
 onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
+  isLoadingHandlaggare.value = false;
   window.addEventListener("task-done", handleTaskDone);
 });
 
@@ -75,12 +77,10 @@ async function handleGetNextUppgift() {
           Rimfrost Demoapp
         </div>
         <template #right>
-          <f-select-field
-            v-if="handlaggareStore.handlaggare.length > 0"
-            id="handlaggare-dropdown"
-            v-model="selectedId"
-            inline
-          >
+          <f-select-field id="handlaggare-dropdown" v-model="selectedId" inline>
+            <option v-if="isLoadingHandlaggare" value="" disabled>
+              Laddar handläggare...
+            </option>
             <option
               v-for="handlaggare in handlaggareStore.handlaggare"
               :key="handlaggare.handlaggarId.typId"
