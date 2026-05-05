@@ -1,0 +1,16 @@
+{
+  "routes": {
+    "rtf-manuell": {
+      "scope": "remoteApp",
+      "module": "VardAvHusdjur",
+      "devEntry": "http://localhost:3031/assets/remoteEntry.js",
+      "prodEntry": "https://cdn.example.com/rtf-manuell/remoteEntry.js"
+    },
+    "bekraftabeslut": {
+      "scope": "bekraftaBeslutApp",
+      "module": "BekraftaBeslut",
+      "devEntry": "http://localhost:3033/assets/remoteEntry.js",
+      "prodEntry": "https://cdn.example.com/bekraftabeslut/remoteEntry.js"
+    }
+  }
+}

@@ -1,6 +1,10 @@
 
 
-# Stage 2: Serve with Apache HTTP Server and inject runtime environment variables
+# LOCAL TESTING ONLY — mirrors the Dockerfile generated inline by the CI workflow.
+# Run `npm run build` first to populate dist/, then `docker build .` to test locally.
+# The authoritative build is defined in .github/workflows/.
+
+# Serve with Apache HTTP Server and inject runtime environment variables
 FROM httpd:latest
 
 USER 0
@@ -10,13 +14,6 @@ RUN rm -rf /usr/local/apache2/htdocs/*
 
 # Copy built app from builder stage
 COPY dist/ /usr/local/apache2/htdocs/
-
-# Copy the runtime environment variable injection script from dist folder
-COPY dist/env.sh /usr/local/bin/env.sh
-
-# Make script executable and ensure Unix line endings
-RUN chmod +x /usr/local/bin/env.sh && \
-    sed -i 's/\r$//' /usr/local/bin/env.sh
 
 # Pass version info and image name as build args
 ARG NEXT_VERSION
@@ -38,12 +35,8 @@ RUN mkdir -p /tmp/apache2/logs /tmp/apache2/run && \
     chmod -R 777 /tmp/apache2
 
 # Create startup script that:
-# 1. Runs runtime environment variable injection
 # 2. Configures httpd with dynamic port and proper permissions
 RUN echo '#!/bin/bash' > /usr/local/bin/start-httpd.sh && \
-    echo '' >> /usr/local/bin/start-httpd.sh && \
-    echo '# Run environment variable injection' >> /usr/local/bin/start-httpd.sh && \
-    echo '/usr/local/bin/env.sh' >> /usr/local/bin/start-httpd.sh && \
     echo '' >> /usr/local/bin/start-httpd.sh && \
     echo '# Configure Apache' >> /usr/local/bin/start-httpd.sh && \
     echo 'PORT=${HTTPD_PORT:-8080}' >> /usr/local/bin/start-httpd.sh && \

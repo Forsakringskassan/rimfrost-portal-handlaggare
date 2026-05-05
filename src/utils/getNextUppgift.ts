@@ -1,51 +1,56 @@
 import { env } from "../config/env.js";
 import { router } from "../router/index.js";
+import { useHandlaggareStore } from "../stores/handlaggareStore.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
 import type { OperativUppgiftItem } from "../types.js";
-import { getUppgifterApiUrl } from "./apiUrls.js";
-import { transformUppgift } from "./transformUppgift.js";
 
-export async function getNextUppgift() {
-  const mockHandlaggarId = env.mockHandlaggareId;
-  try {
-    const response = await fetch(
-      getUppgifterApiUrl(`/handlaggare/${mockHandlaggarId}`),
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
+export async function getNextUppgift(): Promise<void> {
+  const handlaggareStore = useHandlaggareStore();
+  const bffUrl = env.bffUrl;
+  const handlaggarId =
+    handlaggareStore.selectedHandlaggare?.handlaggarId ?? null;
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+  if (!handlaggarId) {
+    throw new Error("Ingen handläggare vald");
+  }
 
-    const data = await response.json();
-    const store = useProductStore();
-    const uppgiftLista = store.uppgiftLista;
+  const response = await fetch(`${bffUrl}/tasks/getNext`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      typId: handlaggarId.typId,
+      varde: handlaggarId.varde,
+    }),
+  });
 
-    const uppgift = transformUppgift(data.uppgift);
-    const exists = uppgiftLista.find(
-      (item: OperativUppgiftItem) => item.uppgiftId === uppgift.uppgiftId,
-    );
-    if (!exists) {
-      const newUppgiftLista = [...uppgiftLista, uppgift];
-      store.setUppgiftLista(newUppgiftLista);
-      goToItem(data.uppgift);
-      return;
-    }
-  } catch (error) {
-    console.error("Error fetching next uppgift:", error);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const store = useProductStore();
+  const uppgiftLista = store.uppgiftLista;
+
+  const uppgift = data.uppgift;
+
+  if (!uppgift) {
+    throw new Error("Ingen uppgift i svaret från backend");
+  }
+
+  const exists = uppgiftLista.find(
+    (item: OperativUppgiftItem) => item.uppgiftId === uppgift.uppgiftId,
+  );
+
+  if (!exists) {
+    const newUppgiftLista = [...uppgiftLista, uppgift];
+    store.setUppgiftLista(newUppgiftLista);
+    goToItem(uppgift);
   }
 }
 
-function goToItem(item: { id: string; typ: string }) {
-  const routeName = "item";
+function goToItem(item: OperativUppgiftItem) {
   router.push({
-    name: routeName,
-    params: { id: item.id.toString() },
-    query: { title: item.typ },
+    name: "item",
+    params: { id: item.handlaggningId.toString() },
   });
 }

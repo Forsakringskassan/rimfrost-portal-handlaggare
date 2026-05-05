@@ -13,8 +13,8 @@ dist-ssr
 *.local
 
 # Environment variables
-.env*
-!.env.example
+.env
+!.env
 
 # Editor directories and files
 .vscode/*
@@ -29,9 +29,14 @@ dist-ssr
 
 .__mf_temp/*
 
+# Used while creating fallback BFF locally
+bff-fallback-responses.json
 .env
 .env.local
 .env.local
 .env.development
 .env.test
 .env.production
+
+.bff-fallback-responses.json
+.__mf__temp

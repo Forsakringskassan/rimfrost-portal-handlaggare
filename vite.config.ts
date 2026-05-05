@@ -4,24 +4,24 @@ import { vitePlugin as apimockPlugin } from "@forsakringskassan/apimock-express"
 import federation from "@originjs/vite-plugin-federation";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
+import routeManifest from "./public/route-manifest.json";
 
-export default defineConfig(({ mode }) => ({
+const isProd = process.env.NODE_ENV === "production";
+
+const remotes = Object.values(routeManifest.routes).reduce(
+  (acc, entry) => {
+    acc[entry.scope] = `${isProd ? entry.prodEntry : entry.devEntry}`;
+    return acc;
+  },
+  {} as Record<string, string>,
+);
+
+export default defineConfig(() => ({
   plugins: [
-    apimockPlugin([{ url: "/api", dir: "mock" }]),
+    apimockPlugin([{ url: "/api/uppgifter", dir: "mock" }]),
     federation({
       name: "app",
-      remotes: {
-        remoteApp:
-          mode === "production"
-            ? process.env.VITE_REMOTE_APP_URL ||
-              "http://localhost:3031/assets/remoteEntry.js"
-            : "http://localhost:3031/assets/remoteEntry.js",
-        exampleApp:
-          mode === "production"
-            ? process.env.VITE_EXAMPLE_APP_URL ||
-              "http://localhost:8083/assets/remoteEntry.js"
-            : "http://localhost:8083/assets/remoteEntry.js",
-      },
+      remotes,
       shared: ["vue", "@fkui/vue", "pinia"],
       exposes: {
         "./pinia": "./src/pinia.ts",
@@ -38,7 +38,8 @@ export default defineConfig(({ mode }) => ({
   server: {
     proxy: {
       "/uppgifter": "http://localhost:8889",
-      "/regel": "http://localhost:8890",
+      "/api/regel/bekraftabeslut": "http://localhost:9003",
+      "/api": "http://localhost:9002",
     },
     port: 3030,
   },

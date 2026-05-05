@@ -25,7 +25,6 @@ services:
       - RUNTIME_REGEL_API_URL=https://regel.production.example.com
       - RUNTIME_KUNDBEHOV_API_URL=https://kundbehov.production.example.com
       - RUNTIME_REMOTE_APP_URL=https://cdn.production.example.com/remoteApp/remoteEntry.js
-      - RUNTIME_EXAMPLE_APP_URL=https://cdn.production.example.com/exampleApp/remoteEntry.js
       - RUNTIME_MOCK_HANDLAGGARE_ID=469ddd20-6796-4e05-9e18-6a95953f6cb3
       - RUNTIME_USE_API=true
     networks:
