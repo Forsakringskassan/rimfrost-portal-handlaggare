@@ -18,10 +18,6 @@ let manifestCache: RouteManifestData | null = null;
 
 const isDev = import.meta.env.MODE === "development";
 
-console.log(
-  `RouteManifest: Running in ${isDev ? "development" : "production"} mode`,
-);
-
 export async function loadManifest(): Promise<RouteManifestData> {
   if (manifestCache) {
     return manifestCache;
