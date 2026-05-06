@@ -21,7 +21,7 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Thi
 - **Vite** - Next-generation frontend tooling
 - **Pinia** - State management for Vue 3
 - **Vue Router** - Official router for Vue.js
-- **Module Federation** - Micro-frontend architecture via @originjs/vite-plugin-federation
+- **Module Federation** - Micro-frontend architecture via @module-federation/vite + @module-federation/enhanced
 - **FKUI Design System** - Försäkringskassan's UI component library
 
 ## Prerequisites
@@ -109,43 +109,20 @@ window.dispatchEvent(
 
 ### Dynamic Remote Loading
 
-This app uses **Module Federation** to dynamically load micro frontends based on task data. The system is fully data-driven—each task carries a `url` field that points to a registered micro frontend entry.
+This app uses **Module Federation** to dynamically load micro frontends based on task data. The system is fully data-driven — each task carries a `url` field that points to a registered micro frontend entry. No portal rebuild is needed to add or update a remote.
 
 ### How It Works
 
 1. **Task arrives with a `url` field** (e.g., `"url": "rtf-manuell"`)
-2. **Host loads manifest** from `public/route-manifest.json` to look up the remote's scope, module, and entry URLs
-3. **Host calls `loadRemoteModule()`** with the route key → loads the remote entry script and imports the module
+2. **Host fetches `public/route-manifest.json`** at runtime to look up the remote's scope, module, and entry URLs
+3. **Host calls `loadRemoteModule()`** → registers the remote via `registerRemotes()` then loads it via `loadRemote()` from `@module-federation/enhanced/runtime`
 4. **Micro frontend renders** with props: `handlaggningId` and `regeltyp`
 
 ### Adding a New Micro Frontend
 
-Follow these three steps to register a new remote:
+Only one step is required in this repo:
 
-### TypeScript Type Declarations for Remotes
-
-Module Federation imports are not recognized by TypeScript at compile time since they are resolved dynamically by Vite. To avoid TypeScript errors, all remote module imports are declared in `src/federation.d.ts`.
-
-#### `src/federation.d.ts`
-
-This file tells the TypeScript compiler that the remote modules exist and what they export. Without it, imports like `import("bekraftaBeslutApp/BekraftaBeslut")` would cause TypeScript errors since the modules are not real npm packages.
-
-**When to update this file:**
-
-Every time you add a new micro frontend, add a corresponding declaration:
-
-```typescript
-declare module "yourRemoteApp/YourComponent" {
-  const component: import("vue").Component;
-  export default component;
-}
-```
-
-The pattern is `${scope}/${module}` — the same values you used in `route-manifest.json` and `loadRemoteModule.ts`.
-
-> **Note:** The `import('vue').Component` syntax is required due to `erasableSyntaxOnly: true` in `tsconfig.app.json`. Standard `import { Component } from 'vue'` inside declare blocks is not allowed.
-
-#### Step 1: Register in `public/route-manifest.json`
+#### Update `public/route-manifest.json`
 
 ```json
 {
@@ -153,70 +130,34 @@ The pattern is `${scope}/${module}` — the same values you used in `route-manif
     "your-route-key": {
       "scope": "yourRemoteApp",
       "module": "YourComponent",
-      "devEntry": "http://localhost:YOUR_PORT/assets/remoteEntry.js",
-      "prodEntry": "https://your-prod-url.example.com/assets/remoteEntry.js"
+      "devEntry": "http://localhost:YOUR_PORT/mf-manifest.json",
+      "prodEntry": "https://your-prod-url.example.com/mf-manifest.json"
     }
   }
 }
 ```
 
-- **scope**: The Module Federation container name (must match your remote's `federation({ name: ... })`)
-- **module**: The exposed component path (e.g., `"./YourComponent"`)
-- **devEntry**: Dev server remote entry URL
-- **prodEntry**: Production remote entry URL
+- **scope**: must match the remote's `federation({ name: ... })` in its `vite.config.ts`
+- **module**: the exposed component key without the leading `./` (e.g., `"YourComponent"` for `exposes: { "./YourComponent": ... }`)
+- **devEntry/prodEntry**: URL to the remote's `mf-manifest.json`
 
-#### Step 2: Update `vite.config.ts` remotes map
+In **production** (OpenShift), this file is a ConfigMap — update it and the new remote is available without rebuilding or redeploying the portal.
 
-The remotes map is auto-generated from the manifest:
+In **development**, refresh the page after editing the file. No portal dev server restart and no changes to any TypeScript source files are needed.
 
-```typescript
-const remotes = Object.entries(routeManifest.routes).reduce(
-  (acc, [key, entry]) => {
-    acc[entry.scope] = `${isProd ? entry.prodEntry : entry.devEntry}`;
-    return acc;
-  },
-  {} as Record<string, string>,
-);
-```
+#### Backend/BFF
 
-This runs automatically at build time, so you don't need to manually edit it.
+Have the backend set the task's `url` field to your route key (e.g., `"url": "your-route-key"`). Ensure your micro frontend accepts `handlaggningId` and `regeltyp` props.
 
-#### Step 3: Add to `src/utils/loadRemoteModule.ts` and `src/federation.d.ts`
-
-Add your route key to the importer lookup in `loadRemoteModule.ts`:
-
-```typescript
-const remoteImporters: Record<string, () => Promise<{ default: unknown }>> = {
-  "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
-  "your-route-key": () => import("yourRemoteApp/YourComponent"),
-};
-```
-
-And add a type declaration in `src/federation.d.ts`:
-
-```typescript
-declare module "yourRemoteApp/YourComponent" {
-  const component: import("vue").Component;
-  export default component;
-}
-```
-
-#### Step 4: Backend/BFF updates
-
-- Have the backend set the task's `url` field to your route key (e.g., `"url": "your-route-key"`)
-- Ensure your micro frontend has a similar structure to `rimfrost-regel-rtf-manuell-fe`, accepting `handlaggningId` and `regeltyp` props
+### Building for Production
 
 ```bash
-# Build for production
 npm run build
 ```
-
-The production-ready files will be generated in the `dist/` directory.
 
 ### Preview Production Build
 
 ```bash
-# Preview production build locally
 npm run preview
 ```
 
@@ -284,7 +225,7 @@ rimfrost-portal-handlaggare/
 
 - **`public/route-manifest.json`**: Central registry of all available micro frontends
 - **`src/utils/loadRemoteModule.ts`**: Loads and instantiates remotes dynamically
-- **`src/federation.d.ts`**: TypeScript type declarations for remote modules
+- **`src/config/remoteRegistry.ts`**: Fetches and caches `route-manifest.json` at runtime
 - **`src/stores/handlaggareStore.ts`**: Manages selected case handler state
 - **`src/components/OppnadUppgift.vue`**: Container that renders the loaded micro frontend
 
@@ -294,14 +235,20 @@ rimfrost-portal-handlaggare/
 
 Your micro frontend must:
 
-1. **Use Module Federation** with `@originjs/vite-plugin-federation`
+1. **Use Module Federation** with `@module-federation/vite`
 2. **Declare a unique name** in `vite.config.ts` (e.g., `federation({ name: "yourRemoteApp" })`)
 3. **Expose a component** (e.g., `exposes: { "./YourComponent": "./src/components/YourComponent.vue" }`)
-4. **Share dependencies** with the host (Vue, @fkui/vue, Pinia):
+4. **Enable manifest generation** and auto publicPath so the runtime resolves chunk URLs correctly:
 
 ```typescript
 federation({
-  shared: ["vue", "@fkui/vue", "pinia"],
+  manifest: true,
+  publicPath: "auto",
+  shared: {
+    vue: { singleton: true, requiredVersion: "^3.x.x" },
+    "@fkui/vue": { singleton: true, requiredVersion: "^6.x.x" },
+    pinia: { singleton: true, requiredVersion: "^3.x.x" },
+  },
 });
 ```
 
@@ -319,9 +266,9 @@ Both host and remotes share these libraries to avoid duplication:
 
 If developing the host and remote simultaneously:
 
-1. Start remote dev server: `npm run dev` (e.g., port 3032)
-2. Start host dev server: `npm run dev` (e.g., port 3030)
-3. Host automatically loads from remote's dev entry URL
+1. Start the remote dev server: `npm run dev` (e.g., port 3031)
+2. Start the host dev server: `npm run dev` (port 3030)
+3. The host fetches the remote's `mf-manifest.json` at runtime — no build step needed for the remote
 4. Hot-reload works on both sides
 
 ## API Integration
