@@ -9,14 +9,14 @@
     "rtf-manuell": {
       "scope": "remoteApp",
       "module": "VardAvHusdjur",
-      "devEntry": "http://localhost:3031/assets/remoteEntry.js",
-      "prodEntry": "https://cdn.example.com/rtf-manuell/remoteEntry.js"
+      "devEntry": "http://localhost:3031/mf-manifest.json",
+      "prodEntry": "https://cdn.example.com/rtf-manuell/mf-manifest.json"
     },
     "bekraftabeslut": {
       "scope": "bekraftaBeslutApp",
       "module": "BekraftaBeslut",
-      "devEntry": "http://localhost:3033/assets/remoteEntry.js",
-      "prodEntry": "https://cdn.example.com/bekraftabeslut/remoteEntry.js"
+      "devEntry": "http://localhost:3033/mf-manifest.json",
+      "prodEntry": "https://cdn.example.com/bekraftabeslut/mf-manifest.json"
     }
   }
 }
