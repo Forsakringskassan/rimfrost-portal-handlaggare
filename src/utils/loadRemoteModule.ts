@@ -3,6 +3,7 @@
 const remoteImporters: Record<string, () => Promise<{ default: unknown }>> = {
   "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
   bekraftabeslut: () => import("bekraftaBeslutApp/BekraftaBeslut"),
+  template: () => import("microFeTemplateApp/ExampleComponent"),
 };
 
 export async function loadRemoteModule(remoteName: string) {

@@ -22,7 +22,11 @@ export default defineConfig(() => ({
     federation({
       name: "app",
       remotes,
-      shared: ["vue", "@fkui/vue", "pinia"],
+      shared: {
+        vue: { requiredVersion: "^3.5.0" },
+        "@fkui/vue": { requiredVersion: "^6.0.0" },
+        pinia: { requiredVersion: "^3.0.4" },
+      },
       exposes: {
         "./pinia": "./src/pinia.ts",
       },

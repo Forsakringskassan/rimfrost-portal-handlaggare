@@ -1,5 +1,11 @@
 {
   "routes": {
+    "template": {
+      "scope": "microFeTemplateApp",
+      "module": "ExampleComponent",
+      "devEntry": "http://localhost:3039/assets/remoteEntry.js",
+      "prodEntry": "https://cdn.example.com/template/remoteEntry.js"
+    },
     "rtf-manuell": {
       "scope": "remoteApp",
       "module": "VardAvHusdjur",
