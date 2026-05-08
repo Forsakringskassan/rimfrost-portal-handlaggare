@@ -19,11 +19,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import("../components/OppnadUppgift.vue"),
         props: true,
       },
-      {
-        path: "dev/template",
-        name: "dev-template",
-        component: () => import("../components/DevTemplateMFE.vue"),
-      },
     ],
   },
 ];

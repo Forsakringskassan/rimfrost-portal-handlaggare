@@ -43,6 +43,17 @@ function handleTaskDone(event: Event) {
   toast.success(customEvent.detail.message || "Uppgift slutförd");
 }
 
+function openExample() {
+  console.log("klick på knapp");
+  router.push({
+    name: "item",
+    params: {
+      id: "remoteExample",
+    },
+    query: { title: "Exempel" },
+  });
+}
+
 onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
   isLoadingHandlaggare.value = false;
@@ -111,9 +122,7 @@ async function handleGetNextUppgift() {
           </div>
           <div class="nav-footer">
             <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
-            <FButton
-              variant="secondary"
-              @click="router.push({ name: 'dev-template' })"
+            <FButton variant="secondary" @click="openExample"
               >Ladda template MFE</FButton
             >
             <p v-if="getNextUppgiftFel" class="error-message">
