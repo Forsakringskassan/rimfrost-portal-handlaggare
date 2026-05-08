@@ -24,7 +24,12 @@ async function loadManifest() {
         }
         return response.json();
       })
-      .then((json) => json.routes);
+      .then((json) => json.routes)
+      .catch((err) => {
+        console.error("Error loading route manifest:", err);
+        manifestPromise = null;
+        throw err;
+      });
   }
   return manifestPromise;
 }
