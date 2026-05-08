@@ -110,10 +110,12 @@ async function handleGetNextUppgift() {
             </div>
           </div>
           <div class="nav-footer">
-            <FButton variant="secondary" @click="router.push('/dev/template')"
+            <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
+            <FButton
+              variant="secondary"
+              @click="router.push({ name: 'dev-template' })"
               >Ladda template MFE</FButton
             >
-            <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
             <p v-if="getNextUppgiftFel" class="error-message">
               {{ getNextUppgiftFel }}
             </p>
