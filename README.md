@@ -114,15 +114,17 @@ This app uses **Module Federation** to dynamically load micro frontends based on
 ### How It Works
 
 1. **Task arrives with a `url` field** (e.g., `"url": "rtf-manuell"`)
-2. **Host fetches `public/route-manifest.json`** at runtime to look up the remote's scope, module, and entry URLs
+2. **Host fetches the remote registry** from Portal BFF (`GET /api/route-manifest`) to look up the remote's scope, module, and entry URLs. Falls back to `public/route-manifest.json` only in local dev when no BFF is running.
 3. **Host calls `loadRemoteModule()`** → registers the remote via `registerRemotes()` then loads it via `loadRemote()` from `@module-federation/enhanced/runtime`
 4. **Micro frontend renders** with props: `handlaggningId` and `regeltyp`
 
 ### Adding a New Micro Frontend
 
-Only one step is required in this repo:
+**No changes to this repo are required.** The registry lives in `rimfrost-portal-bff`.
 
-#### Update `public/route-manifest.json`
+#### Update `remotes.json` in `rimfrost-portal-bff`
+
+Add an entry to `rimfrost-portal-bff/remotes.json`:
 
 ```json
 {
@@ -141,9 +143,9 @@ Only one step is required in this repo:
 - **module**: the exposed component key without the leading `./` (e.g., `"YourComponent"` for `exposes: { "./YourComponent": ... }`)
 - **devEntry/prodEntry**: URL to the remote's `mf-manifest.json`
 
-In **production** (OpenShift), this file is a ConfigMap — update it and the new remote is available without rebuilding or redeploying the portal.
+In **production** (Kubernetes/OpenShift), `remotes.json` is replaced by a ConfigMap mounted at the path specified by `REMOTES_CONFIG_PATH` on the BFF. Update the ConfigMap and the change takes effect immediately — no rebuild or restart of the portal or BFF is needed.
 
-In **development**, refresh the page after editing the file. No portal dev server restart and no changes to any TypeScript source files are needed.
+In **development**, the BFF re-reads the file on every request — just save the file and reload the page.
 
 #### Backend/BFF
 
@@ -185,7 +187,7 @@ window._env_ = {
 
 In OpenShift this is done via a ConfigMap mounted with `subPath`. See [ENV_SETUP.md](ENV_SETUP.md).
 
-Micro frontend entry URLs are configured in `public/route-manifest.json` under `devEntry` and `prodEntry`, not via environment variables.
+Micro frontend entry URLs are configured in `remotes.json` in `rimfrost-portal-bff` (or the Kubernetes ConfigMap pointed to by `REMOTES_CONFIG_PATH` on the BFF), not via environment variables on the portal.
 
 ## Project Structure
 
@@ -216,16 +218,16 @@ rimfrost-portal-handlaggare/
 │   ├── federation.d.ts              # TypeScript declarations for remote modules
 │   └── types.ts                     # Type definitions
 ├── public/
-│   └── route-manifest.json          # MFE registry (scope, module, entry URLs)
+│   └── route-manifest.json          # Local dev fallback only — authoritative registry lives in rimfrost-portal-bff
 ├── vite.config.ts                   # Vite & Module Federation config
 └── package.json                     # Dependencies & scripts
 ```
 
 ### Key Files
 
-- **`public/route-manifest.json`**: Central registry of all available micro frontends
 - **`src/utils/loadRemoteModule.ts`**: Loads and instantiates remotes dynamically
-- **`src/config/remoteRegistry.ts`**: Fetches and caches `route-manifest.json` at runtime
+- **`src/config/remoteRegistry.ts`**: Fetches the remote registry from Portal BFF at runtime; falls back to `public/route-manifest.json` in local dev without a BFF
+- **`public/route-manifest.json`**: Local dev fallback registry — the authoritative registry is `remotes.json` in `rimfrost-portal-bff`
 - **`src/stores/handlaggareStore.ts`**: Manages selected case handler state
 - **`src/components/OppnadUppgift.vue`**: Container that renders the loaded micro frontend
 
@@ -278,6 +280,7 @@ This host app communicates only with the **Portal BFF**:
 - `GET /handlaggare` - Fetch available case handlers
 - `GET /tasks/:handlaggarId` - Fetch all tasks assigned to a handler
 - `POST /tasks/getNext/:handlaggarId` - Fetch the next available task
+- `GET /api/route-manifest` - Fetch the micro-frontend remote registry
 
 The Portal BFF fetches from backend services and returns mock data when unavailable.
 
