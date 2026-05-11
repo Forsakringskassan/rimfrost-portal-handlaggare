@@ -1,5 +1,11 @@
 {
   "routes": {
+    "remoteExample": {
+      "scope": "remoteExample",
+      "module": "ExampleComponent",
+      "devEntry": "http://localhost:3039/mf-manifest.json",
+      "prodEntry": "https://cdn.example.com/template/mf-manifest.json"
+    },
     "rtf-manuell": {
       "scope": "remoteApp",
       "module": "VardAvHusdjur",

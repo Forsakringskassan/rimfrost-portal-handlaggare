@@ -10,7 +10,6 @@ function getMFInstance() {
     getInstance() ?? createInstance({ name: "app", remotes: [], shared: {} })
   );
 }
-
 export async function loadRemoteModule(routeKey: string): Promise<Component> {
   const mf = getMFInstance();
   const config = await getRemoteConfig(routeKey);
