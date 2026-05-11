@@ -71,6 +71,41 @@ npm run dev
 
 The application will be available at `http://localhost:3030`.
 
+## Testing
+
+Unit tests are written with [Vitest](https://vitest.dev/) and [@vue/test-utils](https://test-utils.vuejs.org/), using [happy-dom](https://github.com/capricorn86/happy-dom) as the DOM environment.
+
+```bash
+# Run tests in watch mode
+npm test
+
+# Run once and generate a coverage report (output: coverage/)
+npm run test:coverage
+```
+
+Tests live next to the code they cover in `__tests__` directories:
+
+```
+src/
+└── stores/
+    ├── handlaggareStore.ts
+    ├── uppgiftListaStore.ts
+    └── __tests__/
+        ├── handlaggareStore.spec.ts
+        └── uppgiftListaStore.spec.ts
+```
+
+### Conventions
+
+- Each store and util gets its own `*.spec.ts` file in a sibling `__tests__/` directory.
+- Store tests call `setActivePinia(createPinia())` in `beforeEach` to isolate state between tests.
+- `fetch` is mocked with `vi.stubGlobal("fetch", ...)` and cleaned up in `afterEach` via `vi.unstubAllGlobals()`.
+
+### Config
+
+- `vitest.config.ts` — standalone Vitest config using only the Vue plugin (the Module Federation plugin is excluded as it is incompatible with the test environment).
+- `tsconfig.vitest.json` — extends `tsconfig.app.json` and adds `vitest/globals` types.
+
 ## Handläggare Selection (Dev Only)
 
 A dropdown in the application header allows switching between case handlers during development. Handlers are fetched from Portal BFF (`GET /handlaggare`) with automatic mock fallback.
