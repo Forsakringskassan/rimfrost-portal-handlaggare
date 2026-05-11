@@ -44,7 +44,6 @@ function handleTaskDone(event: Event) {
 }
 
 function openExample() {
-  console.log("klick på knapp");
   router.push({
     name: "item",
     params: {
