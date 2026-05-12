@@ -31,6 +31,11 @@ export default defineConfig(() => ({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  // TODO: after deploying under a sub-path, verify that Module Federation dynamic chunk
+  // loading still works (open a task that loads a remote MFE and check the network tab).
+  // If chunks 404, add `publicPath: "auto"` to the federation() config above — this tells
+  // the MF runtime to infer its base URL from the executing script's src attribute at
+  // runtime instead of relying on the static Vite base.
   base: "./",
   build: {
     target: "esnext",

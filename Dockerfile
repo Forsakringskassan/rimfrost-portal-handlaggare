@@ -14,6 +14,7 @@ RUN rm -rf /usr/local/apache2/htdocs/*
 
 # Copy built app from builder stage
 COPY dist/ /usr/local/apache2/htdocs/
+COPY apache-spa.conf /usr/local/apache2/conf/spa.conf
 
 # Pass version info and image name as build args
 ARG NEXT_VERSION
@@ -47,6 +48,8 @@ RUN echo '#!/bin/bash' > /usr/local/bin/start-httpd.sh && \
     echo 'sed -i "s|#PidFile logs/httpd.pid|PidFile /tmp/apache2/run/httpd.pid|" /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
     echo 'echo "PidFile /tmp/apache2/run/httpd.pid" >> /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
     echo 'echo "ServerName localhost" >> /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+    echo 'sed -i "s|#LoadModule rewrite_module|LoadModule rewrite_module|" /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
+    echo 'echo "Include /usr/local/apache2/conf/spa.conf" >> /tmp/httpd.conf' >> /usr/local/bin/start-httpd.sh && \
     echo '' >> /usr/local/bin/start-httpd.sh && \
     echo '# Display container information' >> /usr/local/bin/start-httpd.sh && \
     echo 'echo "Starting container: $IMAGE_NAME"' >> /usr/local/bin/start-httpd.sh && \

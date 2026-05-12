@@ -114,7 +114,7 @@ This app uses **Module Federation** to dynamically load micro frontends based on
 ### How It Works
 
 1. **Task arrives with a `url` field** (e.g., `"url": "rtf-manuell"`)
-2. **Host fetches the remote registry** from Portal BFF (`GET /api/route-manifest`) to look up the remote's scope, module, and entry URLs. Falls back to `public/route-manifest.json` only in local dev when no BFF is running.
+2. **Host fetches the remote registry** from Portal BFF (`GET /api/route-manifest`) to look up the remote's scope, module, and entry URLs. Falls back to `public/route-manifest.json` when `RUNTIME_BFF_URL` is not set.
 3. **Host calls `loadRemoteModule()`** → registers the remote via `registerRemotes()` then loads it via `loadRemote()` from `@module-federation/enhanced/runtime`
 4. **Micro frontend renders** with props: `handlaggningId` and `regeltyp`
 
@@ -169,7 +169,7 @@ Config is split between local development and container deployments. See [ENV_SE
 
 ### Local development
 
-Set variables in `.env`. These are baked into the bundle at build time and are **not configurable** after the image is built.
+Set variables in `.env.development`. These are only active during `npm run dev` and are **not included in production builds**.
 
 ```env
 VITE_BFF_URL=http://localhost:9001
