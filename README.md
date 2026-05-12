@@ -341,6 +341,46 @@ Figma design file: [Rimfrost-FE](https://www.figma.com/design/bPSo3oZMvp9Mbm7keQ
 
 The application is built to support modern browsers. Ensure your target browsers support ES2015+ features.
 
+## E2E Testing
+
+End-to-end tests are written with [Playwright](https://playwright.dev/) and live in the `e2e/` directory.
+
+### Setup
+
+The tests require both the portal dev server (port 3030) and the template-micro-fe **preview** server (port 3039) to be running. Playwright starts them automatically when you run the tests.
+
+> **First run:** Playwright uses `vite --force` to start the portal, which clears the Vite optimizer cache. This takes ~30 s on the first run but is fast on subsequent runs when the servers are already up.
+
+### Running tests
+
+```bash
+# Headless (default — use in CI and for quick checks)
+npm run test:e2e
+
+# Interactive UI mode (recommended for development)
+npm run test:e2e:ui
+
+# Headed browser (useful for debugging)
+npm run test:e2e:headed
+
+# Step-through debugger
+npm run test:e2e:debug
+```
+
+### Test structure
+
+| File                    | What it covers                                                                      |
+| ----------------------- | ----------------------------------------------------------------------------------- |
+| `e2e/portal.spec.ts`    | App header, sidebar, handläggare dropdown, toast notifications, home navigation     |
+| `e2e/uppgifter.spec.ts` | Task list rendering, empty state, click navigation, error states, task-done removal |
+| `e2e/mfe.spec.ts`       | Template MFE route navigation, successful load, load-error state                    |
+
+### How mocking works
+
+BFF calls are intercepted at the network level via `page.route()` in `e2e/fixtures.ts`. No real BFF or backend is needed to run the tests. The mock data and route-manifest entries match the values in `public/route-manifest.json`.
+
+The `gotoPortal()` helper in `e2e/fixtures.ts` navigates to the app and waits for the `/handlaggare` response before proceeding — this is necessary because `@module-federation/vite` bootstraps the app asynchronously, so the Vue app is not mounted when `page.goto()` resolves.
+
 ## Contributing
 
 1. Follow the conventional commits specification
