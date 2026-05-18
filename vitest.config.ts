@@ -10,6 +10,7 @@ export default defineConfig({
     },
   },
   test: {
+    include: ["src/**/*.{spec,test}.ts"],
     environment: "happy-dom",
     globals: true,
     coverage: {
