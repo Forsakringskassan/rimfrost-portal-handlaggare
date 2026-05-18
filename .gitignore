@@ -40,3 +40,7 @@ bff-fallback-responses.json
 
 .bff-fallback-responses.json
 .__mf__temp
+
+# Playwright test artifacts
+playwright-report/
+test-results/
