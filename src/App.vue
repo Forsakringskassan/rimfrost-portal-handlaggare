@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import {
   FButton,
   FLayoutApplicationTemplate,
   FLayoutLeftPanel,
   FPageHeader,
-  FSelectField,
 } from "@fkui/vue";
 import { useRouter } from "vue-router";
+import LoginModal from "./components/LoginModal.vue";
+import StartPage from "./components/StartPage.vue";
 import ToastContainer from "./components/ToastContainer.vue";
 import UppgiftLista from "./components/UppgiftLista.vue";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
@@ -20,13 +21,8 @@ const store = useProductStore();
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
 const getNextUppgiftFel = ref<string | null>(null);
-const isLoadingHandlaggare = ref(true);
+const isLoginOpen = ref(false);
 const toast = useToast();
-
-const selectedId = computed({
-  get: () => handlaggareStore.selectedHandlaggare?.handlaggarId.typId ?? "",
-  set: (value) => handlaggareStore.setSelectedHandlaggare(value),
-});
 
 watch(
   () => handlaggareStore.selectedHandlaggare,
@@ -55,13 +51,31 @@ function openExample() {
 
 onMounted(async () => {
   await handlaggareStore.fetchHandlaggare();
-  isLoadingHandlaggare.value = false;
   window.addEventListener("task-done", handleTaskDone);
 });
 
 onUnmounted(() => {
   window.removeEventListener("task-done", handleTaskDone);
 });
+
+function handleLogin() {
+  isLoginOpen.value = true;
+}
+
+function onLoginConfirm(result: { selectedId: string; securityCode: string }) {
+  handlaggareStore.login(result.selectedId);
+  isLoginOpen.value = false;
+}
+
+function onLoginCancel() {
+  isLoginOpen.value = false;
+}
+
+function handleLogout() {
+  handlaggareStore.logout();
+  store.setUppgiftLista([]);
+  router.push("/");
+}
 
 async function handleGetNextUppgift() {
   getNextUppgiftFel.value = null;
@@ -77,6 +91,12 @@ async function handleGetNextUppgift() {
 
 <template>
   <ToastContainer />
+  <LoginModal
+    v-if="isLoginOpen"
+    :handlaggare="handlaggareStore.handlaggare"
+    @confirm="onLoginConfirm"
+    @cancel="onLoginCancel"
+  />
   <f-layout-application-template>
     <template #header>
       <f-page-header skip-link="main-title">
@@ -87,23 +107,33 @@ async function handleGetNextUppgift() {
           Rimfrost Demoapp
         </div>
         <template #right>
-          <f-select-field id="handlaggare-dropdown" v-model="selectedId" inline>
-            <option v-if="isLoadingHandlaggare" value="" disabled>
-              Laddar handläggare...
-            </option>
-            <option
-              v-for="handlaggare in handlaggareStore.handlaggare"
-              :key="handlaggare.handlaggarId.typId"
-              :value="handlaggare.handlaggarId.typId"
-            >
-              {{ handlaggare.fornamn }} {{ handlaggare.efternamn }}
-            </option>
-          </f-select-field>
+          <template v-if="handlaggareStore.isAuthenticated">
+            <div style="display: flex; align-items: baseline; gap: 1rem">
+              <span style="line-height: 1.25">
+                Du är inloggad som
+                {{ handlaggareStore.selectedHandlaggare?.fornamn }}
+                {{ handlaggareStore.selectedHandlaggare?.efternamn }}
+              </span>
+              <FButton
+                variant="tertiary"
+                tertiary-style="inverted"
+                @click="handleLogout"
+                >Logga ut</FButton
+              >
+            </div>
+          </template>
+          <FButton
+            v-else
+            variant="tertiary"
+            tertiary-style="inverted"
+            @click="handleLogin"
+            >Logga in</FButton
+          >
         </template>
       </f-page-header>
     </template>
 
-    <f-layout-left-panel>
+    <f-layout-left-panel v-if="handlaggareStore.isAuthenticated">
       <template #heading>
         <h3 class="h3">Uppgifter</h3>
       </template>
@@ -133,6 +163,7 @@ async function handleGetNextUppgift() {
 
       <router-view />
     </f-layout-left-panel>
+    <StartPage v-else />
 
     <template #footer>
       <div
@@ -187,7 +218,9 @@ div:has(.left-nav-custom) {
   font-size: 0.875rem;
   padding: 0.25rem 0;
 }
-.layout-navigation__navigation {
-  top: var(--fkui-header-height, 5.688rem) !important;
+
+.page-header button {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 </style>
