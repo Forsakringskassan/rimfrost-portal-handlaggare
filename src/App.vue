@@ -73,7 +73,8 @@ function onLoginCancel() {
 
 function handleLogout() {
   handlaggareStore.logout();
-  store.setUppgiftLista([]);
+  store.$reset();
+  getNextUppgiftFel.value = null;
   router.push("/");
 }
 
@@ -108,8 +109,8 @@ async function handleGetNextUppgift() {
         </div>
         <template #right>
           <template v-if="handlaggareStore.isAuthenticated">
-            <div style="display: flex; align-items: baseline; gap: 1rem">
-              <span style="line-height: 1.25">
+            <div class="header-user">
+              <span class="header-user__name">
                 Du är inloggad som
                 {{ handlaggareStore.selectedHandlaggare?.fornamn }}
                 {{ handlaggareStore.selectedHandlaggare?.efternamn }}
@@ -222,5 +223,15 @@ div:has(.left-nav-custom) {
 .page-header button {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+.header-user {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.header-user__name {
+  line-height: 1.25;
 }
 </style>

@@ -6,6 +6,7 @@ import type { Handlaggare } from "../types";
 export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const handlaggare = ref<Handlaggare[]>([]);
   const selectedHandlaggare = ref<Handlaggare | null>(null);
+  // Persistence of login state will be handled later
   const isAuthenticated = ref(false);
 
   function setSelectedHandlaggare(typId: string) {
