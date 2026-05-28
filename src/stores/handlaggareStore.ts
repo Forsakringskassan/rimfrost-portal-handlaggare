@@ -44,6 +44,7 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
       }
 
       handlaggare.value = data.handlaggare;
+      selectedHandlaggare.value = data.handlaggare[0] ?? null;
     } catch (error) {
       console.error("Fel vid hämtning av handläggare:", error);
     }
