@@ -6,6 +6,8 @@ import type { Handlaggare } from "../types";
 export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const handlaggare = ref<Handlaggare[]>([]);
   const selectedHandlaggare = ref<Handlaggare | null>(null);
+  // Persistence of login state will be handled later
+  const isAuthenticated = ref(false);
 
   function setSelectedHandlaggare(typId: string) {
     const found = handlaggare.value.find(
@@ -14,6 +16,16 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
     if (found) {
       selectedHandlaggare.value = found;
     }
+  }
+
+  function login(typId: string) {
+    setSelectedHandlaggare(typId);
+    isAuthenticated.value = true;
+  }
+
+  function logout() {
+    selectedHandlaggare.value = null;
+    isAuthenticated.value = false;
   }
 
   async function fetchHandlaggare() {
@@ -32,7 +44,7 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
       }
 
       handlaggare.value = data.handlaggare;
-      selectedHandlaggare.value = handlaggare.value.at(0) ?? null;
+      selectedHandlaggare.value = data.handlaggare[0] ?? null;
     } catch (error) {
       console.error("Fel vid hämtning av handläggare:", error);
     }
@@ -41,6 +53,9 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   return {
     handlaggare,
     selectedHandlaggare,
+    isAuthenticated,
+    login,
+    logout,
     setSelectedHandlaggare,
     fetchHandlaggare,
   };

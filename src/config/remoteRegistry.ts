@@ -1,3 +1,5 @@
+import { env } from "./env";
+
 interface RemoteConfig {
   scope: string;
   module: string;
@@ -9,17 +11,32 @@ let manifestPromise: Promise<Record<string, RemoteConfig>> | null = null;
 
 async function loadManifest() {
   if (!manifestPromise) {
-    manifestPromise = fetch("/route-manifest.json")
-      .then((response) => response.json())
-      .then((json) => json.routes);
-  }
+    const url = env.bffUrl
+      ? `${env.bffUrl}/api/route-manifest`
+      : "/route-manifest.json";
 
+    manifestPromise = fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch route manifest: ${response.statusText}`,
+          );
+        }
+        return response.json();
+      })
+      .then((json) => json.routes)
+      .catch((err) => {
+        console.error("Error loading route manifest:", err);
+        manifestPromise = null;
+        throw err;
+      });
+  }
   return manifestPromise;
 }
 
 export async function getRemoteConfig(routeKey: string) {
   const manifest = await loadManifest();
-  const normalizedKey = routeKey.replace(/^\//, ""); // Remove leading slash if present
+  const normalizedKey = routeKey.replace(/^\//, "");
   const config = manifest[normalizedKey];
 
   if (!config) {

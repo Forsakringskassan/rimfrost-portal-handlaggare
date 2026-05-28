@@ -1,17 +1,30 @@
-/* eslint-disable import/no-unresolved -- Handled by Vite Module Federation plugin */
+import type { Component } from "vue";
+import { createInstance, getInstance } from "@module-federation/runtime";
+import { getRemoteConfig } from "../config/remoteRegistry";
 
-const remoteImporters: Record<string, () => Promise<{ default: unknown }>> = {
-  "rtf-manuell": () => import("remoteApp/VardAvHusdjur"),
-  bekraftabeslut: () => import("bekraftaBeslutApp/BekraftaBeslut"),
-};
+function getMFInstance() {
+  // In prod the plugin bootstrap has already called init(), so getInstance()
+  // returns the fully-configured instance. In dev mode the bootstrap runs
+  // asynchronously and may not have fired yet, so we create a minimal instance.
+  return (
+    getInstance() ?? createInstance({ name: "app", remotes: [], shared: {} })
+  );
+}
+export async function loadRemoteModule(routeKey: string): Promise<Component> {
+  const mf = getMFInstance();
+  const config = await getRemoteConfig(routeKey);
 
-export async function loadRemoteModule(remoteName: string) {
-  const importer = remoteImporters[remoteName];
+  mf.registerRemotes([{ name: config.scope, entry: config.entryUrl }], {
+    force: true,
+  });
 
-  if (!importer) {
-    throw new Error(`No importer found for remote: ${remoteName}`);
+  const module = await mf.loadRemote<{ default: Component }>(
+    `${config.scope}/${config.module}`,
+  );
+
+  if (!module) {
+    throw new Error(`Failed to load remote module: ${routeKey}`);
   }
 
-  const module = await importer();
-  return module.default ?? module;
+  return module.default ?? (module as unknown as Component);
 }

@@ -6,7 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@fkui/date": "^6.24.0",
@@ -22,7 +28,8 @@
     "@forsakringskassan/eslint-config-vue": "^13.2.9",
     "@forsakringskassan/prettier-config": "^3.3.2",
     "@forsakringskassan/template-api": "^1.11.0",
-    "@originjs/vite-plugin-federation": "^1.4.1",
+    "@module-federation/enhanced": "^2.4.0",
+    "@module-federation/runtime": "^2.4.0",
     "pinia": "^3.0.4",
     "sass": "^1.93.3",
     "vue": "^3.5.22",
@@ -32,12 +39,18 @@
     "@forsakringskassan/apimock-express": "^2.11.0",
     "@forsakringskassan/commitlint-config": "^3.3.3",
     "@forsakringskassan/devindex-menu": "^1.10.0",
+    "@module-federation/vite": "^1.15.2",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^24.6.0",
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vitest/coverage-v8": "^4.1.5",
+    "@vue/test-utils": "^2.4.10",
     "@vue/tsconfig": "^0.8.1",
+    "happy-dom": "^20.9.0",
     "typescript": "~5.9.3",
     "vite": "^7.1.7",
     "vite-plugin-vue-devtools": "^8.0.3",
+    "vitest": "^4.1.5",
     "vue-tsc": "^3.1.0"
   },
   "commitlint": {

@@ -27,25 +27,26 @@ const currentUppgift = computed(() => {
   );
 });
 
-const remoteName = computed(() => {
+const remoteKey = computed(() => {
   const url = currentUppgift.value?.url ?? "";
-  return url.split("/").pop() ?? "";
+  return url.split("/").pop() || handlaggningId.value || "";
 });
 
 async function loadComponent() {
-  if (!remoteName.value) {
+  if (!remoteKey.value) {
     error.value = "Uppgiften saknar en giltig url — kan inte ladda komponent";
     return;
   }
 
   isLoading.value = true;
   error.value = null;
+  RemoteComponent.value = null;
 
   try {
-    const component = await loadRemoteModule(remoteName.value);
+    const component = await loadRemoteModule(remoteKey.value);
     RemoteComponent.value = component;
   } catch (err) {
-    error.value = `Kunde inte ladda komponent för "${remoteName.value}". Kontrollera att micro-frontenden körs.`;
+    error.value = `Kunde inte ladda komponent för "${remoteKey.value}". Kontrollera att micro-frontenden körs.`;
     console.error(err);
   } finally {
     isLoading.value = false;
@@ -53,14 +54,18 @@ async function loadComponent() {
 }
 
 watch(
-  currentUppgift,
-  (uppgift) => {
-    if (uppgift && handlaggningId.value) {
-      if (handlaggningId.value !== loadedHandlaggningId.value) {
-        loadedHandlaggningId.value = handlaggningId.value;
-        loadComponent();
-      }
-    } else if (!uppgift && handlaggningId.value) {
+  [currentUppgift, handlaggningId],
+  ([uppgift, id]) => {
+    if (!id || id === loadedHandlaggningId.value) return;
+
+    if (uppgift) {
+      loadedHandlaggningId.value = id;
+      loadComponent();
+    } else if (!uppgiftLista.value.some((u) => u.handlaggningId === id)) {
+      // id is not an uppgift — treat as a direct manifest key
+      loadedHandlaggningId.value = id;
+      loadComponent();
+    } else {
       router.push("/");
     }
   },
