@@ -2,7 +2,7 @@
 
 <template>
   <div class="start-page">
-    <h1 class="h1">Välkommen till Nubulosa!</h1>
+    <h1 class="h1">Välkommen till Nebulosa!</h1>
   </div>
 </template>
 
