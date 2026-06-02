@@ -10,7 +10,7 @@ import { loadRemoteModule } from "../utils/loadRemoteModule";
 const route = useRoute();
 const router = useRouter();
 const store = useProductStore();
-const { uppgiftLista } = storeToRefs(store);
+const { uppgiftLista, hasFetched } = storeToRefs(store);
 
 const handlaggningId = computed(() => route.params.id as string | null);
 const componentKey = ref(0);
@@ -54,13 +54,16 @@ async function loadComponent() {
 }
 
 watch(
-  [currentUppgift, handlaggningId],
-  ([uppgift, id]) => {
+  [currentUppgift, handlaggningId, hasFetched],
+  ([uppgift, id, fetched]) => {
     if (!id || id === loadedHandlaggningId.value) return;
 
     if (uppgift) {
       loadedHandlaggningId.value = id;
       loadComponent();
+    } else if (!fetched) {
+      // Task list hasn't loaded yet — wait for it
+      return;
     } else if (!uppgiftLista.value.some((u) => u.handlaggningId === id)) {
       // id is not an uppgift — treat as a direct manifest key
       loadedHandlaggningId.value = id;

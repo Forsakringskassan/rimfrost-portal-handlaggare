@@ -37,6 +37,7 @@ watch(
 function handleTaskDone(event: Event) {
   const customEvent = event as CustomEvent;
   toast.success(customEvent.detail.message || "Uppgift slutförd");
+  router.push("/");
 }
 
 function openExample() {

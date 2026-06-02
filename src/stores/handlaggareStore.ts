@@ -3,10 +3,11 @@ import { defineStore } from "pinia";
 import { env } from "../config/env";
 import type { Handlaggare } from "../types";
 
+const DEV_SESSION_KEY = "dev_handlaggare_typId";
+
 export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const handlaggare = ref<Handlaggare[]>([]);
   const selectedHandlaggare = ref<Handlaggare | null>(null);
-  // Persistence of login state will be handled later
   const isAuthenticated = ref(false);
 
   function setSelectedHandlaggare(typId: string) {
@@ -21,11 +22,13 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   function login(typId: string) {
     setSelectedHandlaggare(typId);
     isAuthenticated.value = true;
+    localStorage.setItem(DEV_SESSION_KEY, typId);
   }
 
   function logout() {
     selectedHandlaggare.value = null;
     isAuthenticated.value = false;
+    localStorage.removeItem(DEV_SESSION_KEY);
   }
 
   async function fetchHandlaggare() {
@@ -45,6 +48,11 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
 
       handlaggare.value = data.handlaggare;
       selectedHandlaggare.value = data.handlaggare[0] ?? null;
+
+      const savedTypId = localStorage.getItem(DEV_SESSION_KEY);
+      if (savedTypId) {
+        login(savedTypId);
+      }
     } catch (error) {
       console.error("Fel vid hämtning av handläggare:", error);
     }
