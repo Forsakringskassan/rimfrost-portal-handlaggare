@@ -25,7 +25,7 @@ const buttons = computed(() => [
     event: "submit",
     type: "primary" as const,
     submitButton: true,
-    disabled: !hasHandlaggare.value,
+    disabled: !hasHandlaggare.value || !value.value.securityCode,
   },
   {
     label: "Avbryt",
@@ -40,7 +40,9 @@ const buttons = computed(() => [
   <f-form-modal
     :value
     :buttons
-    @submit="emit('confirm', $event.data)"
+    @submit="
+      hasHandlaggare && $event.data.securityCode && emit('confirm', $event.data)
+    "
     @cancel="emit('cancel')"
   >
     <template #header>Logga in</template>
