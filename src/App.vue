@@ -163,7 +163,9 @@ async function handleGetNextUppgift() {
         </div>
       </template>
 
-      <router-view />
+      <div class="content-area">
+        <router-view />
+      </div>
     </f-layout-left-panel>
     <StartPage v-else />
 
@@ -175,8 +177,23 @@ async function handleGetNextUppgift() {
     </template>
   </f-layout-application-template>
 </template>
-
 <style>
+body {
+  overflow: hidden;
+}
+
+.layout-application-template__header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+.layout-application-template__main {
+  padding-top: var(--header-height, 5rem);
+}
+
 div:has(.left-nav-custom) {
   display: flex;
   flex-direction: column;

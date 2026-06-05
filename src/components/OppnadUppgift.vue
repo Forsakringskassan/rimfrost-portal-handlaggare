@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, shallowRef } from "vue";
+import { computed, onMounted, ref, watch, shallowRef } from "vue";
 import type { Component } from "vue";
 import { FLoader } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
@@ -81,10 +81,22 @@ watch(
     componentKey.value++;
   },
 );
+
+onMounted(() => {
+  const header = document.querySelector(
+    ".layout-application-template__header",
+  ) as HTMLElement | null;
+  if (header) {
+    document.documentElement.style.setProperty(
+      "--header-height",
+      `${header.offsetHeight}px`,
+    );
+  }
+});
 </script>
 
 <template>
-  <div>
+  <div class="oppnad-uppgift">
     <f-loader
       :show="isLoading"
       :delay="true"
