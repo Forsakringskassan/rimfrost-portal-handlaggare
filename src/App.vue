@@ -21,6 +21,7 @@ const store = useProductStore();
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
 const getNextUppgiftFel = ref<string | null>(null);
+const getTilldeladeUppgifterFel = ref<string | null>(null);
 const isLoginOpen = ref(false);
 const toast = useToast();
 
@@ -30,7 +31,14 @@ watch(
     if (!newHandlaggare) {
       return;
     }
-    await getTilldeladeUppgifter(newHandlaggare.handlaggarId);
+    getTilldeladeUppgifterFel.value = null;
+    try {
+      await getTilldeladeUppgifter(newHandlaggare.handlaggarId);
+    } catch (err) {
+      getTilldeladeUppgifterFel.value =
+        "Kunde inte hämta uppgiftslistan. Försök igen senare.";
+      console.error(err);
+    }
   },
 );
 
@@ -76,6 +84,7 @@ function handleLogout() {
   handlaggareStore.logout();
   store.$reset();
   getNextUppgiftFel.value = null;
+  getTilldeladeUppgifterFel.value = null;
   router.push("/");
 }
 
@@ -147,6 +156,9 @@ async function handleGetNextUppgift() {
               Välj en uppgift i listan
             </p>
             <p v-else class="body">Inga tilldelade uppgifter hittades</p>
+            <p v-if="getTilldeladeUppgifterFel" class="error-message">
+              {{ getTilldeladeUppgifterFel }}
+            </p>
             <div class="scrollable-list">
               <UppgiftLista />
             </div>
@@ -177,6 +189,34 @@ async function handleGetNextUppgift() {
 </template>
 
 <style>
+/* Lock layout to viewport — overrides FKUI's min-height: 100vh on body */
+body.layout-application-template__body {
+  height: 100vh !important;
+  min-height: unset !important;
+  overflow: hidden;
+}
+
+/* Template fills height as a flex column */
+.layout-application-template {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header: flex-shrink keeps it at natural height; sits OUTSIDE the scroll
+   container so it never moves regardless of what scrolls below */
+.layout-application-template__header {
+  flex-shrink: 0;
+}
+
+/* Main area fills remaining height and IS the scroll container.
+   Header is above this element, so it is unaffected by scroll. */
+.layout-application-template__main {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 div:has(.left-nav-custom) {
   display: flex;
   flex-direction: column;

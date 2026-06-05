@@ -29,5 +29,6 @@ export async function getTilldeladeUppgifter(handlaggarId: {
     );
   } catch (error) {
     console.error("Error loading tasks:", error);
+    throw error;
   }
 }
