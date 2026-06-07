@@ -23,13 +23,17 @@ async function loadManifest() {
       : "/route-manifest.json";
 
     manifestPromise = fetch(url)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
           throw new ManifestLoadError(
             `Failed to fetch route manifest: ${response.statusText}`,
           );
         }
-        return response.json();
+        try {
+          return await response.json();
+        } catch {
+          throw new ManifestLoadError(`Failed to parse route manifest as JSON`);
+        }
       })
       .then((json) => json.routes)
       .catch((err) => {
