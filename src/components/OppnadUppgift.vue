@@ -6,6 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
+import { ManifestLoadError } from "../config/remoteRegistry";
 
 const route = useRoute();
 const router = useRouter();
@@ -46,7 +47,12 @@ async function loadComponent() {
     const component = await loadRemoteModule(remoteKey.value);
     RemoteComponent.value = component;
   } catch (err) {
-    error.value = `Kunde inte ladda komponent för "${remoteKey.value}". Kontrollera att micro-frontenden körs.`;
+    if (err instanceof ManifestLoadError) {
+      error.value =
+        "Kunde inte ladda applikationskonfigurationen. Ladda om sidan.";
+    } else {
+      error.value = `Kunde inte ladda komponent för "${remoteKey.value}". Kontrollera att micro-frontenden körs.`;
+    }
     console.error(err);
   } finally {
     isLoading.value = false;
@@ -84,7 +90,7 @@ watch(
 </script>
 
 <template>
-  <div>
+  <div class="oppnad-uppgift">
     <f-loader
       :show="isLoading"
       :delay="true"
