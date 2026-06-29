@@ -26,9 +26,13 @@ const isLoginOpen = ref(false);
 const toast = useToast();
 
 watch(
-  () => handlaggareStore.selectedHandlaggare,
-  async (newHandlaggare) => {
-    if (!newHandlaggare) {
+  () =>
+    [
+      handlaggareStore.selectedHandlaggare,
+      handlaggareStore.isAuthenticated,
+    ] as const,
+  async ([newHandlaggare, isAuthenticated]) => {
+    if (!newHandlaggare || !isAuthenticated) {
       return;
     }
     getTilldeladeUppgifterFel.value = null;

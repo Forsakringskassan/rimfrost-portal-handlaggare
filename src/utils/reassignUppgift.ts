@@ -4,28 +4,17 @@ import { useHandlaggareStore } from "../stores/handlaggareStore.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
 import type { OperativUppgiftItem } from "../types.js";
 
-export async function getNextUppgift(): Promise<void> {
-  const handlaggareStore = useHandlaggareStore();
+export async function reassignUppgift(uppgiftId: string): Promise<void> {
   const bffUrl = env.bffUrl;
-  const handlaggarId =
-    handlaggareStore.selectedHandlaggare?.handlaggarId ?? null;
-
-  if (!handlaggarId) {
-    throw new Error("Ingen handläggare vald");
-  }
-
+  const handlaggareStore = useHandlaggareStore();
   const token = handlaggareStore.bearerToken;
 
-  const response = await fetch(`${bffUrl}/tasks/getNext`, {
+  const response = await fetch(`${bffUrl}/tasks/${uppgiftId}/reassign`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    body: JSON.stringify({
-      typId: handlaggarId.typId,
-      varde: handlaggarId.varde,
-    }),
   });
 
   if (!response.ok) {
@@ -47,15 +36,11 @@ export async function getNextUppgift(): Promise<void> {
   );
 
   if (!exists) {
-    const newUppgiftLista = [...uppgiftLista, uppgift];
-    store.setUppgiftLista(newUppgiftLista);
-    goToItem(uppgift);
+    store.setUppgiftLista([...uppgiftLista, uppgift]);
   }
-}
 
-function goToItem(item: OperativUppgiftItem) {
   router.push({
     name: "item",
-    params: { id: item.handlaggningId.toString() },
+    params: { id: uppgift.handlaggningId.toString() },
   });
 }

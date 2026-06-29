@@ -15,7 +15,7 @@ const emit = defineEmits<{
 const hasHandlaggare = computed(() => props.handlaggare.length > 0);
 
 const value = ref({
-  selectedId: props.handlaggare[0]?.handlaggarId.typId ?? "",
+  selectedId: props.handlaggare[0]?.handlaggarId.varde ?? "",
   securityCode: "",
 });
 
@@ -59,8 +59,8 @@ const buttons = computed(() => [
           <template #label>Välj handläggare</template>
           <option
             v-for="h in handlaggare"
-            :key="h.handlaggarId.typId"
-            :value="h.handlaggarId.typId"
+            :key="h.handlaggarId.varde"
+            :value="h.handlaggarId.varde"
           >
             {{ h.fornamn }} {{ h.efternamn }}
           </option>
