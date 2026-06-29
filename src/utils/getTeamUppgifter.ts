@@ -2,10 +2,7 @@ import { env } from "../config/env";
 import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { useProductStore } from "../stores/uppgiftListaStore";
 
-export async function getTilldeladeUppgifter(handlaggarId: {
-  typId: string;
-  varde: string;
-}) {
+export async function getTeamUppgifter(): Promise<void> {
   const store = useProductStore();
   const handlaggareStore = useHandlaggareStore();
 
@@ -13,16 +10,10 @@ export async function getTilldeladeUppgifter(handlaggarId: {
     const bffUrl = env.bffUrl;
     const token = handlaggareStore.bearerToken;
 
-    const response = await fetch(`${bffUrl}/tasks`, {
-      method: "POST",
+    const response = await fetch(`${bffUrl}/tasks/team`, {
       headers: {
-        "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify({
-        typId: handlaggarId.typId,
-        varde: handlaggarId.varde,
-      }),
     });
 
     if (!response.ok) {
@@ -34,7 +25,7 @@ export async function getTilldeladeUppgifter(handlaggarId: {
       Array.isArray(data.operativa_uppgifter) ? data.operativa_uppgifter : [],
     );
   } catch (error) {
-    console.error("Error loading tasks:", error);
+    console.error("Error loading team tasks:", error);
     throw error;
   }
 }
