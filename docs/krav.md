@@ -31,7 +31,7 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
 
 ### PORT-FR-02 — Uppgiftslista
 
-- **PORT-FR-02.1** Efter inloggning ska handläggarens tilldelade uppgifter listas i ett
+- **PORT-FR-02.1** Efter inloggning ska handläggarens tilldelade uppgifter listas i en
   navigeringspanel.
 - **PORT-FR-02.2** Uppgiftslistan ska hämtas på nytt när handläggaridentiteten ändras.
 - **PORT-FR-02.3** Handläggaren ska kunna hämta en ny, ännu inte tilldelad uppgift och direkt
