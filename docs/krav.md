@@ -67,7 +67,7 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
 
 - **PORT-NFR-01.1** Fel vid hämtning av handläggare eller uppgifter ska visas som ett begripligt
   meddelande utan att applikationen kraschar.
-- **PORT-NFR-01.2** Ett fel vid SID-kontrollen ska inte hindra uppgiften från att laddas.
+- **PORT-NFR-01.2** Ett fel vid SID-kontrollen ska inte hindra uppgiften från att laddas - en tillfällig lösning till hantering av SIDat ärende är löst i backend.
 
 ### PORT-NFR-02 — Integrerbarhet
 
