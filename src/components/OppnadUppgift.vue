@@ -6,9 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
-import { checkSidStatus } from "../utils/checkSidStatus";
 import { ManifestLoadError } from "../config/remoteRegistry";
-import type { HandlaggarId } from "../types";
 
 const route = useRoute();
 const router = useRouter();
@@ -61,15 +59,6 @@ async function loadComponent() {
   }
 }
 
-async function logSidStatus(individer: HandlaggarId[]) {
-  try {
-    const sidFinns = await checkSidStatus(individer);
-    console.log(`SID finns i ärendet: ${sidFinns ? "ja" : "nej"}`);
-  } catch (err) {
-    console.error("Kunde inte hämta SID-status:", err);
-  }
-}
-
 watch(
   [currentUppgift, handlaggningId, hasFetched],
   ([uppgift, id, fetched]) => {
@@ -78,7 +67,6 @@ watch(
     if (uppgift) {
       loadedHandlaggningId.value = id;
       loadComponent();
-      logSidStatus(uppgift.individer ?? []);
     } else if (!fetched) {
       // Task list hasn't loaded yet — wait for it
       return;

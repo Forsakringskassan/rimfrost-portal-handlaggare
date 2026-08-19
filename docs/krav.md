@@ -52,13 +52,6 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
   som skiljer detta fall från ett registerfel visas.
 - **PORT-FR-03.5** Registret ska kunna uppdateras utan att portalen behöver byggas om.
 
-### PORT-FR-04 — Kontroll av skyddad identitet (SID)
-
-- **PORT-FR-04.1** När en uppgift öppnas ska portalen kontrollera om någon av uppgiftens
-  individer har skyddad identitet.
-- **PORT-FR-04.2** Resultatet av SID-kontrollen ska loggas som "SID finns i ärendet: ja" eller
-  "SID finns i ärendet: nej".
-
 ---
 
 ## Icke-funktionella krav
@@ -67,7 +60,6 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
 
 - **PORT-NFR-01.1** Fel vid hämtning av handläggare eller uppgifter ska visas som ett begripligt
   meddelande utan att applikationen kraschar.
-- **PORT-NFR-01.2** Ett fel vid SID-kontrollen ska inte hindra uppgiften från att laddas - en tillfällig lösning till hantering av SIDat ärende är löst i backend.
 
 ### PORT-NFR-02 — Integrerbarhet
 
@@ -86,8 +78,7 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
 
 ## Integration med Portal BFF
 
-Handläggarportalen talar uteslutande med Portal BFF för handläggar- och uppgiftsdata,
-mikrofrontend-registret samt kontroll av skyddad identitet (SID). Portal BFF vidarebefordrar
-SID-kontrollen till en bakomliggande SID-tjänst; portalen har ingen egen kännedom om denna
-tjänst. All kommunikation med enskilda regel-mikrofrontends sker genom att portalen laddar in
-dem direkt i webbläsaren — portalen anropar inte deras respektive BFF:er själv.
+Handläggarportalen talar uteslutande med Portal BFF för handläggar- och uppgiftsdata samt för
+mikrofrontend-registret. All kommunikation med enskilda regel-mikrofrontends sker genom att
+portalen laddar in dem direkt i webbläsaren — portalen anropar inte deras respektive BFF:er
+själv.
