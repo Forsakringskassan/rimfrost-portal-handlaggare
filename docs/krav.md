@@ -40,6 +40,11 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
   bort från uppgiftslistan och en bekräftelse ska visas för handläggaren.
 - **PORT-FR-02.5** Om ingen uppgift är vald ska ett tomt tillstånd visas som vägleder
   handläggaren att välja en uppgift i menyn.
+- **PORT-FR-02.6** Om Portal BFF:s svar anger att en eller flera uppgifter har tagits bort ur
+  listan på grund av bristande behörighet (t.ex. SID-behörighet) ska handläggaren informeras
+  genom en meddelanderuta med texten "En eller flera uppgifter har tagits bort av
+  behörighetsskäl". Meddelandet ska förbli synligt tills handläggaren själv stänger det — det
+  ska inte försvinna automatiskt.
 
 ### PORT-FR-03 — Dynamisk inladdning av mikrofrontends
 

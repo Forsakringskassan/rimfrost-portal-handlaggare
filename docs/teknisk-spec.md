@@ -14,9 +14,12 @@ src/
 ├── components/
 │   ├── UppgiftLista.vue      # Uppgiftsnavigering, lyssnar på "task-done"
 │   ├── OppnadUppgift.vue     # Löser upp och monterar rätt mikrofrontend för :id
-│   └── LoginModal.vue         # Val av handläggaridentitet
+│   ├── LoginModal.vue         # Val av handläggaridentitet
+│   └── ToastContainer.vue     # Renderar meddelanderutor (toasts), inkl. icke-avvisande varianten
 ├── stores/                  # Pinia: handläggare/session, uppgiftslista
 ├── config/remoteRegistry.ts  # Hämtar och cachar modulfederationsregistret
+├── utils/useToast.ts         # Global toast-state; stödjer både självstängande och
+│                              # kvarstående (persistent) meddelanden
 └── utils/loadRemoteModule.ts # Modulfederation-inladdning av fjärrkomponenter
 ```
 
@@ -30,6 +33,15 @@ Ingen extern OpenAPI-specifikation — kontraktet definieras av Portal BFF.
 | POST  | `/tasks`              | Uppgifter tilldelade vald handläggare |
 | POST  | `/tasks/getNext`      | Tilldela nästa tillgängliga uppgift   |
 | GET   | `/api/route-manifest` | Modulfederationsregister              |
+
+### Meddelande vid begränsad behörighet
+
+Svaret från `/tasks` och `/tasks/team` innehåller fältet `borttagna_pga_behorighet` (antal
+uppgifter som togs bort ur listan eftersom handläggaren saknar behörighet, t.ex.
+SID-behörighet). Är värdet större än 0 visas en kvarstående (icke-avvisande) toast via
+`useToast`/`ToastContainer.vue` med texten "En eller flera uppgifter har tagits bort av
+behörighetsskäl". Till skillnad från övriga toasts, som självstängs efter en fast tid, stängs
+denna endast genom att handläggaren klickar på dess stängningsknapp.
 
 ## Kafka-integration
 
