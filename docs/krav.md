@@ -57,6 +57,27 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
   som skiljer detta fall från ett registerfel visas.
 - **PORT-FR-03.5** Registret ska kunna uppdateras utan att portalen behöver byggas om.
 
+### PORT-FR-04 — Lämna tillbaka en uppgift
+
+- **PORT-FR-04.1** Handläggaren ska kunna lämna tillbaka en tilldelad uppgift från den öppnade
+  uppgiftens vy (t.ex. vid jäv).
+- **PORT-FR-04.2** Innan en uppgift lämnas tillbaka ska handläggaren bekräfta handlingen i en
+  dialog.
+- **PORT-FR-04.3** Vid lyckad avtilldelning ska uppgiften omedelbart tas bort ur handläggarens
+  uppgiftslista, utan att sidan behöver laddas om, och en bekräftelse ska visas.
+
+### PORT-FR-05 — Teamets uppgifter och övertagande
+
+- **PORT-FR-05.1** Handläggaren ska kunna se en lista över samtliga uppgifter tilldelade
+  teammedlemmar, separat från egna tilldelade uppgifter.
+- **PORT-FR-05.2** Varje rad i teamlistan ska visa vilken handläggare uppgiften för närvarande
+  är tilldelad.
+- **PORT-FR-05.3** Handläggaren ska kunna ta över (stjäla) en teammedlems uppgift, efter
+  bekräftelse i en dialog.
+- **PORT-FR-05.4** Om övertagandet nekas på grund av bristande SID-behörighet ska ett tydligt,
+  specifikt felmeddelande visas, skilt från ett generellt fel.
+- **PORT-FR-05.5** Vid lyckat övertagande ska uppgiften visas i handläggarens egen lista.
+
 ---
 
 ## Icke-funktionella krav
