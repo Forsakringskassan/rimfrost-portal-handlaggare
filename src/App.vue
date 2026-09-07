@@ -9,6 +9,7 @@ import {
 import { useRouter } from "vue-router";
 import LoginModal from "./components/LoginModal.vue";
 import StartPage from "./components/StartPage.vue";
+import TeamUppgiftLista from "./components/TeamUppgiftLista.vue";
 import ToastContainer from "./components/ToastContainer.vue";
 import UppgiftLista from "./components/UppgiftLista.vue";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
@@ -23,6 +24,7 @@ const handlaggareStore = useHandlaggareStore();
 const getNextUppgiftFel = ref<string | null>(null);
 const getTilldeladeUppgifterFel = ref<string | null>(null);
 const isLoginOpen = ref(false);
+const uppgiftVy = ref<"mina" | "team">("mina");
 const toast = useToast();
 
 watch(
@@ -155,7 +157,20 @@ async function handleGetNextUppgift() {
 
       <template #content>
         <div class="left-nav-custom">
-          <div class="nav-content">
+          <div class="view-toggle">
+            <FButton
+              :variant="uppgiftVy === 'mina' ? 'primary' : 'secondary'"
+              @click="uppgiftVy = 'mina'"
+              >Mina uppgifter</FButton
+            >
+            <FButton
+              :variant="uppgiftVy === 'team' ? 'primary' : 'secondary'"
+              @click="uppgiftVy = 'team'"
+              >Teamets uppgifter</FButton
+            >
+          </div>
+
+          <div v-if="uppgiftVy === 'mina'" class="nav-content">
             <p v-if="store.uppgiftLista.length > 0" class="body">
               Välj en uppgift i listan
             </p>
@@ -167,7 +182,13 @@ async function handleGetNextUppgift() {
               <UppgiftLista />
             </div>
           </div>
-          <div class="nav-footer">
+          <div v-else class="nav-content">
+            <div class="scrollable-list">
+              <TeamUppgiftLista />
+            </div>
+          </div>
+
+          <div v-if="uppgiftVy === 'mina'" class="nav-footer">
             <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
             <FButton variant="secondary" @click="openExample"
               >Ladda template MFE</FButton
@@ -247,6 +268,16 @@ div:has(.left-nav-custom) {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+
+  & button {
+    flex: 1;
+  }
 }
 
 .nav-footer {
