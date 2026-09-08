@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import {
   FButton,
+  FIcon,
   FLayoutApplicationTemplate,
   FLayoutLeftPanel,
   FPageHeader,
@@ -9,11 +10,11 @@ import {
 import { useRouter } from "vue-router";
 import LoginModal from "./components/LoginModal.vue";
 import StartPage from "./components/StartPage.vue";
-import TeamUppgiftLista from "./components/TeamUppgiftLista.vue";
 import ToastContainer from "./components/ToastContainer.vue";
 import UppgiftLista from "./components/UppgiftLista.vue";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { useProductStore } from "./stores/uppgiftListaStore";
+import { useViewStore } from "./stores/viewStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
 import { getTilldeladeUppgifter } from "./utils/getTilldeladeUppgifter";
 import { useToast } from "./utils/useToast";
@@ -21,10 +22,9 @@ import { useToast } from "./utils/useToast";
 const store = useProductStore();
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
+const viewStore = useViewStore();
 const getNextUppgiftFel = ref<string | null>(null);
-const getTilldeladeUppgifterFel = ref<string | null>(null);
 const isLoginOpen = ref(false);
-const uppgiftVy = ref<"mina" | "team">("mina");
 const toast = useToast();
 
 watch(
@@ -37,12 +37,10 @@ watch(
     if (!newHandlaggare || !isAuthenticated) {
       return;
     }
-    getTilldeladeUppgifterFel.value = null;
     try {
       await getTilldeladeUppgifter(newHandlaggare.handlaggarId);
     } catch (err) {
-      getTilldeladeUppgifterFel.value =
-        "Kunde inte hämta uppgiftslistan. Försök igen senare.";
+      store.setError("Kunde inte hämta uppgiftslistan. Försök igen senare.");
       console.error(err);
     }
   },
@@ -51,6 +49,16 @@ watch(
 function handleTaskDone(event: Event) {
   const customEvent = event as CustomEvent;
   toast.success(customEvent.detail.message || "Uppgift slutförd");
+  router.push("/");
+}
+
+function goHome() {
+  viewStore.setVy("mina");
+  router.push("/");
+}
+
+function goToTeamvy() {
+  viewStore.setVy("team");
   router.push("/");
 }
 
@@ -90,7 +98,6 @@ function handleLogout() {
   handlaggareStore.logout();
   store.$reset();
   getNextUppgiftFel.value = null;
-  getTilldeladeUppgifterFel.value = null;
   router.push("/");
 }
 
@@ -117,11 +124,21 @@ async function handleGetNextUppgift() {
   <f-layout-application-template>
     <template #header>
       <f-page-header skip-link="main-title">
-        <div
-          style="cursor: pointer; font-weight: bold; font-size: 1.25rem"
-          @click="router.push('/')"
-        >
-          Rimfrost Demoapp
+        <div class="header-title-row">
+          <div
+            style="cursor: pointer; font-weight: bold; font-size: 1.25rem"
+            @click="goHome"
+          >
+            Rimfrost Demoapp
+          </div>
+          <button
+            type="button"
+            class="header-icon-button"
+            title="Ladda template MFE"
+            @click="openExample"
+          >
+            <FIcon name="new-window" />
+          </button>
         </div>
         <template #right>
           <template v-if="handlaggareStore.isAuthenticated">
@@ -157,42 +174,19 @@ async function handleGetNextUppgift() {
 
       <template #content>
         <div class="left-nav-custom">
-          <div class="view-toggle">
-            <FButton
-              :variant="uppgiftVy === 'mina' ? 'primary' : 'secondary'"
-              @click="uppgiftVy = 'mina'"
-              >Mina uppgifter</FButton
-            >
-            <FButton
-              :variant="uppgiftVy === 'team' ? 'primary' : 'secondary'"
-              @click="uppgiftVy = 'team'"
-              >Teamets uppgifter</FButton
-            >
-          </div>
-
-          <div v-if="uppgiftVy === 'mina'" class="nav-content">
+          <div class="nav-content">
             <p v-if="store.uppgiftLista.length > 0" class="body">
               Välj en uppgift i listan
             </p>
             <p v-else class="body">Inga tilldelade uppgifter hittades</p>
-            <p v-if="getTilldeladeUppgifterFel" class="error-message">
-              {{ getTilldeladeUppgifterFel }}
-            </p>
             <div class="scrollable-list">
               <UppgiftLista />
             </div>
           </div>
-          <div v-else class="nav-content">
-            <div class="scrollable-list">
-              <TeamUppgiftLista />
-            </div>
-          </div>
 
-          <div v-if="uppgiftVy === 'mina'" class="nav-footer">
+          <div class="nav-footer">
             <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
-            <FButton variant="secondary" @click="openExample"
-              >Ladda template MFE</FButton
-            >
+            <FButton variant="secondary" @click="goToTeamvy">Teamvy</FButton>
             <p v-if="getNextUppgiftFel" class="error-message">
               {{ getNextUppgiftFel }}
             </p>
@@ -270,16 +264,6 @@ div:has(.left-nav-custom) {
   min-height: 0;
 }
 
-.view-toggle {
-  display: flex;
-  gap: 0.5rem;
-  padding-bottom: 0.75rem;
-
-  & button {
-    flex: 1;
-  }
-}
-
 .nav-footer {
   padding: 0.75rem 0;
   border-top: 1px solid #e0e0e0;
@@ -299,6 +283,22 @@ div:has(.left-nav-custom) {
 .page-header button {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+.header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
 }
 
 .header-user {

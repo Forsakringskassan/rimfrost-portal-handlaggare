@@ -5,13 +5,16 @@ import { FLoader } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
+import { useTeamUppgiftListaStore } from "../stores/teamUppgiftListaStore";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
 import { ManifestLoadError } from "../config/remoteRegistry";
 
 const route = useRoute();
 const router = useRouter();
 const store = useProductStore();
+const teamStore = useTeamUppgiftListaStore();
 const { uppgiftLista, hasFetched } = storeToRefs(store);
+const { teamUppgiftLista } = storeToRefs(teamStore);
 
 const handlaggningId = computed(() => route.params.id as string | null);
 const componentKey = ref(0);
@@ -23,8 +26,14 @@ const error = ref<string | null>(null);
 
 const currentUppgift = computed(() => {
   if (!handlaggningId.value) return null;
-  return uppgiftLista.value.find(
-    (item) => item.handlaggningId === handlaggningId.value,
+  return (
+    uppgiftLista.value.find(
+      (item) => item.handlaggningId === handlaggningId.value,
+    ) ??
+    teamUppgiftLista.value.find(
+      (item) => item.handlaggningId === handlaggningId.value,
+    ) ??
+    null
   );
 });
 
