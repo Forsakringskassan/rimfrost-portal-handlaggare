@@ -42,4 +42,18 @@ describe("uppgiftListaStore", () => {
     store.setUppgiftLista([]);
     expect(store.uppgiftLista).toEqual([]);
   });
+
+  it("setError sets the error and marks the store as fetched", () => {
+    const store = useProductStore();
+    store.setError("Kunde inte hämta uppgiftslistan.");
+    expect(store.error).toBe("Kunde inte hämta uppgiftslistan.");
+    expect(store.hasFetched).toBe(true);
+  });
+
+  it("setUppgiftLista clears a previous error", () => {
+    const store = useProductStore();
+    store.setError("Kunde inte hämta uppgiftslistan.");
+    store.setUppgiftLista([mockUppgift]);
+    expect(store.error).toBeNull();
+  });
 });

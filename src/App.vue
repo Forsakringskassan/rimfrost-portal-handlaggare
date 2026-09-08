@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import {
   FButton,
+  FIcon,
   FLayoutApplicationTemplate,
   FLayoutLeftPanel,
   FPageHeader,
@@ -13,6 +14,7 @@ import ToastContainer from "./components/ToastContainer.vue";
 import UppgiftLista from "./components/UppgiftLista.vue";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { useProductStore } from "./stores/uppgiftListaStore";
+import { useViewStore } from "./stores/viewStore";
 import { getNextUppgift } from "./utils/getNextUppgift";
 import { getTilldeladeUppgifter } from "./utils/getTilldeladeUppgifter";
 import { useToast } from "./utils/useToast";
@@ -20,8 +22,8 @@ import { useToast } from "./utils/useToast";
 const store = useProductStore();
 const router = useRouter();
 const handlaggareStore = useHandlaggareStore();
+const viewStore = useViewStore();
 const getNextUppgiftFel = ref<string | null>(null);
-const getTilldeladeUppgifterFel = ref<string | null>(null);
 const isLoginOpen = ref(false);
 const toast = useToast();
 
@@ -35,12 +37,10 @@ watch(
     if (!newHandlaggare || !isAuthenticated) {
       return;
     }
-    getTilldeladeUppgifterFel.value = null;
     try {
       await getTilldeladeUppgifter(newHandlaggare.handlaggarId);
     } catch (err) {
-      getTilldeladeUppgifterFel.value =
-        "Kunde inte hämta uppgiftslistan. Försök igen senare.";
+      store.setError("Kunde inte hämta uppgiftslistan. Försök igen senare.");
       console.error(err);
     }
   },
@@ -49,6 +49,16 @@ watch(
 function handleTaskDone(event: Event) {
   const customEvent = event as CustomEvent;
   toast.success(customEvent.detail.message || "Uppgift slutförd");
+  router.push("/");
+}
+
+function goHome() {
+  viewStore.setVy("mina");
+  router.push("/");
+}
+
+function goToTeamvy() {
+  viewStore.setVy("team");
   router.push("/");
 }
 
@@ -88,7 +98,6 @@ function handleLogout() {
   handlaggareStore.logout();
   store.$reset();
   getNextUppgiftFel.value = null;
-  getTilldeladeUppgifterFel.value = null;
   router.push("/");
 }
 
@@ -115,11 +124,21 @@ async function handleGetNextUppgift() {
   <f-layout-application-template>
     <template #header>
       <f-page-header skip-link="main-title">
-        <div
-          style="cursor: pointer; font-weight: bold; font-size: 1.25rem"
-          @click="router.push('/')"
-        >
-          Rimfrost Demoapp
+        <div class="header-title-row">
+          <div
+            style="cursor: pointer; font-weight: bold; font-size: 1.25rem"
+            @click="goHome"
+          >
+            Rimfrost Demoapp
+          </div>
+          <button
+            type="button"
+            class="header-icon-button"
+            title="Ladda template MFE"
+            @click="openExample"
+          >
+            <FIcon name="new-window" />
+          </button>
         </div>
         <template #right>
           <template v-if="handlaggareStore.isAuthenticated">
@@ -160,18 +179,14 @@ async function handleGetNextUppgift() {
               Välj en uppgift i listan
             </p>
             <p v-else class="body">Inga tilldelade uppgifter hittades</p>
-            <p v-if="getTilldeladeUppgifterFel" class="error-message">
-              {{ getTilldeladeUppgifterFel }}
-            </p>
             <div class="scrollable-list">
               <UppgiftLista />
             </div>
           </div>
+
           <div class="nav-footer">
             <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
-            <FButton variant="secondary" @click="openExample"
-              >Ladda template MFE</FButton
-            >
+            <FButton variant="secondary" @click="goToTeamvy">Teamvy</FButton>
             <p v-if="getNextUppgiftFel" class="error-message">
               {{ getNextUppgiftFel }}
             </p>
@@ -268,6 +283,22 @@ div:has(.left-nav-custom) {
 .page-header button {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+.header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
 }
 
 .header-user {

@@ -10,17 +10,19 @@ regelspecifika mikrofrontends. Ingen egen affärslogik eller databas. All data h
 
 ```text
 src/
-├── router/                  # "/" (tomt läge) och "/items/:id" (inbäddad mikrofrontend)
+├── router/                    # "/" (tomt läge eller teamtabell) och "/items/:id" (inbäddad mikrofrontend)
 ├── components/
-│   ├── UppgiftLista.vue      # Uppgiftsnavigering, lyssnar på "task-done"
-│   ├── OppnadUppgift.vue     # Löser upp och monterar rätt mikrofrontend för :id
-│   ├── LoginModal.vue         # Val av handläggaridentitet
-│   └── ToastContainer.vue     # Renderar meddelanderutor (toasts), inkl. icke-avvisande varianten
-├── stores/                  # Pinia: handläggare/session, uppgiftslista
-├── config/remoteRegistry.ts  # Hämtar och cachar modulfederationsregistret
-├── utils/useToast.ts         # Global toast-state; stödjer både självstängande och
-│                              # kvarstående (persistent) meddelanden
-└── utils/loadRemoteModule.ts # Modulfederation-inladdning av fjärrkomponenter
+│   ├── UppgiftOversikt.vue     # Visar teamtabellen eller tomt-läget via viewStore
+│   ├── UppgiftLista.vue        # Egna uppgifter i navigeringspanelen, lyssnar på "task-done"
+│   ├── TeamUppgiftLista.vue    # Tabell över teamets uppgifter i huvudytan
+│   ├── OppnadUppgift.vue       # Löser upp och monterar rätt mikrofrontend för :id
+│   ├── LoginModal.vue          # Val av handläggaridentitet
+│   └── ToastContainer.vue      # Renderar meddelanderutor (toasts), inkl. icke-avvisande varianten
+├── stores/                    # Pinia: handläggare/session, uppgiftslistor, aktiv vy (viewStore)
+├── config/remoteRegistry.ts    # Hämtar och cachar modulfederationsregistret
+├── utils/useToast.ts           # Global toast-state; stödjer både självstängande och
+│                                # kvarstående (persistent) meddelanden
+└── utils/loadRemoteModule.ts   # Modulfederation-inladdning av fjärrkomponenter
 ```
 
 ## API-specifikationer

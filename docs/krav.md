@@ -76,7 +76,7 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
 
 ### PORT-FR-05 — Teamets uppgifter och övertagande
 
-- **PORT-FR-05.1** Handläggaren ska kunna se en lista över samtliga uppgifter tilldelade
+- **PORT-FR-05.1** Handläggaren ska kunna se en tabell över samtliga uppgifter tilldelade
   teammedlemmar, separat från egna tilldelade uppgifter.
 - **PORT-FR-05.2** Varje rad i teamlistan ska visa vilken handläggare uppgiften för närvarande
   är tilldelad.

@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { FLoader, FNavigationMenu } from "@fkui/vue";
+import { computed, onBeforeUnmount, onMounted } from "vue";
+import { FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../types";
 
 const store = useProductStore();
-const isLoading = ref(false);
-const error = ref<string | null>(null);
 const router = useRouter();
 const route = useRoute();
 
@@ -60,18 +58,10 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <f-loader
-      :show="isLoading"
-      :delay="true"
-      style="margin-top: 10vh !important; display: block"
-    >
-      Vänligen vänta
-    </f-loader>
-
-    <p v-if="error" class="error-message">{{ error }}</p>
+    <p v-if="store.error" class="error-message">{{ store.error }}</p>
 
     <f-navigation-menu
-      v-if="!isLoading && !error"
+      v-else
       :route="currentRoute"
       :routes
       vertical
