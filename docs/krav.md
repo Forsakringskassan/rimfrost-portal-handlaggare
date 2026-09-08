@@ -65,6 +65,14 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
   dialog.
 - **PORT-FR-04.3** Vid lyckad avtilldelning ska uppgiften omedelbart tas bort ur handläggarens
   uppgiftslista, utan att sidan behöver laddas om, och en bekräftelse ska visas.
+- **PORT-FR-04.4** Åtgärden ska tillhandahållas av applikationsskalet och vara tillgänglig för
+  samtliga uppgiftstyper, oberoende av vilken mikrofrontend som är inläst.
+- **PORT-FR-04.5** Om avtilldelningen misslyckas ska uppgiften kvarstå i listan och ett
+  begripligt felmeddelande visas (jfr PORT-NFR-01.1).
+- **PORT-FR-04.6** Bekräftelsedialogen ska göra klart att åtgärden inte kan ångras — uppgiften
+  kommer inte att erbjudas handläggaren igen vid hämtning av ny uppgift (jfr OUL-FR-20).
+- **PORT-FR-04.7** Bekräftelsedialogen ska ange att återlämning är avsedd för jäv eller annat
+  formellt hinder, och inte som ett sätt att välja bort enskilda uppgifter.
 
 ### PORT-FR-05 — Teamets uppgifter och övertagande
 
