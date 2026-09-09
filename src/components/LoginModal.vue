@@ -25,7 +25,7 @@ const buttons = computed(() => [
     event: "submit",
     type: "primary" as const,
     submitButton: true,
-    disabled: !hasHandlaggare.value || !value.value.securityCode,
+    disabled: hasHandlaggare.value && !value.value.securityCode,
   },
   {
     label: "Avbryt",
@@ -41,7 +41,9 @@ const buttons = computed(() => [
     :value
     :buttons
     @submit="
-      hasHandlaggare && $event.data.securityCode && emit('confirm', $event.data)
+      hasHandlaggare
+        ? $event.data.securityCode && emit('confirm', $event.data)
+        : emit('cancel')
     "
     @cancel="emit('cancel')"
   >
