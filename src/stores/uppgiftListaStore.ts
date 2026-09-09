@@ -19,5 +19,12 @@ export const useProductStore = defineStore("uppgiftStore", {
         this.hasFetched = true;
       }
     },
+    // Drops a single uppgift without refetching, so the list updates immediately
+    // when the handläggare hands a task back (PORT-FR-04.3).
+    removeUppgift(uppgiftId: string) {
+      this.uppgiftLista = this.uppgiftLista.filter(
+        (item) => item.uppgiftId !== uppgiftId,
+      );
+    },
   },
 });
