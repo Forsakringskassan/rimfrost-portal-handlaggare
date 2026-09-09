@@ -56,4 +56,24 @@ describe("uppgiftListaStore", () => {
     store.setUppgiftLista([mockUppgift]);
     expect(store.error).toBeNull();
   });
+
+  it("removeUppgift drops only the matching uppgift", () => {
+    const store = useProductStore();
+    const other = { ...mockUppgift, uppgiftId: "2", handlaggningId: "h2" };
+    store.setUppgiftLista([mockUppgift, other]);
+
+    store.removeUppgift(mockUppgift.uppgiftId);
+
+    expect(store.uppgiftLista).toHaveLength(1);
+    expect(store.uppgiftLista[0].uppgiftId).toBe("2");
+  });
+
+  it("removeUppgift leaves the list untouched for an unknown id", () => {
+    const store = useProductStore();
+    store.setUppgiftLista([mockUppgift]);
+
+    store.removeUppgift("finns-inte");
+
+    expect(store.uppgiftLista).toHaveLength(1);
+  });
 });
