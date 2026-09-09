@@ -66,7 +66,7 @@ function openExample() {
   router.push({
     name: "item",
     params: {
-      id: "remoteExample",
+      uppgiftId: "remoteExample",
     },
     query: { title: "Exempel" },
   });

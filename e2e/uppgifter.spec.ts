@@ -29,11 +29,11 @@ test.describe("Uppgiftslista", () => {
     await mockBffApis(page, [mockUppgift]);
     await gotoPortal(page);
     await page.getByText("0001234: RTF Manuell").click();
-    await expect(page).toHaveURL(/\/items\/handl-0001234/);
+    await expect(page).toHaveURL(/\/items\/uppg-001/);
   });
 
   test("visar felmeddelande när uppgift inte kan laddas", async ({ page }) => {
-    // When url is empty, remoteKey falls back to handlaggningId.
+    // When url is empty, remoteKey falls back to uppgiftId.
     // It won't match any manifest entry, so the generic load error is shown.
     await mockBffApis(page, [{ ...mockUppgift, url: "" }]);
     await gotoPortal(page);

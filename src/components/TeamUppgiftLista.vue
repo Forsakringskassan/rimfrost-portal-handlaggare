@@ -22,7 +22,7 @@ const error = ref<string | null>(null);
 function openUppgift(item: OperativUppgiftItem): void {
   router.push({
     name: "item",
-    params: { id: item.handlaggningId },
+    params: { uppgiftId: item.uppgiftId },
     query: { title: item.regel },
   });
 }

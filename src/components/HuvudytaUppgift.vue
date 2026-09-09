@@ -5,12 +5,12 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 const pageTitle = computed(() => route.query.title ?? "Ingen titel");
-const pageId = computed(() => route.params.id ?? "Inget ID");
+const pageId = computed(() => route.params.uppgiftId ?? "Inget ID");
 </script>
 
 <template>
   <div class="container">
-    <h1 v-if="route.params.id" class="page-title">
+    <h1 v-if="route.params.uppgiftId" class="page-title">
       {{ pageTitle }} - {{ pageId }}
     </h1>
     <router-view />
