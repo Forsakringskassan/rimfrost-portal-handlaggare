@@ -11,7 +11,7 @@ const route = useRoute();
 
 const routes = computed(() => {
   return store.uppgiftLista.map((item: OperativUppgiftItem) => ({
-    label: `${item.handlaggningId.slice(-7)}: ${item.regel}`,
+    label: `${item.uppgiftId.slice(-7)}: ${item.regel}`,
     route: `item-${item.uppgiftId}`,
   }));
 });
