@@ -12,16 +12,15 @@ const { confirmModal } = useModal();
 const toast = useToast();
 
 const pageTitle = computed(() => route.query.title ?? "Ingen titel");
-const pageId = computed(() => route.params.id ?? "Inget ID");
+const pageId = computed(() => route.params.uppgiftId ?? "Inget ID");
 
 const isUnassigning = ref(false);
 
-// The route carries handlaggningId, but the endpoint needs uppgiftId, so the task
-// has to be resolved from the list. Looking it up in the handläggare's own list
-// also limits the action to tasks assigned to them (PORT-FR-04.1) — a team
-// member's task is not in this list, so no button is offered for it.
+// Looking the task up in the handläggare's own list limits the action to
+// tasks assigned to them (PORT-FR-04.1) — a team member's task is not in
+// this list, so no button is offered for it.
 const egenUppgift = computed(() =>
-  store.uppgiftLista.find((item) => item.handlaggningId === route.params.id),
+  store.uppgiftLista.find((item) => item.uppgiftId === route.params.uppgiftId),
 );
 
 async function handleUnassign(): Promise<void> {
@@ -64,7 +63,7 @@ async function handleUnassign(): Promise<void> {
 
 <template>
   <div class="container">
-    <div v-if="route.params.id" class="uppgift-header">
+    <div v-if="route.params.uppgiftId" class="uppgift-header">
       <h1 class="page-title">{{ pageTitle }} - {{ pageId }}</h1>
       <FButton
         v-if="egenUppgift"

@@ -66,7 +66,7 @@ function openExample() {
   router.push({
     name: "item",
     params: {
-      id: "remoteExample",
+      uppgiftId: "remoteExample",
     },
     query: { title: "Exempel" },
   });
@@ -262,6 +262,18 @@ div:has(.left-nav-custom) {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+}
+
+/* FKUI's FLayoutLeftPanel renders the nav (containing .left-nav-custom) and
+   the default slot (our <router-view/>) as siblings under one shared
+   .layout-navigation wrapper — the div matched by div:has(.left-nav-custom)
+   above. That rule's overflow: hidden clips both, but only the nav side has
+   its own scroll region (.scrollable-list); give the main content area
+   (FKUI's .layout-navigation__primary) the same treatment so a tall route
+   component isn't cut off with no way to reach the rest of it. */
+.layout-navigation__primary {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .nav-footer {

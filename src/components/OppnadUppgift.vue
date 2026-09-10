@@ -16,30 +16,34 @@ const teamStore = useTeamUppgiftListaStore();
 const { uppgiftLista, hasFetched } = storeToRefs(store);
 const { teamUppgiftLista } = storeToRefs(teamStore);
 
-const handlaggningId = computed(() => route.params.id as string | null);
+const uppgiftId = computed(() => route.params.uppgiftId as string | null);
 const componentKey = ref(0);
-const loadedHandlaggningId = ref<string | null>(null);
+const loadedUppgiftId = ref<string | null>(null);
 
 const RemoteComponent = shallowRef<Component | null>(null);
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 
 const currentUppgift = computed(() => {
-  if (!handlaggningId.value) return null;
+  if (!uppgiftId.value) return null;
   return (
-    uppgiftLista.value.find(
-      (item) => item.handlaggningId === handlaggningId.value,
-    ) ??
-    teamUppgiftLista.value.find(
-      (item) => item.handlaggningId === handlaggningId.value,
-    ) ??
+    uppgiftLista.value.find((item) => item.uppgiftId === uppgiftId.value) ??
+    teamUppgiftLista.value.find((item) => item.uppgiftId === uppgiftId.value) ??
     null
   );
 });
 
+// Two uppgifter can share a handlaggningId (e.g. different regler open on the
+// same case) — routing and lookup use uppgiftId so each is reachable on its
+// own; handlaggningId here is only for the remote micro frontend's own prop
+// contract, which identifies the case, not the uppgift.
+const handlaggningId = computed(
+  () => currentUppgift.value?.handlaggningId ?? uppgiftId.value,
+);
+
 const remoteKey = computed(() => {
   const url = currentUppgift.value?.url ?? "";
-  return url.split("/").pop() || handlaggningId.value || "";
+  return url.split("/").pop() || uppgiftId.value || "";
 });
 
 async function loadComponent() {
@@ -69,19 +73,19 @@ async function loadComponent() {
 }
 
 watch(
-  [currentUppgift, handlaggningId, hasFetched],
+  [currentUppgift, uppgiftId, hasFetched],
   ([uppgift, id, fetched]) => {
-    if (!id || id === loadedHandlaggningId.value) return;
+    if (!id || id === loadedUppgiftId.value) return;
 
     if (uppgift) {
-      loadedHandlaggningId.value = id;
+      loadedUppgiftId.value = id;
       loadComponent();
     } else if (!fetched) {
       // Task list hasn't loaded yet — wait for it
       return;
-    } else if (!uppgiftLista.value.some((u) => u.handlaggningId === id)) {
+    } else if (!uppgiftLista.value.some((u) => u.uppgiftId === id)) {
       // id is not an uppgift — treat as a direct manifest key
-      loadedHandlaggningId.value = id;
+      loadedUppgiftId.value = id;
       loadComponent();
     } else {
       router.push("/");
@@ -91,7 +95,7 @@ watch(
 );
 
 watch(
-  () => route.params.id,
+  () => route.params.uppgiftId,
   () => {
     componentKey.value++;
   },

@@ -41,6 +41,6 @@ export async function reassignUppgift(uppgiftId: string): Promise<void> {
 
   router.push({
     name: "item",
-    params: { id: uppgift.handlaggningId.toString() },
+    params: { uppgiftId: uppgift.uppgiftId.toString() },
   });
 }

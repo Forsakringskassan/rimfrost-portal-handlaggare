@@ -56,6 +56,6 @@ export async function getNextUppgift(): Promise<void> {
 function goToItem(item: OperativUppgiftItem) {
   router.push({
     name: "item",
-    params: { id: item.handlaggningId.toString() },
+    params: { uppgiftId: item.uppgiftId.toString() },
   });
 }
