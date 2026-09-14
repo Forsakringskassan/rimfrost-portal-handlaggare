@@ -9,6 +9,7 @@
 
 <style scoped>
 .container {
-  padding: 0.75rem;
+  padding-top: 0.75rem;
+  margin: 0;
 }
 </style>

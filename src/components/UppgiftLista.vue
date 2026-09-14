@@ -1,33 +1,31 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { FLoader, FNavigationMenu } from "@fkui/vue";
+import { computed, onBeforeUnmount, onMounted } from "vue";
+import { FNavigationMenu } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../types";
 
 const store = useProductStore();
-const isLoading = ref(false);
-const error = ref<string | null>(null);
 const router = useRouter();
 const route = useRoute();
 
 const routes = computed(() => {
   return store.uppgiftLista.map((item: OperativUppgiftItem) => ({
-    label: `${item.handlaggningId.slice(-7)}: ${item.regel}`,
-    route: `item-${item.handlaggningId}`,
+    label: `${item.uppgiftId.slice(-7)}: ${item.regel}`,
+    route: `item-${item.uppgiftId}`,
   }));
 });
 
 function onSelectedRoute(routeId: string) {
   const itemId = routeId.replace("item-", "");
   const item = store.uppgiftLista.find(
-    (item: OperativUppgiftItem) => item.handlaggningId === itemId,
+    (item: OperativUppgiftItem) => item.uppgiftId === itemId,
   );
   if (item) {
     router.push({
       name: "item",
       params: {
-        id: item.handlaggningId.toString(),
+        uppgiftId: item.uppgiftId.toString(),
       },
       query: { title: item.regel },
     });
@@ -35,9 +33,12 @@ function onSelectedRoute(routeId: string) {
 }
 
 const currentRoute = computed(() => {
-  return route?.params?.id ? `item-${route.params.id}` : "";
+  return route?.params?.uppgiftId ? `item-${route.params.uppgiftId}` : "";
 });
 
+// The remote micro frontend's task-done contract only carries handlaggningId
+// (see README), not uppgiftId, so this still removes by case id — if a case
+// ever has more than one open uppgift, finishing one here clears all of them.
 function onTaskDone(event: Event) {
   const handlaggningId = (event as CustomEvent).detail?.handlaggningId;
   if (handlaggningId) {
@@ -60,18 +61,10 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <f-loader
-      :show="isLoading"
-      :delay="true"
-      style="margin-top: 10vh !important; display: block"
-    >
-      Vänligen vänta
-    </f-loader>
-
-    <p v-if="error" class="error-message">{{ error }}</p>
+    <p v-if="store.error" class="error-message">{{ store.error }}</p>
 
     <f-navigation-menu
-      v-if="!isLoading && !error"
+      v-else
       :route="currentRoute"
       :routes
       vertical

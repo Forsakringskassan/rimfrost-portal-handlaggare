@@ -33,5 +33,19 @@ export default defineConfig({
       timeout: 120_000,
       cwd: "../rimfrost-template-micro-fe",
     },
+    {
+      command: "npm run preview",
+      url: "http://localhost:3031",
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      cwd: "../rimfrost-regel-rtf-manuell-fe",
+    },
+    {
+      command: "npm run preview",
+      url: "http://localhost:3033",
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      cwd: "../rimfrost-regel-bekraftabeslut-fe",
+    },
   ],
 });

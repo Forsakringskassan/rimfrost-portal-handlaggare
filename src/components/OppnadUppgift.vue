@@ -5,31 +5,45 @@ import { FLoader } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
+import { useTeamUppgiftListaStore } from "../stores/teamUppgiftListaStore";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
+import { ManifestLoadError } from "../config/remoteRegistry";
 
 const route = useRoute();
 const router = useRouter();
 const store = useProductStore();
-const { uppgiftLista } = storeToRefs(store);
+const teamStore = useTeamUppgiftListaStore();
+const { uppgiftLista, hasFetched } = storeToRefs(store);
+const { teamUppgiftLista } = storeToRefs(teamStore);
 
-const handlaggningId = computed(() => route.params.id as string | null);
+const uppgiftId = computed(() => route.params.uppgiftId as string | null);
 const componentKey = ref(0);
-const loadedHandlaggningId = ref<string | null>(null);
+const loadedUppgiftId = ref<string | null>(null);
 
 const RemoteComponent = shallowRef<Component | null>(null);
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 
 const currentUppgift = computed(() => {
-  if (!handlaggningId.value) return null;
-  return uppgiftLista.value.find(
-    (item) => item.handlaggningId === handlaggningId.value,
+  if (!uppgiftId.value) return null;
+  return (
+    uppgiftLista.value.find((item) => item.uppgiftId === uppgiftId.value) ??
+    teamUppgiftLista.value.find((item) => item.uppgiftId === uppgiftId.value) ??
+    null
   );
 });
 
+// Two uppgifter can share a handlaggningId (e.g. different regler open on the
+// same case) — routing and lookup use uppgiftId so each is reachable on its
+// own; handlaggningId here is only for the remote micro frontend's own prop
+// contract, which identifies the case, not the uppgift.
+const handlaggningId = computed(
+  () => currentUppgift.value?.handlaggningId ?? uppgiftId.value,
+);
+
 const remoteKey = computed(() => {
   const url = currentUppgift.value?.url ?? "";
-  return url.split("/").pop() || handlaggningId.value || "";
+  return url.split("/").pop() || uppgiftId.value || "";
 });
 
 async function loadComponent() {
@@ -46,7 +60,12 @@ async function loadComponent() {
     const component = await loadRemoteModule(remoteKey.value);
     RemoteComponent.value = component;
   } catch (err) {
-    error.value = `Kunde inte ladda komponent för "${remoteKey.value}". Kontrollera att micro-frontenden körs.`;
+    if (err instanceof ManifestLoadError) {
+      error.value =
+        "Kunde inte ladda applikationskonfigurationen. Ladda om sidan.";
+    } else {
+      error.value = `Kunde inte ladda komponent för "${remoteKey.value}". Kontrollera att micro-frontenden körs.`;
+    }
     console.error(err);
   } finally {
     isLoading.value = false;
@@ -54,16 +73,19 @@ async function loadComponent() {
 }
 
 watch(
-  [currentUppgift, handlaggningId],
-  ([uppgift, id]) => {
-    if (!id || id === loadedHandlaggningId.value) return;
+  [currentUppgift, uppgiftId, hasFetched],
+  ([uppgift, id, fetched]) => {
+    if (!id || id === loadedUppgiftId.value) return;
 
     if (uppgift) {
-      loadedHandlaggningId.value = id;
+      loadedUppgiftId.value = id;
       loadComponent();
-    } else if (!uppgiftLista.value.some((u) => u.handlaggningId === id)) {
+    } else if (!fetched) {
+      // Task list hasn't loaded yet — wait for it
+      return;
+    } else if (!uppgiftLista.value.some((u) => u.uppgiftId === id)) {
       // id is not an uppgift — treat as a direct manifest key
-      loadedHandlaggningId.value = id;
+      loadedUppgiftId.value = id;
       loadComponent();
     } else {
       router.push("/");
@@ -73,7 +95,7 @@ watch(
 );
 
 watch(
-  () => route.params.id,
+  () => route.params.uppgiftId,
   () => {
     componentKey.value++;
   },
@@ -81,7 +103,7 @@ watch(
 </script>
 
 <template>
-  <div>
+  <div class="oppnad-uppgift">
     <f-loader
       :show="isLoading"
       :delay="true"

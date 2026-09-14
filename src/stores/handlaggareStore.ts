@@ -3,29 +3,45 @@ import { defineStore } from "pinia";
 import { env } from "../config/env";
 import type { Handlaggare } from "../types";
 
+const DEV_SESSION_KEY = "dev_handlaggare_typId";
+
+function createDevToken(typId: string, varde: string): string {
+  return `${typId}:${varde}`;
+}
+
 export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const handlaggare = ref<Handlaggare[]>([]);
   const selectedHandlaggare = ref<Handlaggare | null>(null);
-  // Persistence of login state will be handled later
   const isAuthenticated = ref(false);
+  const bearerToken = ref<string | null>(null);
 
-  function setSelectedHandlaggare(typId: string) {
+  function setSelectedHandlaggare(varde: string) {
     const found = handlaggare.value.find(
-      (handlaggare) => handlaggare.handlaggarId.typId === typId,
+      (handlaggare) => handlaggare.handlaggarId.varde === varde,
     );
     if (found) {
       selectedHandlaggare.value = found;
     }
   }
 
-  function login(typId: string) {
-    setSelectedHandlaggare(typId);
+  function login(varde: string) {
+    setSelectedHandlaggare(varde);
     isAuthenticated.value = true;
+    localStorage.setItem(DEV_SESSION_KEY, varde);
+    const handlaggarId = selectedHandlaggare.value?.handlaggarId;
+    if (handlaggarId) {
+      bearerToken.value = createDevToken(
+        handlaggarId.typId,
+        handlaggarId.varde,
+      );
+    }
   }
 
   function logout() {
     selectedHandlaggare.value = null;
     isAuthenticated.value = false;
+    bearerToken.value = null;
+    localStorage.removeItem(DEV_SESSION_KEY);
   }
 
   async function fetchHandlaggare() {
@@ -45,6 +61,11 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
 
       handlaggare.value = data.handlaggare;
       selectedHandlaggare.value = data.handlaggare[0] ?? null;
+
+      const savedTypId = localStorage.getItem(DEV_SESSION_KEY);
+      if (savedTypId) {
+        login(savedTypId);
+      }
     } catch (error) {
       console.error("Fel vid hämtning av handläggare:", error);
     }
@@ -54,6 +75,7 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
     handlaggare,
     selectedHandlaggare,
     isAuthenticated,
+    bearerToken,
     login,
     logout,
     setSelectedHandlaggare,

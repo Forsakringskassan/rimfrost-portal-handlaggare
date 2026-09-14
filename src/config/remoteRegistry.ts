@@ -7,6 +7,13 @@ interface RemoteConfig {
   prodEntry: string;
 }
 
+export class ManifestLoadError extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = "ManifestLoadError";
+  }
+}
+
 let manifestPromise: Promise<Record<string, RemoteConfig>> | null = null;
 
 async function loadManifest() {
@@ -16,13 +23,17 @@ async function loadManifest() {
       : "/route-manifest.json";
 
     manifestPromise = fetch(url)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
-          throw new Error(
+          throw new ManifestLoadError(
             `Failed to fetch route manifest: ${response.statusText}`,
           );
         }
-        return response.json();
+        try {
+          return await response.json();
+        } catch {
+          throw new ManifestLoadError(`Failed to parse route manifest as JSON`);
+        }
       })
       .then((json) => json.routes)
       .catch((err) => {

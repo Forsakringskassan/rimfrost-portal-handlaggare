@@ -21,7 +21,11 @@ test.describe("Portal – grundläggande", () => {
   });
 
   test("visar handläggare i dropdown", async ({ page }) => {
-    const dropdown = page.locator("#handlaggare-dropdown");
+    // gotoPortal's beforeEach already logged in and closed the modal — reopen it
+    // via the same "Logga in"/"Logga ut" affordance the app itself offers.
+    await page.getByRole("button", { name: "Logga ut" }).click();
+    await page.getByRole("button", { name: "Logga in" }).click();
+    const dropdown = page.getByRole("combobox", { name: "Välj handläggare" });
     await expect(dropdown).toBeVisible();
     await expect(
       dropdown.getByRole("option", { name: "Anna Andersson" }),

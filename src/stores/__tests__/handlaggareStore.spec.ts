@@ -77,11 +77,11 @@ describe("handlaggareStore", () => {
       mockFetch({ handlaggare: mockHandlaggare });
       const store = useHandlaggareStore();
       await store.fetchHandlaggare();
-      store.setSelectedHandlaggare("def456");
+      store.setSelectedHandlaggare("Bo Karlsson");
       expect(store.selectedHandlaggare?.fornamn).toBe("Bo");
     });
 
-    it("does nothing if typId is not found", async () => {
+    it("does nothing if varde is not found", async () => {
       mockFetch({ handlaggare: mockHandlaggare });
       const store = useHandlaggareStore();
       await store.fetchHandlaggare();

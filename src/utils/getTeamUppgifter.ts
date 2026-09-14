@@ -1,13 +1,10 @@
 import { env } from "../config/env";
 import { useHandlaggareStore } from "../stores/handlaggareStore";
-import { useProductStore } from "../stores/uppgiftListaStore";
+import { useTeamUppgiftListaStore } from "../stores/teamUppgiftListaStore";
 import { useToast } from "./useToast";
 
-export async function getTilldeladeUppgifter(handlaggarId: {
-  typId: string;
-  varde: string;
-}) {
-  const store = useProductStore();
+export async function getTeamUppgifter(): Promise<void> {
+  const store = useTeamUppgiftListaStore();
   const handlaggareStore = useHandlaggareStore();
   const toast = useToast();
 
@@ -15,16 +12,10 @@ export async function getTilldeladeUppgifter(handlaggarId: {
     const bffUrl = env.bffUrl;
     const token = handlaggareStore.bearerToken;
 
-    const response = await fetch(`${bffUrl}/tasks`, {
-      method: "POST",
+    const response = await fetch(`${bffUrl}/tasks/team`, {
       headers: {
-        "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify({
-        typId: handlaggarId.typId,
-        varde: handlaggarId.varde,
-      }),
     });
 
     if (!response.ok) {
@@ -32,7 +23,7 @@ export async function getTilldeladeUppgifter(handlaggarId: {
     }
 
     const data = await response.json();
-    store.setUppgiftLista(
+    store.setTeamUppgiftLista(
       Array.isArray(data.operativa_uppgifter) ? data.operativa_uppgifter : [],
     );
     if (data.borttagna_pga_behorighet > 0) {
@@ -42,7 +33,7 @@ export async function getTilldeladeUppgifter(handlaggarId: {
       );
     }
   } catch (error) {
-    console.error("Error loading tasks:", error);
+    console.error("Error loading team tasks:", error);
     throw error;
   }
 }

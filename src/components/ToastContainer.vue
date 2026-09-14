@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useToast } from "../utils/useToast";
 
-const { toasts } = useToast();
+const { toasts, dismiss } = useToast();
 </script>
 
 <template>
@@ -10,9 +10,24 @@ const { toasts } = useToast();
       v-for="toast in toasts"
       :key="toast.id"
       class="toast"
-      :class="['toast--' + toast.type, { 'toast--removing': toast.removing }]"
+      :class="[
+        'toast--' + toast.type,
+        {
+          'toast--removing': toast.removing,
+          'toast--persistent': toast.persistent,
+        },
+      ]"
     >
-      {{ toast.message }}
+      <span class="toast__message">{{ toast.message }}</span>
+      <button
+        v-if="toast.persistent"
+        type="button"
+        class="toast__close"
+        aria-label="Stäng"
+        @click="dismiss(toast.id)"
+      >
+        &times;
+      </button>
     </div>
   </div>
 </template>
@@ -56,6 +71,28 @@ const { toasts } = useToast();
 }
 .toast--info {
   background: #2b6cb0;
+}
+
+.toast--persistent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: left;
+  background: #fff;
+  color: #c53030;
+  border: 2px solid #c53030;
+}
+
+.toast__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
 }
 
 @keyframes slideIn {
