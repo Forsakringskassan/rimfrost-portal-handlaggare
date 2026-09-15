@@ -215,7 +215,7 @@ VITE_BFF_URL=http://localhost:9001
 Mount a `runtime-config.js` file at `/usr/local/apache2/htdocs/runtime-config.js` inside the container:
 
 ```js
-window._env_ = {
+window.__PORTAL_HANDLAGGARE_ENV__ = {
   RUNTIME_BFF_URL: "https://your-bff.internal.example.com",
 };
 ```

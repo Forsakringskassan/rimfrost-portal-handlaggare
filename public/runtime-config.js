@@ -1,1 +1,1 @@
-window._env_ = {};
+window.__PORTAL_HANDLAGGARE_ENV__ = {};
