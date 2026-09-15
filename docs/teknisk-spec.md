@@ -51,10 +51,10 @@ Ingen. Applikationen har ingen meddelandeintegration.
 
 ## Konfiguration
 
-| Egenskap                           | Beskrivning                     | Standardvärde          |
-| ---------------------------------- | ------------------------------- | ---------------------- |
-| `VITE_BFF_URL`                     | BFF-url vid lokal utveckling    | Relativ sökväg (proxy) |
-| `RUNTIME_BFF_URL` (`window._env_`) | BFF-url vid körning i container | —                      |
+| Egenskap                                                | Beskrivning                     | Standardvärde          |
+| ------------------------------------------------------- | ------------------------------- | ---------------------- |
+| `VITE_BFF_URL`                                          | BFF-url vid lokal utveckling    | Relativ sökväg (proxy) |
+| `RUNTIME_BFF_URL` (`window.__PORTAL_HANDLAGGARE_ENV__`) | BFF-url vid körning i container | —                      |
 
 ## Liveness
 
