@@ -2,6 +2,25 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.3.1 (2026-09-15)
+
+### Bug Fixes
+
+-  namespace the runtime-config global per app ([9d434](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/9d434381ab3c516) LisaWedin_Ductus)  
+
+### Other changes
+
+**Update package.json**
+
+
+[a7bc3](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/a7bc34afd893800) LisaWedin-Ductus *2026-09-15 10:36:44*
+
+**Rename project from rimfrost-fe to rimfrost-portal-handlaggare**
+
+
+[9c918](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/9c918e21ab32159) LisaWedin-Ductus *2026-09-15 10:36:22*
+
+
 ## 0.3.0 (2026-09-14)
 
 ### Features
