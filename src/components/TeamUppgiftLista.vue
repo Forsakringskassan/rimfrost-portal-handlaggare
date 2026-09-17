@@ -6,18 +6,24 @@ import {
   FSortFilterDataset,
   FTableButton,
   FTableColumn,
+  useModal,
 } from "@fkui/vue";
 import { useRouter } from "vue-router";
 import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { useTeamUppgiftListaStore } from "../stores/teamUppgiftListaStore";
 import type { HandlaggarId, OperativUppgiftItem } from "../types";
 import { getTeamUppgifter } from "../utils/getTeamUppgifter";
+import { reassignUppgift } from "../utils/reassignUppgift";
+import { useToast } from "../utils/useToast";
 
 const store = useTeamUppgiftListaStore();
 const handlaggareStore = useHandlaggareStore();
 const router = useRouter();
+const { confirmModal } = useModal();
+const toast = useToast();
 const isLoading = ref(false);
 const error = ref<string | null>(null);
+const pickingUppgiftId = ref<string | null>(null);
 
 function openUppgift(item: OperativUppgiftItem): void {
   router.push({
@@ -43,6 +49,33 @@ function handlaggareLabel(id: HandlaggarId): string {
       h.handlaggarId.typId === id.typId && h.handlaggarId.varde === id.varde,
   );
   return match ? `${match.fornamn} ${match.efternamn}` : id.varde;
+}
+
+async function handlePlocka(item: OperativUppgiftItem): Promise<void> {
+  if (pickingUppgiftId.value) {
+    return;
+  }
+
+  const confirmed = await confirmModal({
+    heading: "Ta över uppgiften?",
+    content: `Uppgiften tas över från ${handlaggareLabel(item.handlaggarId)} och läggs till i din egen uppgiftslista.`,
+    confirm: "Ta över",
+    dismiss: "Avbryt",
+  });
+  if (!confirmed) {
+    return;
+  }
+
+  pickingUppgiftId.value = item.uppgiftId;
+  try {
+    await reassignUppgift(item.uppgiftId);
+    toast.success("Uppgiften har tagits över.");
+  } catch (err) {
+    console.error("Failed to reassign uppgift:", err);
+    toast.error("Kunde inte ta över uppgiften. Försök igen senare.");
+  } finally {
+    pickingUppgiftId.value = null;
+  }
 }
 
 const sortableTeamUppgiftLista = computed(() =>
@@ -123,6 +156,15 @@ onMounted(async () => {
               <FTableColumn name="actions" title="" shrink>
                 <FTableButton label @click="openUppgift(row)">
                   Öppna
+                </FTableButton>
+              </FTableColumn>
+              <FTableColumn name="plocka" title="" shrink>
+                <FTableButton
+                  label
+                  :disabled="pickingUppgiftId === row.uppgiftId"
+                  @click="handlePlocka(row)"
+                >
+                  Plocka
                 </FTableButton>
               </FTableColumn>
             </template>
