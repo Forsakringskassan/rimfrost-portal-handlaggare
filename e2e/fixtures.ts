@@ -203,7 +203,7 @@ export async function mockUnassignUppgift(page: Page, status = 204) {
   });
 }
 
-/** Mocks POST /tasks/\{id\}/reassign, triggered by "Plocka" in the Teamvy. */
+/** Mocks POST /tasks/\{id\}/reassign, triggered by "Ta över" in the Teamvy. */
 export async function mockReassignUppgift(
   page: Page,
   uppgift: OperativUppgiftItem = mockUppgift,
