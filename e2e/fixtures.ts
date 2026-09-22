@@ -203,6 +203,16 @@ export async function mockUnassignUppgift(page: Page, status = 204) {
   });
 }
 
+/** Mocks POST /tasks/\{id\}/reassign, triggered by "Plocka" in the Teamvy. */
+export async function mockReassignUppgift(
+  page: Page,
+  uppgift: OperativUppgiftItem = mockUppgift,
+) {
+  await page.route("**/tasks/*/reassign", async (route) => {
+    await route.fulfill({ json: { uppgift } });
+  });
+}
+
 /** Mocks GET /tasks/team, fetched when the Teamvy is opened. */
 export async function mockTeamUppgifter(
   page: Page,
