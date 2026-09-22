@@ -13,7 +13,7 @@ import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { useTeamUppgiftListaStore } from "../stores/teamUppgiftListaStore";
 import type { HandlaggarId, OperativUppgiftItem } from "../types";
 import { getTeamUppgifter } from "../utils/getTeamUppgifter";
-import { reassignUppgift } from "../utils/reassignUppgift";
+import { NotTeamMemberError, reassignUppgift } from "../utils/reassignUppgift";
 import { useToast } from "../utils/useToast";
 
 const store = useTeamUppgiftListaStore();
@@ -51,28 +51,38 @@ function handlaggareLabel(id: HandlaggarId): string {
   return match ? `${match.fornamn} ${match.efternamn}` : id.varde;
 }
 
+function isEgenUppgift(id: HandlaggarId): boolean {
+  const egen = handlaggareStore.selectedHandlaggare?.handlaggarId;
+  return egen?.typId === id.typId && egen?.varde === id.varde;
+}
+
 async function handlePlocka(item: OperativUppgiftItem): Promise<void> {
   if (pickingUppgiftId.value) {
     return;
   }
 
-  const confirmed = await confirmModal({
-    heading: "Ta över uppgiften?",
-    content: `Uppgiften tas över från ${handlaggareLabel(item.handlaggarId)} och läggs till i din egen uppgiftslista.`,
-    confirm: "Ta över",
-    dismiss: "Avbryt",
-  });
-  if (!confirmed) {
-    return;
-  }
-
+  // Set before the modal opens — two fast clicks would otherwise both pass the guard.
   pickingUppgiftId.value = item.uppgiftId;
   try {
+    const confirmed = await confirmModal({
+      heading: "Ta över uppgiften?",
+      content: `Uppgiften tas över från ${handlaggareLabel(item.handlaggarId)} och läggs till i din egen uppgiftslista.`,
+      confirm: "Ta över",
+      dismiss: "Avbryt",
+    });
+    if (!confirmed) {
+      return;
+    }
+
     await reassignUppgift(item.uppgiftId);
     toast.success("Uppgiften har tagits över.");
   } catch (err) {
     console.error("Failed to reassign uppgift:", err);
-    toast.error("Kunde inte ta över uppgiften. Försök igen senare.");
+    toast.error(
+      err instanceof NotTeamMemberError
+        ? err.message
+        : "Kunde inte ta över uppgiften. Försök igen senare.",
+    );
   } finally {
     pickingUppgiftId.value = null;
   }
@@ -160,6 +170,7 @@ onMounted(async () => {
               </FTableColumn>
               <FTableColumn name="plocka" title="" shrink>
                 <FTableButton
+                  v-if="!isEgenUppgift(row.handlaggarId)"
                   label
                   :disabled="pickingUppgiftId === row.uppgiftId"
                   @click="handlePlocka(row)"

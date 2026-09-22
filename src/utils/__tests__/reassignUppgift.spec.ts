@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useHandlaggareStore } from "../../stores/handlaggareStore";
 import { useProductStore } from "../../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../../types";
-import { reassignUppgift } from "../reassignUppgift";
+import { NotTeamMemberError, reassignUppgift } from "../reassignUppgift";
 
 const pushMock = vi.fn();
 vi.mock("../../router/index.js", () => ({
@@ -93,7 +93,7 @@ describe("reassignUppgift", () => {
   it("throws and does not navigate when the caller is not a team member", async () => {
     mockFetch(403);
 
-    await expect(reassignUppgift("1")).rejects.toThrow("403");
+    await expect(reassignUppgift("1")).rejects.toThrow(NotTeamMemberError);
     expect(pushMock).not.toHaveBeenCalled();
   });
 

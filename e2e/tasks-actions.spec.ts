@@ -3,6 +3,8 @@ import {
   gotoPortal,
   mockBffApis,
   mockGetNextUppgift,
+  mockHandlaggare,
+  mockReassignUppgift,
   mockTeamUppgifter,
   mockUnassignUppgift,
   mockUppgift,
@@ -89,6 +91,14 @@ test.describe("Lämna tillbaka uppgift (POST /tasks/{id}/unassign)", () => {
 });
 
 test.describe("Teamvy (GET /tasks/team)", () => {
+  // Assigned to the second mock handläggare — gotoPortal logs in as the first,
+  // and Plocka is hidden on your own tasks.
+  const annansUppgift = {
+    ...mockUppgift,
+    uppgiftId: "team-uppg-001",
+    handlaggarId: mockHandlaggare[1].handlaggarId,
+  };
+
   test("visar teamets uppgifter och navigerar vid klick på Öppna", async ({
     page,
   }) => {
@@ -138,6 +148,84 @@ test.describe("Teamvy (GET /tasks/team)", () => {
       page.getByText(
         "En eller flera uppgifter har tagits bort av behörighetsskäl",
       ),
+    ).toBeVisible();
+  });
+
+  test("plockar uppgiften, visar toast och navigerar till den", async ({
+    page,
+  }) => {
+    await mockBffApis(page, []);
+    await mockTeamUppgifter(page, [annansUppgift]);
+    await mockReassignUppgift(page, annansUppgift);
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Teamvy" }).click();
+
+    const reassignRequest = page.waitForRequest(
+      (req) =>
+        req.url().includes("/tasks/team-uppg-001/reassign") &&
+        req.method() === "POST",
+    );
+    await page.getByRole("button", { name: "Plocka" }).click();
+    await page.getByRole("button", { name: "Ta över", exact: true }).click();
+    await reassignRequest;
+
+    await expect(page.getByText("Uppgiften har tagits över.")).toBeVisible();
+    await expect(page).toHaveURL(/\/items\/team-uppg-001/);
+  });
+
+  test("visar ingen Plocka-knapp för uppgift som redan är tilldelad mig", async ({
+    page,
+  }) => {
+    await mockBffApis(page, []);
+    await mockTeamUppgifter(page, [{ ...mockUppgift, uppgiftId: "egen-001" }]);
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Teamvy" }).click();
+    await expect(page.getByRole("button", { name: "Öppna" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Plocka" })).toHaveCount(0);
+  });
+
+  test("avbryter utan att anropa backend och låser inte knappen", async ({
+    page,
+  }) => {
+    await mockBffApis(page, []);
+    await mockTeamUppgifter(page, [annansUppgift]);
+    let reassignCalls = 0;
+    await page.route("**/tasks/*/reassign", async (route) => {
+      reassignCalls++;
+      await route.fulfill({ json: { uppgift: annansUppgift } });
+    });
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Teamvy" }).click();
+    await page.getByRole("button", { name: "Plocka" }).click();
+    await page.getByRole("button", { name: "Avbryt", exact: true }).click();
+
+    expect(reassignCalls).toBe(0);
+    // Reopening proves the guard reset on dismiss — otherwise Plocka stays dead.
+    await page.getByRole("button", { name: "Plocka" }).click();
+    await expect(
+      page.getByRole("button", { name: "Ta över", exact: true }),
+    ).toBeVisible();
+  });
+
+  test("visar behörighetsmeddelande när backend svarar 403", async ({
+    page,
+  }) => {
+    await mockBffApis(page, []);
+    await mockTeamUppgifter(page, [annansUppgift]);
+    await page.route("**/tasks/*/reassign", async (route) => {
+      await route.fulfill({ status: 403 });
+    });
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Teamvy" }).click();
+    await page.getByRole("button", { name: "Plocka" }).click();
+    await page.getByRole("button", { name: "Ta över", exact: true }).click();
+
+    await expect(
+      page.getByText("Du har inte behörighet att ta över uppgiften."),
     ).toBeVisible();
   });
 });

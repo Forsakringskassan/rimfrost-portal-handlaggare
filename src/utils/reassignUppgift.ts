@@ -4,6 +4,17 @@ import { useHandlaggareStore } from "../stores/handlaggareStore.js";
 import { useProductStore } from "../stores/uppgiftListaStore.js";
 import type { OperativUppgiftItem } from "../types.js";
 
+/**
+ * The caller may not take this task over — OUL answers 403 when the task is not
+ * in a team they belong to. Kept distinct because retrying can never succeed.
+ */
+export class NotTeamMemberError extends Error {
+  public constructor() {
+    super("Du har inte behörighet att ta över uppgiften.");
+    this.name = "NotTeamMemberError";
+  }
+}
+
 export async function reassignUppgift(uppgiftId: string): Promise<void> {
   const bffUrl = env.bffUrl;
   const handlaggareStore = useHandlaggareStore();
@@ -16,6 +27,10 @@ export async function reassignUppgift(uppgiftId: string): Promise<void> {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
+
+  if (response.status === 403) {
+    throw new NotTeamMemberError();
+  }
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
