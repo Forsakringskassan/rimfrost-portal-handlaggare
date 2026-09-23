@@ -8,7 +8,6 @@ import {
   FTableColumn,
   useModal,
 } from "@fkui/vue";
-import { useRouter } from "vue-router";
 import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { useTeamUppgiftListaStore } from "../stores/teamUppgiftListaStore";
 import type { HandlaggarId, OperativUppgiftItem } from "../types";
@@ -18,20 +17,11 @@ import { useToast } from "../utils/useToast";
 
 const store = useTeamUppgiftListaStore();
 const handlaggareStore = useHandlaggareStore();
-const router = useRouter();
 const { confirmModal } = useModal();
 const toast = useToast();
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 const pickingUppgiftId = ref<string | null>(null);
-
-function openUppgift(item: OperativUppgiftItem): void {
-  router.push({
-    name: "item",
-    params: { uppgiftId: item.uppgiftId },
-    query: { title: item.regel },
-  });
-}
 
 function formatDate(dateString: string): string {
   if (!dateString) {
@@ -56,7 +46,7 @@ function isEgenUppgift(id: HandlaggarId): boolean {
   return egen?.typId === id.typId && egen?.varde === id.varde;
 }
 
-async function handlePlocka(item: OperativUppgiftItem): Promise<void> {
+async function handleTaOver(item: OperativUppgiftItem): Promise<void> {
   if (pickingUppgiftId.value) {
     return;
   }
@@ -163,19 +153,14 @@ onMounted(async () => {
               <FTableColumn name="handlaggareLabel" title="Tilldelad" sortable>
                 {{ row.handlaggareLabel }}
               </FTableColumn>
-              <FTableColumn name="actions" title="" shrink>
-                <FTableButton label @click="openUppgift(row)">
-                  Öppna
-                </FTableButton>
-              </FTableColumn>
-              <FTableColumn name="plocka" title="" shrink>
+              <FTableColumn name="taOver" title="Åtgärd" shrink>
                 <FTableButton
                   v-if="!isEgenUppgift(row.handlaggarId)"
                   label
                   :disabled="pickingUppgiftId === row.uppgiftId"
-                  @click="handlePlocka(row)"
+                  @click="handleTaOver(row)"
                 >
-                  Plocka
+                  Ta över
                 </FTableButton>
               </FTableColumn>
             </template>
