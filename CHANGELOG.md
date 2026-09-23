@@ -2,6 +2,21 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.4.0 (2026-09-23)
+
+### Features
+
+-  pick tasks from your own team ([c0930](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/c0930d60c9e4cea) julolsso)  
+-  pick-task-team plocka button ([2434e](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/2434ebf91671bfa) julolsso)  
+
+### Bug Fixes
+
+-  close direct-URL access to a colleague's task ([030a0](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/030a08e43a66d2e) julolsso)  
+-  remove open button from team view and rename plocka to ta över ([84f1d](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/84f1dba2e8e7c6e) julolsso)  
+-  revert unintended @fkui bump, keep surgical npm ci fix ([ae802](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/ae8027636735f8d) julolsso)  
+-  fully resync package-lock.json via clean reinstall ([79499](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/79499243d634177) julolsso)  
+-  resync package-lock.json to fix npm ci EUSAGE error ([42a8d](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/42a8d20879dafdf) julolsso)  
+
 ## 0.3.1 (2026-09-15)
 
 ### Bug Fixes
