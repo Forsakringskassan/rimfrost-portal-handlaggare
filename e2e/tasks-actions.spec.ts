@@ -229,4 +229,24 @@ test.describe("Teamvy (GET /tasks/team)", () => {
       page.getByText("Du har inte behörighet att ta över uppgiften."),
     ).toBeVisible();
   });
+
+  // Without the button, a colleague's uppgiftId is still visible in the team
+  // table's ID column — this proves it can't be opened by pasting/typing it
+  // into the URL either (PORT-FR review comment on PR #76).
+  test("kan inte öppna en kollegas uppgift genom att navigera direkt till dess URL", async ({
+    page,
+  }) => {
+    await mockBffApis(page, []);
+    await mockTeamUppgifter(page, [annansUppgift]);
+    await gotoPortal(page, "/items/team-uppg-001");
+
+    // If the id had resolved via teamUppgiftLista, the error would name
+    // annansUppgift's own url-derived key instead of the raw uppgiftId —
+    // this confirms it was never matched to the colleague's task at all.
+    await expect(
+      page.getByText('Kunde inte ladda komponent för "team-uppg-001"', {
+        exact: false,
+      }),
+    ).toBeVisible();
+  });
 });

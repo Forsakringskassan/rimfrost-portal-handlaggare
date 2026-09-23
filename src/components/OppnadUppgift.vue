@@ -5,16 +5,13 @@ import { FLoader } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
-import { useTeamUppgiftListaStore } from "../stores/teamUppgiftListaStore";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
 import { ManifestLoadError } from "../config/remoteRegistry";
 
 const route = useRoute();
 const router = useRouter();
 const store = useProductStore();
-const teamStore = useTeamUppgiftListaStore();
 const { uppgiftLista, hasFetched } = storeToRefs(store);
-const { teamUppgiftLista } = storeToRefs(teamStore);
 
 const uppgiftId = computed(() => route.params.uppgiftId as string | null);
 const componentKey = ref(0);
@@ -24,11 +21,13 @@ const RemoteComponent = shallowRef<Component | null>(null);
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 
+// Only the handler's own tasks (uppgiftLista) count as a match here — a task
+// visible only via teamUppgiftLista belongs to someone else, and must not be
+// openable by pasting/typing its uppgiftId into the URL.
 const currentUppgift = computed(() => {
   if (!uppgiftId.value) return null;
   return (
     uppgiftLista.value.find((item) => item.uppgiftId === uppgiftId.value) ??
-    teamUppgiftLista.value.find((item) => item.uppgiftId === uppgiftId.value) ??
     null
   );
 });
