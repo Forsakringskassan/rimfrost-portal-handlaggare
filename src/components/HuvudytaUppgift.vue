@@ -12,7 +12,6 @@ const { confirmModal } = useModal();
 const toast = useToast();
 
 const pageTitle = computed(() => route.query.title ?? "Ingen titel");
-const pageId = computed(() => route.params.uppgiftId ?? "Inget ID");
 
 const isUnassigning = ref(false);
 
@@ -64,7 +63,7 @@ async function handleUnassign(): Promise<void> {
 <template>
   <div class="container">
     <div v-if="route.params.uppgiftId" class="uppgift-header">
-      <h1 class="page-title">{{ pageTitle }} - {{ pageId }}</h1>
+      <h1 class="page-title">{{ pageTitle }}</h1>
       <FButton
         v-if="egenUppgift"
         variant="secondary"
