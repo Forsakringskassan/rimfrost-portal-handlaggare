@@ -345,3 +345,9 @@ export const test = base.extend<{ setupMocks: Page }>({
     await use(page);
   },
 });
+
+// The nav label is just the regel, which the uppgift header also shows once the
+// uppgift is open — scoping to the menu keeps the locator unambiguous.
+export function uppgiftINavigering(page: Page, regel: string) {
+  return page.getByLabel("Uppgiftslista").getByText(regel, { exact: true });
+}

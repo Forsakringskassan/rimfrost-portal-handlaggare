@@ -9,6 +9,7 @@ import {
   mockUnassignUppgift,
   mockUppgift,
   test,
+  uppgiftINavigering,
 } from "./fixtures";
 
 test.describe("Hämta ny uppgift (POST /tasks/getNext)", () => {
@@ -19,7 +20,7 @@ test.describe("Hämta ny uppgift (POST /tasks/getNext)", () => {
 
     await page.getByRole("button", { name: "Hämta ny uppgift" }).click();
     await expect(page).toHaveURL(/\/items\/uppg-001/);
-    await expect(page.getByText("ppg-001: RTF Manuell")).toBeVisible();
+    await expect(uppgiftINavigering(page, "RTF Manuell")).toBeVisible();
   });
 
   test("visar felmeddelande när backend svarar med fel", async ({ page }) => {
@@ -44,7 +45,7 @@ test.describe("Lämna tillbaka uppgift (POST /tasks/{id}/unassign)", () => {
     await mockUnassignUppgift(page);
     await gotoPortal(page);
 
-    await page.getByText("ppg-001: RTF Manuell").click();
+    await uppgiftINavigering(page, "RTF Manuell").click();
     await expect(page).toHaveURL(/\/items\/uppg-001/);
 
     const unassignRequest = page.waitForRequest(
@@ -76,7 +77,7 @@ test.describe("Lämna tillbaka uppgift (POST /tasks/{id}/unassign)", () => {
     });
     await gotoPortal(page);
 
-    await page.getByText("ppg-001: RTF Manuell").click();
+    await uppgiftINavigering(page, "RTF Manuell").click();
     await page.getByRole("button", { name: "Lämna tillbaka uppgift" }).click();
     await page
       .getByRole("button", { name: "Lämna tillbaka", exact: true })
@@ -86,7 +87,7 @@ test.describe("Lämna tillbaka uppgift (POST /tasks/{id}/unassign)", () => {
       page.getByText("Kunde inte lämna tillbaka uppgiften", { exact: false }),
     ).toBeVisible();
     // The task stays in the list — unassign only removes it on success.
-    await expect(page.getByText("ppg-001: RTF Manuell")).toBeVisible();
+    await expect(uppgiftINavigering(page, "RTF Manuell")).toBeVisible();
   });
 });
 

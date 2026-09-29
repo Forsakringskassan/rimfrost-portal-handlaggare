@@ -6,10 +6,10 @@ import {
   mockRtfManuellEndpoints,
   mockRtfManuellUppgift,
   test,
+  uppgiftINavigering,
 } from "./fixtures";
 
-// uppgift list label = last 7 chars of uppgiftId + ": " + regel (see uppgifter.spec.ts)
-const listLabel = "rtf-001: Har kunden rätt till VAH?";
+const listLabel = "Har kunden rätt till VAH?";
 
 // Exercises the real rtf-manuell-fe micro frontend (built and served on :3031 by
 // the playwright.config.ts webServer entry), loaded through Module Federation the
@@ -22,7 +22,7 @@ test.describe("rtf-manuell MFE", () => {
     await mockRtfManuellEndpoints(page);
     await gotoPortal(page);
 
-    await page.getByText(listLabel).click();
+    await uppgiftINavigering(page, listLabel).click();
     await expect(page).toHaveURL(/\/items\/uppg-rtf-001/);
 
     await expect(
@@ -38,7 +38,7 @@ test.describe("rtf-manuell MFE", () => {
     await mockRtfManuellEndpoints(page);
     await gotoPortal(page);
 
-    await page.getByText(listLabel).click();
+    await uppgiftINavigering(page, listLabel).click();
     await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
 
     const descriptionRequest = page.waitForRequest(
@@ -58,7 +58,7 @@ test.describe("rtf-manuell MFE", () => {
     await mockRtfManuellEndpoints(page);
     await gotoPortal(page);
 
-    await page.getByText(listLabel).click();
+    await uppgiftINavigering(page, listLabel).click();
     await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
 
     // FKUI's radio input sits under a styled decorator; clicking the visible
@@ -86,7 +86,7 @@ test.describe("rtf-manuell MFE", () => {
     await mockRtfManuellEndpoints(page, { status: 500 });
     await gotoPortal(page);
 
-    await page.getByText(listLabel).click();
+    await uppgiftINavigering(page, listLabel).click();
     await expect(
       page.getByText("Kunde inte hämta uppgiftsdata", { exact: false }),
     ).toBeVisible({ timeout: 15_000 });
