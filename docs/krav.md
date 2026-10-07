@@ -103,10 +103,10 @@ ett brev från Försäkringskassan.
   komplett, giltigt personnummer. "Sök"-knappen och Enter ska starta samma sökning.
 - **PORT-FR-06.6** Om innehållet inte är ett giltigt personnummer ska ingen sökning göras.
   Om användaren trycker "Sök" ska en valideringstext visas.
-- **PORT-FR-06.7** Sökningen ska bara visa uppgifter som inte delas ut via kön, inte är
-  tilldelade och har status Ny.
-- **PORT-FR-06.8** Träffarna ska visas i en lista med beskrivning, regel, skapad, status och
-  planerad till. Det sökta personnumret ska visas en gång ovanför listan, inte på varje rad.
+- **PORT-FR-06.7** Sökningen ska bara visa uppgifter som inte delas ut via kön och har
+  status Ny.
+- **PORT-FR-06.8** Träffarna ska visas i en lista med beskrivning, regel och skapad. Det
+  sökta personnumret ska visas en gång ovanför listan, inte på varje rad.
 - **PORT-FR-06.9** Om sökningen inte ger några träffar ska ett tydligt meddelande om att inga
   uppgifter hittades visas.
 - **PORT-FR-06.10** Varje rad ska ha en knapp "Tilldela uppgift". Knappen ska tilldela
@@ -119,6 +119,8 @@ ett brev från Försäkringskassan.
   hämtas på nytt.
 - **PORT-FR-06.13** Om sökningen misslyckas tekniskt ska ett felmeddelande visas, och
   portalen i övrigt ska fortsätta fungera (jfr PORT-NFR-01).
+- **PORT-FR-06.14** Vilken identitetstyp som motsvarar personnummer i sökningen mot
+  bakomliggande tjänster ska vara konfigurerbar och inte hårdkodad.
 
 ---
 
