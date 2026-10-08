@@ -62,6 +62,11 @@ function goToTeamvy() {
   router.push("/");
 }
 
+function goToSokUppgift() {
+  viewStore.setVy("sok");
+  router.push("/");
+}
+
 function openExample() {
   router.push({
     name: "item",
@@ -186,6 +191,9 @@ async function handleGetNextUppgift() {
 
           <div class="nav-footer">
             <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
+            <FButton variant="secondary" @click="goToSokUppgift"
+              >Sök uppgift</FButton
+            >
             <FButton variant="secondary" @click="goToTeamvy">Teamvy</FButton>
             <p v-if="getNextUppgiftFel" class="error-message">
               {{ getNextUppgiftFel }}

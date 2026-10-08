@@ -15,6 +15,17 @@ export class NotTeamMemberError extends Error {
   }
 }
 
+/**
+ * The task no longer exists in OUL, or can no longer be assigned — for example
+ * because another handläggare got to it first (PORT-FR-06.12).
+ */
+export class UppgiftNotFoundError extends Error {
+  public constructor() {
+    super("Uppgiften finns inte längre.");
+    this.name = "UppgiftNotFoundError";
+  }
+}
+
 export async function reassignUppgift(uppgiftId: string): Promise<void> {
   const bffUrl = env.bffUrl;
   const handlaggareStore = useHandlaggareStore();
@@ -30,6 +41,10 @@ export async function reassignUppgift(uppgiftId: string): Promise<void> {
 
   if (response.status === 403) {
     throw new NotTeamMemberError();
+  }
+
+  if (response.status === 404) {
+    throw new UppgiftNotFoundError();
   }
 
   if (!response.ok) {
