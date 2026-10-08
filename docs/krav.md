@@ -86,6 +86,42 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
   specifikt felmeddelande visas, skilt från ett generellt fel.
 - **PORT-FR-05.5** Vid lyckat övertagande ska uppgiften visas i handläggarens egen lista.
 
+### PORT-FR-06 — Sök och tilldela uppgift
+
+Vissa uppgifter, t.ex. kommuniceringsuppgifter, delas inte ut via kön ("Hämta ny uppgift").
+Handläggaren tilldelar sig dem i stället manuellt, till exempel när en kund hör av sig om
+ett brev från Försäkringskassan.
+
+- **PORT-FR-06.1** Vänstermenyn ska visa en sekundär knapp "Sök uppgift" under "Hämta ny
+  uppgift", med samma stil som "Teamvy".
+- **PORT-FR-06.2** Ett klick på "Sök uppgift" ska visa en sökvy i huvudytan, på samma sätt
+  som teamvyn visas.
+- **PORT-FR-06.3** Sökvyn ska ha ett sökfält för personnummer och en "Sök"-knapp.
+- **PORT-FR-06.4** Sökfältet ska godta personnummer med 12 siffror, med eller utan
+  bindestreck (`ÅÅÅÅMMDDNNNN` / `ÅÅÅÅMMDD-NNNN`).
+- **PORT-FR-06.5** Sökningen ska starta automatiskt (fördröjt) när fältet innehåller ett
+  komplett, giltigt personnummer. "Sök"-knappen och Enter ska starta samma sökning.
+- **PORT-FR-06.6** Om innehållet inte är ett giltigt personnummer ska ingen sökning göras.
+  Om användaren trycker "Sök" ska en valideringstext visas.
+- **PORT-FR-06.7** Sökningen ska bara visa uppgifter som inte delas ut via kön och har
+  status Ny.
+- **PORT-FR-06.8** Träffarna ska visas i en lista med beskrivning, regel och skapad. Det
+  sökta personnumret ska visas en gång ovanför listan, inte på varje rad.
+- **PORT-FR-06.9** Om sökningen inte ger några träffar ska ett tydligt meddelande om att inga
+  uppgifter hittades visas.
+- **PORT-FR-06.10** Varje rad ska ha en knapp "Tilldela uppgift". Knappen ska tilldela
+  uppgiften till den inloggade handläggaren via samma tilldelningsflöde som teamvyn, utan
+  bekräftelsedialog.
+- **PORT-FR-06.11** När tilldelningen lyckas ska uppgiften läggas till i handläggarens egen
+  lista och öppnas i portalen.
+- **PORT-FR-06.12** Om tilldelningen nekas (403) eller uppgiften inte finns (404), till
+  exempel för att någon annan hann före, ska ett tydligt felmeddelande visas och träfflistan
+  hämtas på nytt.
+- **PORT-FR-06.13** Om sökningen misslyckas tekniskt ska ett felmeddelande visas, och
+  portalen i övrigt ska fortsätta fungera (jfr PORT-NFR-01).
+- **PORT-FR-06.14** Vilken identitetstyp som motsvarar personnummer i sökningen mot
+  bakomliggande tjänster ska vara konfigurerbar och inte hårdkodad.
+
 ---
 
 ## Icke-funktionella krav
@@ -99,6 +135,13 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
 
 - **PORT-NFR-02.1** Applikationsskalet ska hålla sig inom en fast yta i webbläsarfönstret och
   inte orsaka att den inlästa mikrofrontendens innehåll får hela sidan att rulla oavsiktligt.
+
+### PORT-NFR-03 — Sökning
+
+- **PORT-NFR-03.1** Behörighet och SID-filtrering för sökträffar och tilldelning ska avgöras
+  av bakomliggande tjänster. Portalen ska inte göra egna behörighetsbedömningar.
+- **PORT-NFR-03.2** En automatisk sökning ska göras högst en gång per giltigt personnummer.
+  Ett nytt anrop ska inte skickas medan ett tidigare anrop för samma värde pågår.
 
 ---
 
