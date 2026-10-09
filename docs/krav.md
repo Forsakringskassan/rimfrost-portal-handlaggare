@@ -120,7 +120,8 @@ ett brev från Försäkringskassan.
 - **PORT-FR-06.13** Om sökningen misslyckas tekniskt ska ett felmeddelande visas, och
   portalen i övrigt ska fortsätta fungera (jfr PORT-NFR-01).
 - **PORT-FR-06.14** Vilken identitetstyp som motsvarar personnummer i sökningen mot
-  bakomliggande tjänster ska vara konfigurerbar och inte hårdkodad.
+  bakomliggande tjänster ska vara konfigurerbar och inte hårdkodad. _Uppfylls av Portal BFF
+  (PBFF-FR-05.7). Portalen skickar endast personnumret._
 
 ---
 
