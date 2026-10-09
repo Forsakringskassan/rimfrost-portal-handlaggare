@@ -123,6 +123,16 @@ ett brev från Försäkringskassan.
   bakomliggande tjänster ska vara konfigurerbar och inte hårdkodad. _Uppfylls av Portal BFF
   (PBFF-FR-05.7). Portalen skickar endast personnumret._
 
+### PORT-FR-07 — Markering av SID-uppgift
+
+- **PORT-FR-07.1** När en öppnad uppgift rör en person med skyddad identitet (SID) ska ytan
+  med uppgiftens rubrik och mikrofrontend ha en röd kant (3 px) till vänster.
+- **PORT-FR-07.2** Markeringen ska även framgå för skärmläsare, så att den inte förmedlas
+  enbart med färg.
+- **PORT-FR-07.3** Om uppgiften är SID-märkt ska avgöras av bakomliggande tjänster.
+  _Portal BFF skickar ännu ingen sådan uppgift. Tills vidare finns en tillfällig mock som bara
+  är aktiv i utvecklingsläge (FKPOC-1113)._
+
 ---
 
 ## Icke-funktionella krav
