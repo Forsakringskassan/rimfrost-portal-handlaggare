@@ -5,6 +5,7 @@ import {
   mockGetNextUppgift,
   mockHandlaggare,
   mockReassignUppgift,
+  mockSearchUppgifter,
   mockTeamUppgifter,
   mockUnassignUppgift,
   mockUppgift,
@@ -247,6 +248,179 @@ test.describe("Teamvy (GET /tasks/team)", () => {
       page.getByText('Kunde inte ladda komponent för "team-uppg-001"', {
         exact: false,
       }),
+    ).toBeVisible();
+  });
+});
+
+test.describe("Sök uppgift (POST /tasks/search)", () => {
+  const sokUppgift = {
+    ...mockUppgift,
+    uppgiftId: "sok-uppg-001",
+    status: "Ny",
+    regel: "Kommunicering",
+    beskrivning: "Kommunicering av beslut",
+  };
+
+  test("söker automatiskt på personnummer och visar träffarna", async ({
+    page,
+  }) => {
+    await mockBffApis(page, []);
+    await mockSearchUppgifter(page, [sokUppgift]);
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Sök uppgift" }),
+    ).toBeVisible();
+
+    const request = page.waitForRequest("**/tasks/search");
+    await page.getByLabel("Personnummer").fill("199001019999");
+    expect((await request).postDataJSON()).toEqual({
+      personnummer: "19900101-9999",
+    });
+
+    await expect(
+      page.getByRole("heading", { name: "Uppgifter för 19900101-9999" }),
+    ).toBeVisible();
+    await expect(page.getByText("Kommunicering av beslut")).toBeVisible();
+  });
+
+  test("visar tomt-meddelande när inga uppgifter hittas", async ({ page }) => {
+    await mockBffApis(page, []);
+    await mockSearchUppgifter(page, []);
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await page.getByLabel("Personnummer").fill("19900101-9999");
+
+    await expect(page.getByText("Inga uppgifter hittades")).toBeVisible();
+  });
+
+  test("visar felmeddelande när sökningen misslyckas", async ({ page }) => {
+    await mockBffApis(page, []);
+    await mockSearchUppgifter(page, [], 502);
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await page.getByLabel("Personnummer").fill("19900101-9999");
+
+    await expect(
+      page.getByText("Kunde inte söka efter uppgifter. Försök igen senare."),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Hämta ny uppgift" }),
+    ).toBeVisible();
+  });
+
+  test("visar valideringstext vid ogiltigt personnummer", async ({ page }) => {
+    await mockBffApis(page, []);
+    let searched = false;
+    await page.route("**/tasks/search", async (route) => {
+      searched = true;
+      await route.abort();
+    });
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await page.getByLabel("Personnummer").fill("900101-9999");
+    await page.getByRole("button", { name: "Sök", exact: true }).click();
+
+    await expect(page.getByText("12 siffror", { exact: false })).toBeVisible();
+    expect(searched).toBe(false);
+  });
+
+  test("växlar mellan sökvyn och teamvyn", async ({ page }) => {
+    await mockBffApis(page, []);
+    await mockTeamUppgifter(page, []);
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Sök uppgift" }),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "Teamvy" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Teamets uppgifter" }),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Sök uppgift" }),
+    ).toBeVisible();
+  });
+
+  test("tilldelar uppgiften och öppnar den", async ({ page }) => {
+    await mockBffApis(page, []);
+    await mockSearchUppgifter(page, [sokUppgift]);
+    await mockReassignUppgift(page, sokUppgift);
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await page.getByLabel("Personnummer").fill("199001019999");
+
+    const reassign = page.waitForRequest(
+      (req) =>
+        req.url().includes("/tasks/sok-uppg-001/reassign") &&
+        req.method() === "POST",
+    );
+    await page.getByRole("button", { name: "Tilldela uppgift" }).click();
+    await reassign;
+
+    await expect(page).toHaveURL(/\/items\/sok-uppg-001/);
+    await expect(page.getByText("Uppgiften har tilldelats dig.")).toBeVisible();
+  });
+
+  test("visar meddelande och hämtar träfflistan igen när uppgiften inte längre finns", async ({
+    page,
+  }) => {
+    await mockBffApis(page, []);
+    let searches = 0;
+    await page.route("**/tasks/search", async (route) => {
+      searches++;
+      await route.fulfill({
+        json: {
+          // eslint-disable-next-line camelcase -- the API expects snake_case
+          operativa_uppgifter: searches === 1 ? [sokUppgift] : [],
+          // eslint-disable-next-line camelcase -- the API expects snake_case
+          borttagna_pga_behorighet: 0,
+        },
+      });
+    });
+    await page.route("**/tasks/*/reassign", async (route) => {
+      await route.fulfill({ status: 404 });
+    });
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await page.getByLabel("Personnummer").fill("199001019999");
+    await page.getByRole("button", { name: "Tilldela uppgift" }).click();
+
+    await expect(
+      page.getByText(
+        "Uppgiften kan inte längre tilldelas. Listan har uppdaterats.",
+      ),
+    ).toBeVisible();
+    await expect(page.getByText("Inga uppgifter hittades")).toBeVisible();
+    expect(searches).toBe(2);
+  });
+
+  test("visar behörighetsmeddelande när tilldelningen nekas", async ({
+    page,
+  }) => {
+    await mockBffApis(page, []);
+    await mockSearchUppgifter(page, [sokUppgift]);
+    await page.route("**/tasks/*/reassign", async (route) => {
+      await route.fulfill({ status: 403 });
+    });
+    await gotoPortal(page);
+
+    await page.getByRole("button", { name: "Sök uppgift" }).click();
+    await page.getByLabel("Personnummer").fill("199001019999");
+    await page.getByRole("button", { name: "Tilldela uppgift" }).click();
+
+    await expect(
+      page.getByText("Uppgiften kunde inte tilldelas."),
     ).toBeVisible();
   });
 });

@@ -10,11 +10,12 @@ regelspecifika mikrofrontends. Ingen egen affärslogik eller databas. All data h
 
 ```text
 src/
-├── router/                    # "/" (tomt läge eller teamtabell) och "/items/:id" (inbäddad mikrofrontend)
+├── router/                    # "/" (tomt läge, teamtabell eller sökvy) och "/items/:id" (inbäddad mikrofrontend)
 ├── components/
-│   ├── UppgiftOversikt.vue     # Visar teamtabellen eller tomt-läget via viewStore
+│   ├── UppgiftOversikt.vue     # Visar teamtabellen, sökvyn eller tomt-läget via viewStore
 │   ├── UppgiftLista.vue        # Egna uppgifter i navigeringspanelen, lyssnar på "task-done"
 │   ├── TeamUppgiftLista.vue    # Tabell över teamets uppgifter i huvudytan
+│   ├── SokUppgift.vue          # Sökning på personnummer efter uppgifter som inte delas ut via kön
 │   ├── OppnadUppgift.vue       # Löser upp och monterar rätt mikrofrontend för :id
 │   ├── LoginModal.vue          # Val av handläggaridentitet
 │   └── ToastContainer.vue      # Renderar meddelanderutor (toasts), inkl. icke-avvisande varianten
@@ -29,12 +30,14 @@ src/
 
 Ingen extern OpenAPI-specifikation — kontraktet definieras av Portal BFF.
 
-| Metod | Sökväg                | Beskrivning                           |
-| ----- | --------------------- | ------------------------------------- |
-| GET   | `/handlaggare`        | Lista över handläggare                |
-| POST  | `/tasks`              | Uppgifter tilldelade vald handläggare |
-| POST  | `/tasks/getNext`      | Tilldela nästa tillgängliga uppgift   |
-| GET   | `/api/route-manifest` | Modulfederationsregister              |
+| Metod | Sökväg                 | Beskrivning                           |
+| ----- | ---------------------- | ------------------------------------- |
+| GET   | `/handlaggare`         | Lista över handläggare                |
+| POST  | `/tasks`               | Uppgifter tilldelade vald handläggare |
+| POST  | `/tasks/getNext`       | Tilldela nästa tillgängliga uppgift   |
+| POST  | `/tasks/search`        | Sök uppgifter på personnummer         |
+| POST  | `/tasks/{id}/reassign` | Tilldela/ta över uppgift              |
+| GET   | `/api/route-manifest`  | Modulfederationsregister              |
 
 ### Meddelande vid begränsad behörighet
 
@@ -44,6 +47,25 @@ SID-behörighet). Är värdet större än 0 visas en kvarstående (icke-avvisand
 `useToast`/`ToastContainer.vue` med texten "En eller flera uppgifter har tagits bort av
 behörighetsskäl". Till skillnad från övriga toasts, som självstängs efter en fast tid, stängs
 denna endast genom att handläggaren klickar på dess stängningsknapp.
+
+### Sök uppgift
+
+Sökvyn (`SokUppgift.vue`) skickar personnumret i bodyn till `POST /tasks/search`
+(`{ "personnummer": "ÅÅÅÅMMDD-NNNN" }`), aldrig i URL:en. Sökningen startar automatiskt 300 ms
+efter att fältet innehåller ett giltigt personnummer (12 siffror, med eller utan bindestreck,
+blanksteg före och efter ignoreras), eller direkt vid "Sök"/Enter. Fältet har ingen
+teckenbegränsning, så att ett inklistrat värde inte kortas av; längden kontrolleras i
+valideringen. Den automatiska sökningen görs högst en gång per personnummer. "Sök"/Enter
+hämtar däremot alltid listan på nytt, utom medan ett anrop för samma personnummer redan pågår.
+Ett nytt giltigt värde avbryter en pågående sökning (PORT-NFR-03.2). Portalen filtrerar inte själv på behörighet eller SID, utan visar det BFF:en
+returnerar (PORT-NFR-03.1). Träffarna hålls lokalt i komponenten och försvinner när vyn lämnas.
+
+"Tilldela uppgift" på en träff anropar `POST /tasks/{id}/reassign`, samma anrop som "Ta över"
+i teamvyn men utan bekräftelsedialog. Vid lyckad tilldelning läggs uppgiften till i den egna
+listan och öppnas (`/items/:id`). Vid 403 visas "Uppgiften kunde inte tilldelas." (i OUL:s
+kontrakt betyder 403 att uppgiften inte får tilldelas). BFF:en skickar inte med orsaken, så ett
+SID-nekande kan inte skiljas från andra 403. Vid 404 visas att uppgiften inte längre kan
+tilldelas. I båda fallen hämtas träfflistan på nytt.
 
 ## Kafka-integration
 

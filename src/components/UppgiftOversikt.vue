@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useViewStore } from "../stores/viewStore";
 import IngenUppgiftVald from "./IngenUppgiftVald.vue";
+import SokUppgift from "./SokUppgift.vue";
 import TeamUppgiftLista from "./TeamUppgiftLista.vue";
 
 const viewStore = useViewStore();
@@ -8,5 +9,6 @@ const viewStore = useViewStore();
 
 <template>
   <TeamUppgiftLista v-if="viewStore.uppgiftVy === 'team'" />
+  <SokUppgift v-else-if="viewStore.uppgiftVy === 'sok'" />
   <IngenUppgiftVald v-else />
 </template>

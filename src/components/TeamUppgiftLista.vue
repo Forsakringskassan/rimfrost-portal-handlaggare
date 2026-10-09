@@ -11,6 +11,7 @@ import {
 import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { useTeamUppgiftListaStore } from "../stores/teamUppgiftListaStore";
 import type { HandlaggarId, OperativUppgiftItem } from "../types";
+import { formatDate } from "../utils/formatDate";
 import { getTeamUppgifter } from "../utils/getTeamUppgifter";
 import { NotTeamMemberError, reassignUppgift } from "../utils/reassignUppgift";
 import { useToast } from "../utils/useToast";
@@ -22,16 +23,6 @@ const toast = useToast();
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 const pickingUppgiftId = ref<string | null>(null);
-
-function formatDate(dateString: string): string {
-  if (!dateString) {
-    return "—";
-  }
-  return new Date(dateString).toLocaleString("sv-SE", {
-    dateStyle: "short",
-    timeStyle: "short",
-  });
-}
 
 function handlaggareLabel(id: HandlaggarId): string {
   const match = handlaggareStore.handlaggare.find(

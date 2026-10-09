@@ -3,7 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useHandlaggareStore } from "../../stores/handlaggareStore";
 import { useProductStore } from "../../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../../types";
-import { NotTeamMemberError, reassignUppgift } from "../reassignUppgift";
+import {
+  NotTeamMemberError,
+  UppgiftNotFoundError,
+  reassignUppgift,
+} from "../reassignUppgift";
 
 const pushMock = vi.fn();
 vi.mock("../../router/index.js", () => ({
@@ -94,6 +98,15 @@ describe("reassignUppgift", () => {
     mockFetch(403);
 
     await expect(reassignUppgift("1")).rejects.toThrow(NotTeamMemberError);
+    expect(pushMock).not.toHaveBeenCalled();
+  });
+
+  it("throws UppgiftNotFoundError and does not navigate on 404", async () => {
+    const store = useProductStore();
+    mockFetch(404);
+
+    await expect(reassignUppgift("1")).rejects.toThrow(UppgiftNotFoundError);
+    expect(store.uppgiftLista).toEqual([]);
     expect(pushMock).not.toHaveBeenCalled();
   });
 

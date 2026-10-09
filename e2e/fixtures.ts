@@ -231,6 +231,28 @@ export async function mockTeamUppgifter(
   });
 }
 
+/** Mocks POST /tasks/search, triggered from the "Sök uppgift" view. */
+export async function mockSearchUppgifter(
+  page: Page,
+  uppgifter: OperativUppgiftItem[] = [],
+  status = 200,
+) {
+  await page.route("**/tasks/search", async (route) => {
+    if (status !== 200) {
+      await route.fulfill({ status });
+      return;
+    }
+    await route.fulfill({
+      json: {
+        // eslint-disable-next-line camelcase -- the API expects snake_case
+        operativa_uppgifter: uppgifter,
+        // eslint-disable-next-line camelcase -- the API expects snake_case
+        borttagna_pga_behorighet: 0,
+      },
+    });
+  });
+}
+
 /**
  * Mocks the rtf-manuell-fe's own BFF contract: GET /api/task/\{id\},
  * GET /api/uppgiftsbeskrivning/\{typ\}, POST /api/\{id\}/patchErsattningar.
