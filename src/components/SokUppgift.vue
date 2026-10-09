@@ -9,6 +9,7 @@ import {
   FTableColumn,
 } from "@fkui/vue";
 import type { OperativUppgiftItem } from "../types";
+import { formatDate } from "../utils/formatDate";
 import { normalizePersonnummer } from "../utils/personnummer";
 import {
   NotTeamMemberError,
@@ -25,7 +26,7 @@ const toast = useToast();
 const personnummerInput = ref("");
 const valideringsfel = ref<string | null>(null);
 // The personnummer of the latest search, in flight or done — used both as the
-// heading above the list and to avoid searching the same value twice (PORT-NFR-03.2).
+// heading above the list and to avoid duplicate searches (PORT-NFR-03.2).
 const soktPersonnummer = ref<string | null>(null);
 const traffar = ref<OperativUppgiftItem[]>([]);
 const isLoading = ref(false);
@@ -35,18 +36,14 @@ const tilldelarUppgiftId = ref<string | null>(null);
 let searchTimer: ReturnType<typeof setTimeout> | undefined;
 let pagaendeSokning: AbortController | null = null;
 
-function formatDate(dateString: string): string {
-  if (!dateString) {
-    return "—";
-  }
-  return new Date(dateString).toLocaleString("sv-SE", {
-    dateStyle: "short",
-    timeStyle: "short",
-  });
-}
-
 async function sok(personnummer: string, igen = false): Promise<void> {
-  if (personnummer === soktPersonnummer.value && !igen) {
+  // Never a second call while the same value is in flight. An automatic search
+  // also skips a value already searched, while igen (Sök/Enter, or a refresh
+  // after a failed tilldelning) fetches it again (PORT-NFR-03.2).
+  if (
+    personnummer === soktPersonnummer.value &&
+    (pagaendeSokning !== null || !igen)
+  ) {
     return;
   }
 
@@ -71,7 +68,7 @@ async function sok(personnummer: string, igen = false): Promise<void> {
     }
     console.error("Failed to search uppgifter:", err);
     error.value = "Kunde inte söka efter uppgifter. Försök igen senare.";
-    // Lets "Sök" retry the same personnummer after a failure.
+    // Lets the automatic search retry the same personnummer after a failure.
     soktPersonnummer.value = null;
   }
   isLoading.value = false;
@@ -95,7 +92,7 @@ function onSubmit(): void {
       "Ange ett personnummer med 12 siffror, ÅÅÅÅMMDDNNNN eller ÅÅÅÅMMDD-NNNN.";
     return;
   }
-  void sok(personnummer);
+  void sok(personnummer, true);
 }
 
 async function handleTilldela(item: OperativUppgiftItem): Promise<void> {
@@ -117,10 +114,10 @@ async function handleTilldela(item: OperativUppgiftItem): Promise<void> {
       err instanceof UppgiftNotFoundError
     ) {
       // The BFF passes OUL's 403 on without a reason, so an SID refusal can't
-      // be told apart from other 403s — all get the team view's message.
+      // be told apart from other 403s — all get the same message.
       toast.error(
         err instanceof NotTeamMemberError
-          ? err.message
+          ? "Uppgiften kunde inte tilldelas."
           : "Uppgiften kan inte längre tilldelas. Listan har uppdaterats.",
       );
       // The hit list has drifted, e.g. someone else got there first (PORT-FR-06.12).
@@ -172,7 +169,6 @@ onBeforeUnmount(() => {
               type="text"
               inputmode="numeric"
               autocomplete="off"
-              maxlength="13"
               :aria-invalid="valideringsfel ? 'true' : undefined"
             />
           </div>
@@ -189,7 +185,7 @@ onBeforeUnmount(() => {
       Söker efter uppgifter...
     </f-loader>
 
-    <p v-if="error" class="error-message">{{ error }}</p>
+    <p v-if="error" class="error-message" role="alert">{{ error }}</p>
 
     <template v-if="soktPersonnummer && !isLoading && !error">
       <h2 class="h3">Uppgifter för {{ soktPersonnummer }}</h2>

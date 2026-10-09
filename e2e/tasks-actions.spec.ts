@@ -420,7 +420,7 @@ test.describe("Sök uppgift (POST /tasks/search)", () => {
     await page.getByRole("button", { name: "Tilldela uppgift" }).click();
 
     await expect(
-      page.getByText("Du har inte behörighet att ta över uppgiften."),
+      page.getByText("Uppgiften kunde inte tilldelas."),
     ).toBeVisible();
   });
 });

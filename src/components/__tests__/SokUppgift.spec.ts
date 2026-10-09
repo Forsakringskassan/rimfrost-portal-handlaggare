@@ -112,6 +112,15 @@ describe("SokUppgift", () => {
       },
     );
 
+    it("accepts a pasted value with surrounding whitespace", async () => {
+      const wrapper = mountView();
+      await type(wrapper, " 19900101-9999 ");
+      await vi.advanceTimersByTimeAsync(300);
+
+      expect(searchMock).toHaveBeenCalledTimes(1);
+      expect(searchMock.mock.calls[0][0]).toBe("19900101-9999");
+    });
+
     it("restarts the delay on each keystroke", async () => {
       const wrapper = mountView();
       await type(wrapper, "199001019999");
@@ -152,15 +161,31 @@ describe("SokUppgift", () => {
       expect(searchMock).toHaveBeenCalledTimes(1);
     });
 
-    it("does not search the same value again after it has been searched", async () => {
+    it("does not search the same value again automatically after it has been searched", async () => {
       const wrapper = mountView();
       await type(wrapper, "199001019999");
       await vi.advanceTimersByTimeAsync(300);
       await flushPromises();
 
-      await wrapper.find("form").trigger("submit");
+      await type(wrapper, "19900101-9999");
+      await vi.advanceTimersByTimeAsync(300);
 
       expect(searchMock).toHaveBeenCalledTimes(1);
+    });
+
+    it("refreshes the same value on Sök after it has been searched", async () => {
+      const wrapper = mountView();
+      await type(wrapper, "199001019999");
+      await vi.advanceTimersByTimeAsync(300);
+      await flushPromises();
+
+      searchMock.mockResolvedValue([uppgift]);
+      await wrapper.find("form").trigger("submit");
+      await flushPromises();
+
+      expect(searchMock).toHaveBeenCalledTimes(2);
+      expect(searchMock.mock.calls[1][0]).toBe("19900101-9999");
+      expect(wrapper.text()).toContain("Kommunicering av beslut");
     });
 
     it("lets a new valid value replace a search in flight", async () => {
@@ -334,14 +359,14 @@ describe("SokUppgift", () => {
       expect(tilldelaButton(wrapper).attributes("disabled")).toBeUndefined();
     });
 
-    it("shows the team view's message on 403 and fetches the hits again", async () => {
+    it("shows that the uppgift can't be assigned on 403 and fetches the hits again", async () => {
       reassignMock.mockRejectedValue(new NotTeamMemberError());
       const wrapper = await mountWithHits();
 
       await tilldelaButton(wrapper).trigger("click");
       await flushPromises();
 
-      expect(toastMessages()).toContain(new NotTeamMemberError().message);
+      expect(toastMessages()).toContain("Uppgiften kunde inte tilldelas.");
       expect(searchMock).toHaveBeenCalledTimes(2);
       expect(searchMock.mock.calls[1][0]).toBe("19900101-9999");
     });
