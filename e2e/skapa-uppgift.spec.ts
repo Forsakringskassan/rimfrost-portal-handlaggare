@@ -92,7 +92,9 @@ test.describe("Skapa uppgift", () => {
     page,
   }) => {
     await oppnaSkapaUppgift(page);
-    await page.getByRole("button", { name: "Skapa anteckning" }).click();
+    await page
+      .locator(".registrera-lage label", { hasText: "Anteckning" })
+      .click();
 
     const form = page.locator(".skapa-anteckning");
     await expect(page.getByPlaceholder("Sök uppgiftstyp")).toHaveCount(0);
@@ -108,7 +110,9 @@ test.describe("Skapa uppgift", () => {
     await expect(page.getByText("Anteckningen har sparats.")).toBeVisible();
     await expect(form.getByLabel("Anteckning")).toHaveValue("");
 
-    await form.getByRole("button", { name: "Tillbaka" }).click();
+    await page
+      .locator(".registrera-lage label", { hasText: "Uppgift" })
+      .click();
     await expect(page.getByPlaceholder("Sök uppgiftstyp")).toBeVisible();
   });
 

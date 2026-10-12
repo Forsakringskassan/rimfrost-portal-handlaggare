@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef, watch } from "vue";
+import { ref, watch } from "vue";
 import { FButton, FTextareaField } from "@fkui/vue";
 import { useSamtalStore } from "../stores/samtalStore";
 import { PERSONNUMMER_FEL, normalizePersonnummer } from "../utils/personnummer";
 import { useToast } from "../utils/useToast";
 import PersonnummerFalt from "./PersonnummerFalt.vue";
 
-const emit = defineEmits<{
-  tillbaka: [];
-}>();
-
 const samtalStore = useSamtalStore();
 const toast = useToast();
-const rubrik = useTemplateRef("rubrik");
 
 // Prefilled from the ongoing call when known (PORT-FR-11.5).
 const personnummer = ref(samtalStore.pagaendeSamtal.personnummer ?? "");
@@ -41,15 +36,11 @@ function onSubmit(): void {
   toast.success("Anteckningen har sparats.");
   anteckning.value = "";
 }
-
-onMounted(() => {
-  rubrik.value?.focus();
-});
 </script>
 
 <template>
   <section class="skapa-anteckning">
-    <h2 ref="rubrik" class="h3" tabindex="-1">Skapa anteckning</h2>
+    <h2 class="h3">Anteckning</h2>
     <form novalidate @submit.prevent="onSubmit">
       <PersonnummerFalt
         id="anteckning-personnummer"
@@ -68,24 +59,12 @@ onMounted(() => {
           <template v-if="anteckningsfel">{{ anteckningsfel }}</template>
         </template>
       </FTextareaField>
-      <div class="button-group">
-        <FButton type="submit" class="button-group__item">Spara</FButton>
-        <FButton
-          variant="secondary"
-          class="button-group__item"
-          @click="emit('tillbaka')"
-          >Tillbaka</FButton
-        >
-      </div>
+      <FButton type="submit">Spara</FButton>
     </form>
   </section>
 </template>
 
 <style scoped>
-.skapa-anteckning h2:focus {
-  outline: none;
-}
-
 .skapa-anteckning :deep(.textarea-field) {
   max-width: 40rem;
 }

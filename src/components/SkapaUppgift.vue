@@ -8,7 +8,7 @@ import {
   useTemplateRef,
   watch,
 } from "vue";
-import { FButton, FExpandablePanel } from "@fkui/vue";
+import { FButton, FExpandablePanel, FFieldset, FRadioField } from "@fkui/vue";
 import { useHandlaggareStore } from "../stores/handlaggareStore";
 import type { Uppgiftstyp } from "../types";
 import {
@@ -28,7 +28,8 @@ import UppgiftstypLista from "./UppgiftstypLista.vue";
 
 const SEARCH_DELAY_MS = 300;
 
-type Steg = "hitta" | "bekrafta" | "anteckning";
+type Steg = "hitta" | "bekrafta";
+type Lage = "uppgift" | "anteckning";
 
 const handlaggareStore = useHandlaggareStore();
 const toast = useToast();
@@ -38,6 +39,9 @@ const katalog = ref<Uppgiftstyp[]>([]);
 const isLoading = ref(true);
 const error = ref<string | null>(null);
 
+// The choice at the top decides whether an uppgift or an anteckning is
+// registered (PORT-FR-11.1).
+const lage = ref<Lage>("uppgift");
 const steg = ref<Steg>("hitta");
 const valdTyp = ref<Uppgiftstyp | null>(null);
 
@@ -151,6 +155,10 @@ onBeforeUnmount(() => {
 <template>
   <div class="skapa-uppgift">
     <h1 id="main-title" class="h1">Skapa uppgift</h1>
+    <p class="body skapa-uppgift__ingress">
+      Registrera en manuell uppgift antingen via uppgiftstyp eller som
+      anteckning.
+    </p>
 
     <BekraftaUppgiftstyp
       v-if="steg === 'bekrafta' && valdTyp"
@@ -159,95 +167,104 @@ onBeforeUnmount(() => {
       @tillbaka="tillbaka"
     />
 
-    <SkapaAnteckning v-else-if="steg === 'anteckning'" @tillbaka="tillbaka" />
-
     <template v-else>
-      <!-- A plain input rather than FTextField: FTextField only updates its
-           v-model on change/blur, and the list follows the typing (PORT-FR-09.2). -->
-      <form
-        class="sok-form"
-        novalidate
-        role="search"
-        @submit.prevent="onSubmit"
-      >
-        <div class="text-field">
-          <label for="sok-uppgiftstyp" class="label">
-            Uppgiftstyp
-            <span class="label__description">
-              Sök på namn, kategori eller sökord
-            </span>
-          </label>
-          <div class="sok-form__row">
-            <div class="text-field__input-wrapper">
-              <input
-                id="sok-uppgiftstyp"
-                ref="sokfalt"
-                v-model="soktext"
-                class="text-field__input"
-                type="search"
-                placeholder="Sök uppgiftstyp"
-                autocomplete="off"
-              />
-            </div>
-            <FButton type="submit">Sök</FButton>
-          </div>
-        </div>
-      </form>
+      <FFieldset name="registrera-lage" horizontal class="registrera-lage">
+        <template #label>Vad vill du registrera?</template>
+        <FRadioField v-model="lage" value="uppgift">Uppgift</FRadioField>
+        <FRadioField v-model="lage" value="anteckning">Anteckning</FRadioField>
+      </FFieldset>
 
-      <!-- Always visible directly under the search field (PORT-FR-11.1). -->
-      <FButton
-        variant="secondary"
-        class="skapa-anteckning-knapp"
-        @click="steg = 'anteckning'"
-        >Skapa anteckning</FButton
-      >
-
-      <p v-if="isLoading" class="body">Hämtar uppgiftstyper...</p>
-      <p v-else-if="error" class="error-message" role="alert">{{ error }}</p>
-
-      <template v-else-if="harSoktext">
-        <!-- Flat hit list while searching (PORT-FR-09.4, PORT-FR-09.5). -->
-        <p class="body traffar-antal" role="status">
-          <template v-if="traffar.length > 0">{{ antalTraffarText }}</template>
-          <template v-else>
-            Inga uppgiftstyper matchar "{{ aktivSoktext.trim() }}". Töm
-            sökfältet för att bläddra bland kategorierna, eller skapa en
-            anteckning om ingen uppgift behövs.
-          </template>
-        </p>
-        <UppgiftstypLista
-          v-if="traffar.length > 0"
-          :typer="traffar"
-          visa-kategori
-          @valj="valjTyp"
-        />
-      </template>
+      <SkapaAnteckning v-if="lage === 'anteckning'" />
 
       <template v-else>
-        <section v-if="senastAnvanda.length > 0" class="senast-anvanda">
-          <h2 class="h3">Senast använda</h2>
+        <!-- A plain input rather than FTextField: FTextField only updates its
+           v-model on change/blur, and the list follows the typing (PORT-FR-09.2). -->
+        <form
+          class="sok-form"
+          novalidate
+          role="search"
+          @submit.prevent="onSubmit"
+        >
+          <div class="text-field">
+            <label for="sok-uppgiftstyp" class="label">
+              Uppgiftstyp
+              <span class="label__description">
+                Sök på namn, kategori eller sökord
+              </span>
+            </label>
+            <div class="sok-form__row">
+              <div class="text-field__input-wrapper">
+                <input
+                  id="sok-uppgiftstyp"
+                  ref="sokfalt"
+                  v-model="soktext"
+                  class="text-field__input"
+                  type="search"
+                  placeholder="Sök uppgiftstyp"
+                  autocomplete="off"
+                />
+              </div>
+              <FButton type="submit">Sök</FButton>
+            </div>
+          </div>
+        </form>
+
+        <p v-if="isLoading" class="body">Hämtar uppgiftstyper...</p>
+        <p v-else-if="error" class="error-message" role="alert">{{ error }}</p>
+
+        <template v-else-if="harSoktext">
+          <!-- Flat hit list while searching (PORT-FR-09.4, PORT-FR-09.5). -->
+          <p class="body traffar-antal" role="status">
+            <template v-if="traffar.length > 0">{{
+              antalTraffarText
+            }}</template>
+            <template v-else>
+              Inga uppgiftstyper matchar "{{ aktivSoktext.trim() }}". Töm
+              sökfältet för att bläddra bland kategorierna, eller
+              <button
+                type="button"
+                class="anchor registrera-anteckning-lank"
+                @click="lage = 'anteckning'"
+              >
+                registrera som anteckning
+              </button>
+              om ingen uppgift behövs.
+            </template>
+          </p>
           <UppgiftstypLista
-            :typer="senastAnvanda"
+            v-if="traffar.length > 0"
+            :typer="traffar"
             visa-kategori
             @valj="valjTyp"
           />
-        </section>
+        </template>
 
-        <section class="kategorier">
-          <h2 class="h3">Kategorier</h2>
-          <FExpandablePanel
-            v-for="kategori in kategorier"
-            :key="kategori.namn"
-            header-tag="h3"
-            :expanded="oppnaKategorier[kategori.namn] ?? false"
-            @toggle="toggleKategori(kategori.namn)"
-          >
-            <template #title>
-              {{ kategori.namn }} ({{ kategori.typer.length }})
-            </template>
-            <UppgiftstypLista :typer="kategori.typer" @valj="valjTyp" />
-          </FExpandablePanel>
-        </section>
+        <template v-else>
+          <section v-if="senastAnvanda.length > 0" class="senast-anvanda">
+            <h2 class="h3">Senast använda</h2>
+            <UppgiftstypLista
+              :typer="senastAnvanda"
+              visa-kategori
+              @valj="valjTyp"
+            />
+          </section>
+
+          <section class="kategorier">
+            <h2 class="h3">Kategorier</h2>
+            <FExpandablePanel
+              v-for="kategori in kategorier"
+              :key="kategori.namn"
+              header-tag="h3"
+              :expanded="oppnaKategorier[kategori.namn] ?? false"
+              @toggle="toggleKategori(kategori.namn)"
+            >
+              <template #title>
+                {{ kategori.namn }} ({{ kategori.typer.length }})
+              </template>
+              <UppgiftstypLista :typer="kategori.typer" @valj="valjTyp" />
+            </FExpandablePanel>
+          </section>
+        </template>
       </template>
     </template>
   </div>
@@ -257,6 +274,10 @@ onBeforeUnmount(() => {
 .skapa-uppgift {
   padding: 1.5rem 2rem;
   max-width: 60rem;
+}
+
+.skapa-uppgift__ingress {
+  margin-top: 0;
 }
 
 .sok-form__row {
@@ -276,8 +297,11 @@ onBeforeUnmount(() => {
   margin: 0;
 }
 
-.skapa-anteckning-knapp {
-  margin-bottom: 1.5rem;
+.registrera-anteckning-lank {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
 }
 
 .senast-anvanda {

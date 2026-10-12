@@ -190,10 +190,14 @@ Gränssnittet finns, men att faktiskt skapa uppgifter och spara anteckningar kop
 
 ### PORT-FR-11 — Skapa anteckning
 
-- **PORT-FR-11.1** Direkt under sökfältet ska en sekundär knapp "Skapa anteckning" alltid synas.
-- **PORT-FR-11.2** Knappen ska byta ut sök- och bläddringsytan mot ett anteckningsformulär med
-  ett personnummerfält, ett flerradigt fält för anteckningen (`FTextareaField`), knappen "Spara"
-  och knappen "Tillbaka".
+- **PORT-FR-11.1** Överst i vyn, under rubriken och ingressen "Registrera en manuell uppgift
+  antingen via uppgiftstyp eller som anteckning.", ska ett val "Vad vill du registrera?" med
+  alternativen "Uppgift" och "Anteckning" visas (radioknappar i rad). "Uppgift" är förvalt.
+- **PORT-FR-11.2** Valet "Anteckning" ska byta ut sök- och bläddringsytan mot ett
+  anteckningsformulär med ett personnummerfält, ett flerradigt fält för anteckningen
+  (`FTextareaField`) och knappen "Spara". Valet "Uppgift" ska visa sök- och bläddringsytan igen
+  med söktexten kvar. Om sökningen inte ger några träffar ska meddelandet innehålla en länk
+  "registrera som anteckning" som byter till "Anteckning".
 - **PORT-FR-11.3** "Spara" ska kräva ett giltigt personnummer (samma regel som PORT-FR-10.3) och
   en anteckning som inte är tom. Annars ska valideringstexter visas.
 - **PORT-FR-11.4** När formuläret är giltigt ska "Spara" visa ett meddelande (toast) om att

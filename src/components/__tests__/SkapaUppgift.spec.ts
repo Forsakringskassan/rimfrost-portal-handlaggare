@@ -206,12 +206,16 @@ describe("SkapaUppgift", () => {
       expect(wrapper.findAll(".expandable-panel")).toHaveLength(3);
     });
 
-    it("always shows Skapa anteckning under the search field (PORT-FR-11.1)", async () => {
+    it("switches to the note form from the no-hits message", async () => {
       const wrapper = await mountView();
-      expect(knapp(wrapper, "Skapa anteckning").exists()).toBe(true);
       await type(wrapper, "xyz");
       await wrapper.find("form").trigger("submit");
-      expect(knapp(wrapper, "Skapa anteckning").exists()).toBe(true);
+      await wrapper.find(".registrera-anteckning-lank").trigger("click");
+      expect(wrapper.find("input#anteckning-personnummer").exists()).toBe(true);
+      expect(
+        wrapper.find<HTMLInputElement>("input[value=anteckning]").element
+          .checked,
+      ).toBe(true);
     });
   });
 
@@ -318,8 +322,17 @@ describe("SkapaUppgift", () => {
 
   describe("skapa anteckning (PORT-FR-11)", () => {
     async function oppnaAnteckning(wrapper: Wrapper) {
-      await knapp(wrapper, "Skapa anteckning").trigger("click");
+      await wrapper.find("input[value=anteckning]").setValue(true);
     }
+
+    it("starts on Uppgift with the choice at the top (PORT-FR-11.1)", async () => {
+      const wrapper = await mountView();
+      expect(wrapper.text()).toContain("Vad vill du registrera?");
+      expect(
+        wrapper.find<HTMLInputElement>("input[value=uppgift]").element.checked,
+      ).toBe(true);
+      expect(wrapper.find("input#sok-uppgiftstyp").exists()).toBe(true);
+    });
 
     it("replaces search and browsing with the note form", async () => {
       const wrapper = await mountView();
@@ -369,11 +382,11 @@ describe("SkapaUppgift", () => {
       ).toBe("19900101-9999");
     });
 
-    it("returns to the search on Tillbaka", async () => {
+    it("keeps the search when switching back to Uppgift", async () => {
       const wrapper = await mountView();
       await type(wrapper, "flytt");
       await oppnaAnteckning(wrapper);
-      await knapp(wrapper, "Tillbaka").trigger("click");
+      await wrapper.find("input[value=uppgift]").setValue(true);
       await flushPromises();
       expect(
         wrapper.find<HTMLInputElement>("input#sok-uppgiftstyp").element.value,
