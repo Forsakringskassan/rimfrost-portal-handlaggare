@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from "vue";
-import { FButton } from "@fkui/vue";
+import { FButton, FTextareaField } from "@fkui/vue";
 import { useSamtalStore } from "../stores/samtalStore";
 import type { Uppgiftstyp } from "../types";
 import { PERSONNUMMER_FEL, normalizePersonnummer } from "../utils/personnummer";
@@ -21,6 +21,10 @@ const rubrik = useTemplateRef("rubrik");
 // Prefilled from the ongoing call when known (PORT-FR-10.2).
 const personnummer = ref(samtalStore.pagaendeSamtal.personnummer ?? "");
 const valideringsfel = ref<string | null>(null);
+// Every uppgift can carry a note. Type-specific fields wait until we know
+// how the uppgift is processed (PORT-FR-10.1). Not logged or stored
+// (PORT-NFR-04.4).
+const anteckning = ref("");
 
 watch(personnummer, () => {
   valideringsfel.value = null;
@@ -43,10 +47,8 @@ onMounted(() => {
 
 <template>
   <section class="bekrafta-uppgiftstyp">
-    <h2 ref="rubrik" class="h3" tabindex="-1">Bekräfta uppgiftstyp</h2>
+    <h2 ref="rubrik" class="h3" tabindex="-1">{{ typ.namn }}</h2>
     <dl class="bekrafta-uppgiftstyp__typ">
-      <dt>Uppgiftstyp</dt>
-      <dd>{{ typ.namn }}</dd>
       <dt>Kategori</dt>
       <dd>{{ typ.kategori }}</dd>
     </dl>
@@ -56,6 +58,9 @@ onMounted(() => {
         v-model="personnummer"
         :valideringsfel
       />
+      <FTextareaField v-model="anteckning">
+        <template #default>Anteckning (valfri)</template>
+      </FTextareaField>
       <div class="button-group">
         <FButton type="submit" class="button-group__item"
           >Skapa uppgift</FButton
@@ -85,6 +90,10 @@ onMounted(() => {
 
 .bekrafta-uppgiftstyp__typ dd {
   margin: 0;
+}
+
+.bekrafta-uppgiftstyp :deep(.textarea-field) {
+  max-width: 40rem;
 }
 
 .bekrafta-uppgiftstyp h2:focus {

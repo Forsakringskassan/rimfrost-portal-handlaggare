@@ -226,14 +226,15 @@ describe("SkapaUppgift", () => {
       await wrapper.find('[data-uppgiftstyp-id="vab"]').trigger("click");
     }
 
-    it("shows the chosen type and kategori with a personnummer field", async () => {
+    it("shows the chosen type as heading, its kategori, a personnummer field and a note", async () => {
       const wrapper = await mountView();
       await valjVab(wrapper);
-      expect(wrapper.find("dl").text()).toContain("Anmälan om vård av barn");
-      expect(wrapper.find("dl").text()).toContain("Tillfällig föräldrapenning");
-      expect(wrapper.find("input#skapa-uppgift-personnummer").exists()).toBe(
-        true,
-      );
+      const steg = wrapper.find(".bekrafta-uppgiftstyp");
+      expect(steg.find("h2").text()).toBe("Anmälan om vård av barn");
+      expect(steg.find("dl").text()).not.toContain("Anmälan om vård av barn");
+      expect(steg.find("dl").text()).toContain("Tillfällig föräldrapenning");
+      expect(steg.find("input#skapa-uppgift-personnummer").exists()).toBe(true);
+      expect(steg.find("textarea").exists()).toBe(true);
     });
 
     it("prefills the personnummer from the ongoing call (PORT-FR-10.2)", async () => {

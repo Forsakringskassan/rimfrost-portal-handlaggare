@@ -276,8 +276,10 @@ onBeforeUnmount(() => {
   max-width: 60rem;
 }
 
+/* The h1's 0.25rem bottom margin collapses into this one, so the gap grows
+   by 7px. */
 .skapa-uppgift__ingress {
-  margin-top: 0;
+  margin-top: calc(0.25rem + 7px);
 }
 
 .sok-form__row {

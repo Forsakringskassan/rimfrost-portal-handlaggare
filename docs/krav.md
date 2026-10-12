@@ -176,8 +176,10 @@ Gränssnittet finns, men att faktiskt skapa uppgifter och spara anteckningar kop
 ### PORT-FR-10 — Välj uppgiftstyp och bekräfta
 
 - **PORT-FR-10.1** När handläggaren väljer en uppgiftstyp, ur träfflistan, "Senast använda"
-  eller en kategori, ska ett bekräftelsesteg visas. Steget visar uppgiftstypens namn och
-  kategori, ett personnummerfält och knapparna "Skapa uppgift" och "Tillbaka".
+  eller en kategori, ska ett bekräftelsesteg visas. Steget har uppgiftstypens namn som rubrik och
+  visar kategorin, ett personnummerfält, ett valfritt anteckningsfält och knapparna "Skapa
+  uppgift" och "Tillbaka". Typspecifika fält läggs inte till förrän det är känt hur uppgiften
+  behandlas och skickas vidare.
 - **PORT-FR-10.2** Personnummerfältet ska förifyllas om personnumret för pågående samtal är känt
   (PORT-FR-11.5).
 - **PORT-FR-10.3** Personnumret ska valideras med samma regel som Sök uppgift: 12 siffror, med
