@@ -133,6 +133,75 @@ ett brev från Försäkringskassan.
   _Portal BFF skickar ännu ingen sådan uppgift. Tills vidare finns en tillfällig mock som bara
   är aktiv i utvecklingsläge (FKPOC-1113)._
 
+### PORT-FR-08 — Skapa uppgift: vy och navigering
+
+När en kund ringer och inte har någon pågående uppgift som kan sökas fram med "Sök uppgift"
+behöver handläggaren kunna skapa en ny uppgift av rätt typ, eller bara anteckna samtalet.
+Gränssnittet finns, men att faktiskt skapa uppgifter och spara anteckningar kopplas in senare
+(FKPOC-1141).
+
+- **PORT-FR-08.1** Vänstermenyn ska visa en sekundär knapp "Skapa uppgift" i `nav-footer`, med
+  samma stil som "Sök uppgift" och "Teamvy".
+- **PORT-FR-08.2** Ett klick på "Skapa uppgift" ska visa vyn Skapa uppgift i huvudytan, på
+  samma sätt som Teamvy och Sök uppgift visas.
+- **PORT-FR-08.3** Vyn Sök uppgift ska ha en knapp "Skapa uppgift" längst ner som öppnar vyn
+  Skapa uppgift.
+
+### PORT-FR-09 — Hitta uppgiftstyp
+
+- **PORT-FR-09.1** Vyn ska ha ett sökfält med platshållartexten "Sök uppgiftstyp" och en knapp
+  "Sök".
+- **PORT-FR-09.2** Sökningen ska uppdateras fördröjt medan handläggaren skriver, från första
+  tecknet. "Sök"-knappen och Enter ska uppdatera sökningen direkt.
+- **PORT-FR-09.3** Sökningen ska matcha skiftlägesokänsligt på delar av uppgiftstypens namn,
+  kategorins namn och uppgiftstypens sökord (synonymer).
+- **PORT-FR-09.4** När sökfältet innehåller text ska kategorivisningen ersättas av en platt
+  träfflista. Varje träff ska visa uppgiftstypens namn och dess kategori. Antal träffar ska
+  visas.
+- **PORT-FR-09.5** Om sökningen inte ger några träffar ska ett meddelande om det visas, med en
+  hänvisning till att bläddra bland kategorierna eller skapa en anteckning.
+- **PORT-FR-09.6** När sökfältet är tomt ska vyn först visa "Senast använda", med de
+  uppgiftstyper handläggaren senast valt (högst 8, senaste först). Avsnittet ska döljas om
+  listan är tom.
+- **PORT-FR-09.7** Under "Senast använda" ska varje kategori visas som en expanderbar panel
+  (`FExpandablePanel`) med kategorinamn och antal uppgiftstyper. Panelerna ska vara stängda från
+  början. En öppen panel ska lista kategorins uppgiftstyper i bokstavsordning.
+- **PORT-FR-09.8** Kategorierna ska visas i bokstavsordning.
+- **PORT-FR-09.9** "Senast använda" ska sparas per handläggare i webbläsarens `localStorage`.
+  Om lagringen inte är tillgänglig ska vyn fungera ändå, bara utan "Senast använda".
+- **PORT-FR-09.10** Katalogen med uppgiftstyper ska hämtas via en asynkron funktion med samma
+  form som ett framtida BFF-anrop. _Tills vidare levereras den från en statisk mockkatalog i
+  portalen med realistiska kategorier och minst cirka 100 uppgiftstyper._
+
+### PORT-FR-10 — Välj uppgiftstyp och bekräfta
+
+- **PORT-FR-10.1** När handläggaren väljer en uppgiftstyp, ur träfflistan, "Senast använda"
+  eller en kategori, ska ett bekräftelsesteg visas. Steget visar uppgiftstypens namn och
+  kategori, ett personnummerfält och knapparna "Skapa uppgift" och "Tillbaka".
+- **PORT-FR-10.2** Personnummerfältet ska förifyllas om personnumret för pågående samtal är känt
+  (PORT-FR-11.5).
+- **PORT-FR-10.3** Personnumret ska valideras med samma regel som Sök uppgift: 12 siffror, med
+  eller utan bindestreck. Om det är ogiltigt ska en valideringstext visas när handläggaren
+  trycker "Skapa uppgift".
+- **PORT-FR-10.4** "Skapa uppgift" med giltigt personnummer ska lägga uppgiftstypen först i
+  "Senast använda" och visa ett informationsmeddelande (toast) om att skapande av uppgift inte
+  är inkopplat än. _Ingen uppgift skapas ännu._
+- **PORT-FR-10.5** "Tillbaka" ska återgå till sökning och bläddring och behålla söktexten.
+
+### PORT-FR-11 — Skapa anteckning
+
+- **PORT-FR-11.1** Direkt under sökfältet ska en sekundär knapp "Skapa anteckning" alltid synas.
+- **PORT-FR-11.2** Knappen ska byta ut sök- och bläddringsytan mot ett anteckningsformulär med
+  ett personnummerfält, ett flerradigt fält för anteckningen (`FTextareaField`), knappen "Spara"
+  och knappen "Tillbaka".
+- **PORT-FR-11.3** "Spara" ska kräva ett giltigt personnummer (samma regel som PORT-FR-10.3) och
+  en anteckning som inte är tom. Annars ska valideringstexter visas.
+- **PORT-FR-11.4** När formuläret är giltigt ska "Spara" visa ett meddelande (toast) om att
+  anteckningen sparats och tömma anteckningsfältet. _Anteckningen sparas ännu inte någonstans._
+- **PORT-FR-11.5** Portalen ska ha ett ställe i en store för personnumret i pågående samtal
+  (`pagaendeSamtal.personnummer`, valfritt). Anteckningsformuläret och bekräftelsesteget ska
+  förifylla personnumret därifrån. _Tills telefonin är integrerad är fältet alltid tomt._
+
 ---
 
 ## Icke-funktionella krav
@@ -153,6 +222,18 @@ ett brev från Försäkringskassan.
   av bakomliggande tjänster. Portalen ska inte göra egna behörighetsbedömningar.
 - **PORT-NFR-03.2** En automatisk sökning ska göras högst en gång per giltigt personnummer.
   Ett nytt anrop ska inte skickas medan ett tidigare anrop för samma värde pågår.
+
+### PORT-NFR-04 — Skapa uppgift
+
+- **PORT-NFR-04.1** Sökning och filtrering i katalogen ska kännas omedelbar (under 50 ms för 500
+  uppgiftstyper) och får inte låsa gränssnittet medan handläggaren skriver.
+- **PORT-NFR-04.2** Vyn ska gå att använda med bara tangentbordet: sökfält, paneler, listval,
+  formulär och knappar ska nås med Tab och aktiveras med Enter eller mellanslag. FKUI:s
+  tillgänglighetsstöd ska inte kringgås.
+- **PORT-NFR-04.3** Fördröjd sökning, katalog och "Senast använda" ska ha enhetstester (Vitest).
+  Flödena "sök → välj → bekräfta" och "skapa anteckning" ska ha e2e-tester (Playwright).
+- **PORT-NFR-04.4** Texten i anteckningar och personnummer ska inte loggas till konsolen och
+  inte sparas i `localStorage`. Endast id:n för uppgiftstyper sparas.
 
 ---
 

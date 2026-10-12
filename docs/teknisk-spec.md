@@ -10,16 +10,20 @@ regelspecifika mikrofrontends. Ingen egen affärslogik eller databas. All data h
 
 ```text
 src/
-├── router/                    # "/" (tomt läge, teamtabell eller sökvy) och "/items/:id" (inbäddad mikrofrontend)
+├── router/                    # "/" (tomt läge, teamtabell, sökvy eller skapa uppgift) och "/items/:id" (inbäddad mikrofrontend)
 ├── components/
-│   ├── UppgiftOversikt.vue     # Visar teamtabellen, sökvyn eller tomt-läget via viewStore
+│   ├── UppgiftOversikt.vue     # Visar teamtabellen, sökvyn, skapa uppgift eller tomt-läget via viewStore
 │   ├── UppgiftLista.vue        # Egna uppgifter i navigeringspanelen, lyssnar på "task-done"
 │   ├── TeamUppgiftLista.vue    # Tabell över teamets uppgifter i huvudytan
 │   ├── SokUppgift.vue          # Sökning på personnummer efter uppgifter som inte delas ut via kön
+│   ├── SkapaUppgift.vue        # Hitta uppgiftstyp (sök/bläddra), bekräfta (BekraftaUppgiftstyp.vue)
+│   │                           # eller skapa anteckning (SkapaAnteckning.vue)
 │   ├── OppnadUppgift.vue       # Löser upp och monterar rätt mikrofrontend för :id
 │   ├── LoginModal.vue          # Val av handläggaridentitet
 │   └── ToastContainer.vue      # Renderar meddelanderutor (toasts), inkl. icke-avvisande varianten
-├── stores/                    # Pinia: handläggare/session, uppgiftslistor, aktiv vy (viewStore)
+├── stores/                    # Pinia: handläggare/session, uppgiftslistor, aktiv vy (viewStore),
+│                               # pågående samtal (samtalStore)
+├── mock/uppgiftstyper.ts       # Statisk mockkatalog med uppgiftstyper (tills BFF-endpoint finns)
 ├── config/remoteRegistry.ts    # Hämtar och cachar modulfederationsregistret
 ├── utils/useToast.ts           # Global toast-state; stödjer både självstängande och
 │                                # kvarstående (persistent) meddelanden
@@ -67,6 +71,24 @@ kontrakt betyder 403 att uppgiften inte får tilldelas). BFF:en skickar inte med
 SID-nekande kan inte skiljas från andra 403. Vid 404 visas att uppgiften inte längre kan
 tilldelas. I båda fallen hämtas träfflistan på nytt.
 
+### Skapa uppgift
+
+Vyn Skapa uppgift (`SkapaUppgift.vue`) är bara gränssnitt: ingen uppgift skapas och ingen
+anteckning sparas (FKPOC-1141). Katalogen hämtas med `hamtaUppgiftstyper()`
+(`utils/uppgiftstyper.ts`), som har samma form som ett framtida BFF-anrop men tills vidare
+returnerar mockkatalogen i `src/mock/uppgiftstyper.ts`. Sökningen sker helt i webbläsaren mot
+ett förberäknat index (namn, kategori och sökord i gemener). Listan följer sökfältet med 300 ms
+fördröjning, och direkt vid "Sök"/Enter eller när fältet töms.
+
+"Senast använda" (`utils/senastAnvanda.ts`) sparas i `localStorage` under nyckeln
+`rimfrost.senastAnvandaUppgiftstyper.<handläggarens id>`, som en JSON-lista med högst 8 id:n
+för uppgiftstyper. Personnummer och anteckningstext sparas eller loggas aldrig
+(PORT-NFR-04.4). Om lagringen inte går att läsa eller skriva visas vyn utan "Senast använda".
+
+Personnumret förifylls från `samtalStore.pagaendeSamtal.personnummer`, som är tomt tills
+telefonin är integrerad. Personnummerfälten (`PersonnummerFalt.vue`) är vanliga `<input>` med
+FKUI-klasser, som i sökvyn, och valideras med `normalizePersonnummer`.
+
 ## Kafka-integration
 
 Ingen. Applikationen har ingen meddelandeintegration.
@@ -84,9 +106,10 @@ Ingen egen hälsokontroll — statisk frontend, hälsa avgörs av webbservern so
 
 ## Kända begränsningar och framtida arbete
 
-| Begränsning                                                                                                                              | Föreslagen åtgärd                                       |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| Inloggning är en klientsidig utvecklingslösning utan verklig autentisering                                                               | Ersätt med riktig identitetsleverantör innan produktion |
-| Funktioner för att hämta teamets uppgifter och att omtilldela en uppgift finns implementerade men är inte kopplade till något gränssnitt | Koppla in eller ta bort                                 |
-| Dokumenterad `regeltyp`-prop skickas aldrig till mikrofrontends trots att det beskrivs i tidigare dokumentation                          | Uppdatera dokumentationen eller implementera propen     |
-| Ingen ruttskyddslogik hindrar direktnavigering till en uppgift utan inloggning                                                           | Bedöm behov av ruttvakter                               |
+| Begränsning                                                                                                                              | Föreslagen åtgärd                                         |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Inloggning är en klientsidig utvecklingslösning utan verklig autentisering                                                               | Ersätt med riktig identitetsleverantör innan produktion   |
+| Funktioner för att hämta teamets uppgifter och att omtilldela en uppgift finns implementerade men är inte kopplade till något gränssnitt | Koppla in eller ta bort                                   |
+| Dokumenterad `regeltyp`-prop skickas aldrig till mikrofrontends trots att det beskrivs i tidigare dokumentation                          | Uppdatera dokumentationen eller implementera propen       |
+| Ingen ruttskyddslogik hindrar direktnavigering till en uppgift utan inloggning                                                           | Bedöm behov av ruttvakter                                 |
+| Skapa uppgift och Skapa anteckning sparar ingenting, och katalogen med uppgiftstyper är en mock                                          | BFF-endpoints för katalog, skapa uppgift och anteckningar |

@@ -6,6 +6,8 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Thi
 
 - **Task Management** - View, manage and process operational tasks
 - **Task Assignment** - Fetch and assign new tasks to case handlers
+- **Sök uppgift** - Search tasks by personnummer and assign them to yourself
+- **Skapa uppgift** - Find an uppgiftstyp by search or by browsing categories, or write a note on a call (UI only for now, backed by a mock catalog)
 - **Handläggare Selection** - Dropdown in header to switch between case handlers (dev only)
 - **Module Federation** - Micro-frontend architecture supporting remote applications
 - **FK UI Components** - Built with Försäkringskassan's design system (@fkui/vue)
