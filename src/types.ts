@@ -47,3 +47,12 @@ export interface Handlaggare {
   fornamn: string;
   efternamn: string;
 }
+
+/** A kind of uppgift a handläggare can create by hand (PORT-FR-09). */
+export interface Uppgiftstyp {
+  id: string;
+  namn: string;
+  kategori: string;
+  // Synonyms the search also matches on (PORT-FR-09.3).
+  sokord: string[];
+}
