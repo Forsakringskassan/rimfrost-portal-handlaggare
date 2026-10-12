@@ -1,6 +1,7 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { useViewStore } from "../../stores/viewStore";
 import type { OperativUppgiftItem } from "../../types";
 import {
   NotTeamMemberError,
@@ -399,5 +400,15 @@ describe("SokUppgift", () => {
       expect(searchMock).toHaveBeenCalledTimes(1);
       expect(wrapper.text()).toContain("Kommunicering av beslut");
     });
+  });
+
+  it("opens Skapa uppgift from the button at the bottom (PORT-FR-08.3)", async () => {
+    const wrapper = mountView();
+    const knapp = wrapper
+      .findAll("button")
+      .find((b) => b.text() === "Skapa uppgift");
+    await knapp?.trigger("click");
+
+    expect(useViewStore().uppgiftVy).toBe("skapa");
   });
 });
