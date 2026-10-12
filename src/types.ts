@@ -33,6 +33,8 @@ export interface OperativUppgiftItem {
   verksamhetslogik: string;
   roll: string;
   url: string;
+  // Not sent by Portal BFF yet — see utils/skyddadIdentitet.ts (FKPOC-1113).
+  skyddadIdentitet?: boolean;
 }
 
 export interface AlternativesModel {

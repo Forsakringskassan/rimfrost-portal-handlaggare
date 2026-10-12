@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import { FButton, useModal } from "@fkui/vue";
 import { useRoute } from "vue-router";
 import { useProductStore } from "../stores/uppgiftListaStore";
+import { isSidUppgift } from "../utils/skyddadIdentitet";
 import { UppgiftGoneError, unassignUppgift } from "../utils/unassignUppgift";
 import { useToast } from "../utils/useToast";
 
@@ -21,6 +22,10 @@ const isUnassigning = ref(false);
 // this list, so no button is offered for it.
 const egenUppgift = computed(() =>
   store.uppgiftLista.find((item) => item.uppgiftId === route.params.uppgiftId),
+);
+
+const sidUppgift = computed(
+  () => !!egenUppgift.value && isSidUppgift(egenUppgift.value),
 );
 
 async function handleUnassign(): Promise<void> {
@@ -62,9 +67,14 @@ async function handleUnassign(): Promise<void> {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" :class="{ 'sid-uppgift': sidUppgift }">
     <div v-if="route.params.uppgiftId" class="uppgift-header">
-      <h1 class="page-title">{{ pageTitle }} - {{ pageId }}</h1>
+      <h1 class="page-title">
+        {{ pageTitle }} - {{ pageId }}
+        <span v-if="sidUppgift" class="sr-only">
+          (Uppgiften rör en person med skyddad identitet)
+        </span>
+      </h1>
       <FButton
         v-if="egenUppgift"
         variant="secondary"
@@ -79,6 +89,30 @@ async function handleUnassign(): Promise<void> {
 </template>
 
 <style scoped>
+/* Marks the opened uppgift — header and micro frontend alike — as SID-märkt
+   (PORT-FR-07.1). FKDS has no SID pattern, so this borrows the red of its
+   error message box.
+   The line is drawn on FKUI's main area (the scroll container beside the left
+   nav) rather than on .container, so it spans the full height whatever the
+   content's length. A background doesn't scroll with the content, and it
+   leaves FKUI's own left margin, which tracks the resizable nav, untouched. */
+:global(.layout-navigation__primary:has(> .sid-uppgift)) {
+  --sid-line-gap: 5px;
+  --sid-line-width: 3px;
+  background-image: linear-gradient(
+    var(--fkds-color-feedback-border-negative, #ca1515),
+    var(--fkds-color-feedback-border-negative, #ca1515)
+  );
+  background-position: var(--sid-line-gap) 0;
+  background-size: var(--sid-line-width) 100%;
+  background-repeat: no-repeat;
+}
+
+/* Keeps the gap between line and content about the same as before. */
+.sid-uppgift {
+  padding-left: calc(1rem + 8px);
+}
+
 /* Not .page-header — FKUI has a global class by that name that paints a
    green banner, and a global rule still matches even with scoped styles. */
 .uppgift-header {
