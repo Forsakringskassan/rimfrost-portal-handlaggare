@@ -18,6 +18,18 @@ describe("viewStore", () => {
     expect(store.uppgiftVy).toBe("team");
   });
 
+  it("setVy switches to sok", () => {
+    const store = useViewStore();
+    store.setVy("sok");
+    expect(store.uppgiftVy).toBe("sok");
+  });
+
+  it("setVy switches to skapa (PORT-FR-08.2)", () => {
+    const store = useViewStore();
+    store.setVy("skapa");
+    expect(store.uppgiftVy).toBe("skapa");
+  });
+
   it("setVy switches back to mina", () => {
     const store = useViewStore();
     store.setVy("team");

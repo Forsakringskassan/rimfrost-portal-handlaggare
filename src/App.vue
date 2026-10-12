@@ -67,6 +67,11 @@ function goToSokUppgift() {
   router.push("/");
 }
 
+function goToSkapaUppgift() {
+  viewStore.setVy("skapa");
+  router.push("/");
+}
+
 function openExample() {
   router.push({
     name: "item",
@@ -193,6 +198,9 @@ async function handleGetNextUppgift() {
             <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
             <FButton variant="secondary" @click="goToSokUppgift"
               >Sök uppgift</FButton
+            >
+            <FButton variant="secondary" @click="goToSkapaUppgift"
+              >Skapa uppgift</FButton
             >
             <FButton variant="secondary" @click="goToTeamvy">Teamvy</FButton>
             <p v-if="getNextUppgiftFel" class="error-message">
