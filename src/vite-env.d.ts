@@ -9,6 +9,7 @@ interface ImportMetaEnv {
   readonly VITE_EXAMPLE_APP_URL: string;
   readonly VITE_MOCK_HANDLAGGARE_ID: string;
   readonly VITE_USE_API: string;
+  readonly VITE_EXPERIMENT_SKAPA_UPPGIFT?: string;
 }
 
 interface ImportMeta {

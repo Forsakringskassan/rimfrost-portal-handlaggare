@@ -56,9 +56,10 @@ volumes:
 
 ## Available variables
 
-| Variable | Dev (`.env`)   | Container (`runtime-config.js`) | Description         |
-| -------- | -------------- | ------------------------------- | ------------------- |
-| BFF URL  | `VITE_BFF_URL` | `RUNTIME_BFF_URL`               | Portal BFF base URL |
+| Variable                 | Dev (`.env`)                    | Container (`runtime-config.js`)    | Description                                                        |
+| ------------------------ | ------------------------------- | ---------------------------------- | ------------------------------------------------------------------ |
+| BFF URL                  | `VITE_BFF_URL`                  | `RUNTIME_BFF_URL`                  | Portal BFF base URL                                                |
+| Experiment Skapa uppgift | `VITE_EXPERIMENT_SKAPA_UPPGIFT` | `RUNTIME_EXPERIMENT_SKAPA_UPPGIFT` | `"true"` shows the experimental Skapa uppgift view. Off by default |
 
 ## Reading config in code
 

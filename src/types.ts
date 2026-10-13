@@ -47,3 +47,12 @@ export interface Handlaggare {
   fornamn: string;
   efternamn: string;
 }
+
+/** A kind of uppgift a handläggare can create by hand. */
+export interface Uppgiftstyp {
+  id: string;
+  namn: string;
+  kategori: string;
+  // Synonyms the search also matches on.
+  sokord: string[];
+}

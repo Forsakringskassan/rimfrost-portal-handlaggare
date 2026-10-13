@@ -7,3 +7,7 @@ export function normalizePersonnummer(value: string): string | null {
   const match = PERSONNUMMER.exec(value.trim());
   return match ? `${match[1]}-${match[2]}` : null;
 }
+
+/** Validation text shown when a personnummer is not valid. */
+export const PERSONNUMMER_FEL =
+  "Ange ett personnummer med 12 siffror, ÅÅÅÅMMDDNNNN eller ÅÅÅÅMMDD-NNNN.";

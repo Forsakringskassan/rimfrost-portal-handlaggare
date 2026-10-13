@@ -8,9 +8,11 @@ import {
   FTableButton,
   FTableColumn,
 } from "@fkui/vue";
+import { env } from "../config/env";
+import { useViewStore } from "../stores/viewStore";
 import type { OperativUppgiftItem } from "../types";
 import { formatDate } from "../utils/formatDate";
-import { normalizePersonnummer } from "../utils/personnummer";
+import { PERSONNUMMER_FEL, normalizePersonnummer } from "../utils/personnummer";
 import {
   NotTeamMemberError,
   UppgiftNotFoundError,
@@ -22,6 +24,7 @@ import { useToast } from "../utils/useToast";
 const SEARCH_DELAY_MS = 300;
 
 const toast = useToast();
+const viewStore = useViewStore();
 
 const personnummerInput = ref("");
 const valideringsfel = ref<string | null>(null);
@@ -88,8 +91,7 @@ function onSubmit(): void {
   clearTimeout(searchTimer);
   const personnummer = normalizePersonnummer(personnummerInput.value);
   if (!personnummer) {
-    valideringsfel.value =
-      "Ange ett personnummer med 12 siffror, ÅÅÅÅMMDDNNNN eller ÅÅÅÅMMDD-NNNN.";
+    valideringsfel.value = PERSONNUMMER_FEL;
     return;
   }
   void sok(personnummer, true);
@@ -213,6 +215,13 @@ onBeforeUnmount(() => {
         </template>
       </FInteractiveTable>
     </template>
+
+    <!-- For a caller with no uppgift to find. Experimental, behind a flag. -->
+    <div v-if="env.experimentSkapaUppgift" class="sok-uppgift__skapa">
+      <FButton variant="secondary" @click="viewStore.setVy('skapa')"
+        >Skapa uppgift</FButton
+      >
+    </div>
   </div>
 </template>
 
@@ -241,5 +250,9 @@ onBeforeUnmount(() => {
 .error-message {
   color: red;
   padding: 0.5rem 0;
+}
+
+.sok-uppgift__skapa {
+  margin-top: 2rem;
 }
 </style>

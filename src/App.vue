@@ -12,6 +12,7 @@ import LoginModal from "./components/LoginModal.vue";
 import StartPage from "./components/StartPage.vue";
 import ToastContainer from "./components/ToastContainer.vue";
 import UppgiftLista from "./components/UppgiftLista.vue";
+import { env } from "./config/env";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { useProductStore } from "./stores/uppgiftListaStore";
 import { useViewStore } from "./stores/viewStore";
@@ -64,6 +65,11 @@ function goToTeamvy() {
 
 function goToSokUppgift() {
   viewStore.setVy("sok");
+  router.push("/");
+}
+
+function goToSkapaUppgift() {
+  viewStore.setVy("skapa");
   router.push("/");
 }
 
@@ -193,6 +199,13 @@ async function handleGetNextUppgift() {
             <FButton @click="handleGetNextUppgift">Hämta ny uppgift</FButton>
             <FButton variant="secondary" @click="goToSokUppgift"
               >Sök uppgift</FButton
+            >
+            <!-- Experimental, behind a flag. -->
+            <FButton
+              v-if="env.experimentSkapaUppgift"
+              variant="secondary"
+              @click="goToSkapaUppgift"
+              >Skapa uppgift</FButton
             >
             <FButton variant="secondary" @click="goToTeamvy">Teamvy</FButton>
             <p v-if="getNextUppgiftFel" class="error-message">
