@@ -113,7 +113,7 @@ describe("SkapaUppgift", () => {
     document.body.innerHTML = "";
   });
 
-  describe("bläddra (PORT-FR-09.6–09.8)", () => {
+  describe("bläddra", () => {
     it("shows every kategori alphabetically as a closed panel with its count", async () => {
       const wrapper = await mountView();
       const paneler = wrapper.findAll(".expandable-panel");
@@ -145,7 +145,7 @@ describe("SkapaUppgift", () => {
     });
   });
 
-  describe("fördröjd sökning (PORT-FR-09.2–09.5)", () => {
+  describe("fördröjd sökning", () => {
     it("shows the hit list after the delay, from the first character", async () => {
       const wrapper = await mountView();
       await type(wrapper, "f");
@@ -219,7 +219,7 @@ describe("SkapaUppgift", () => {
     });
   });
 
-  describe("bekräfta (PORT-FR-10)", () => {
+  describe("bekräfta", () => {
     async function valjVab(wrapper: Wrapper) {
       await type(wrapper, "vabb");
       await wrapper.find("form").trigger("submit");
@@ -237,7 +237,7 @@ describe("SkapaUppgift", () => {
       expect(steg.find("textarea").exists()).toBe(true);
     });
 
-    it("prefills the personnummer from the ongoing call (PORT-FR-10.2)", async () => {
+    it("prefills the personnummer from the ongoing call", async () => {
       useSamtalStore().setPagaendeSamtal({ personnummer: "19900101-9999" });
       const wrapper = await mountView();
       await valjVab(wrapper);
@@ -271,12 +271,12 @@ describe("SkapaUppgift", () => {
       expect(toasts.value).toHaveLength(1);
       expect(toasts.value[0].type).toBe("info");
       expect(toasts.value[0].message).toContain("inte inkopplat");
-      // Only the id is stored, never the personnummer (PORT-NFR-04.4).
+      // Only the id is stored, never the personnummer.
       expect([...lagring.data.values()]).toEqual([JSON.stringify(["vab"])]);
       expect([...lagring.data.keys()][0]).toContain(HANDLAGGAR_ID);
     });
 
-    it("keeps the search text on Tillbaka (PORT-FR-10.5)", async () => {
+    it("keeps the search text on Tillbaka", async () => {
       const wrapper = await mountView();
       await valjVab(wrapper);
       await knapp(wrapper, "Tillbaka").trigger("click");
@@ -287,7 +287,7 @@ describe("SkapaUppgift", () => {
     });
   });
 
-  describe("senast använda (PORT-FR-09.6, PORT-FR-09.9)", () => {
+  describe("senast använda", () => {
     it("lists stored types newest first above the kategorier", async () => {
       lagring.setItem(
         `rimfrost.senastAnvandaUppgiftstyper.${HANDLAGGAR_ID}`,
@@ -321,12 +321,12 @@ describe("SkapaUppgift", () => {
     });
   });
 
-  describe("skapa anteckning (PORT-FR-11)", () => {
+  describe("skapa anteckning", () => {
     async function oppnaAnteckning(wrapper: Wrapper) {
       await wrapper.find("input[value=anteckning]").setValue(true);
     }
 
-    it("starts on Uppgift with the choice at the top (PORT-FR-11.1)", async () => {
+    it("starts on Uppgift with the choice at the top", async () => {
       const wrapper = await mountView();
       expect(wrapper.text()).toContain("Vad vill du registrera?");
       expect(
@@ -373,7 +373,7 @@ describe("SkapaUppgift", () => {
       expect(log).not.toHaveBeenCalled();
     });
 
-    it("prefills the personnummer from the ongoing call (PORT-FR-11.5)", async () => {
+    it("prefills the personnummer from the ongoing call", async () => {
       useSamtalStore().setPagaendeSamtal({ personnummer: "19900101-9999" });
       const wrapper = await mountView();
       await oppnaAnteckning(wrapper);

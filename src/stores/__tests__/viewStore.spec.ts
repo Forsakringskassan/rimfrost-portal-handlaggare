@@ -24,7 +24,7 @@ describe("viewStore", () => {
     expect(store.uppgiftVy).toBe("sok");
   });
 
-  it("setVy switches to skapa (PORT-FR-08.2)", () => {
+  it("setVy switches to skapa", () => {
     const store = useViewStore();
     store.setVy("skapa");
     expect(store.uppgiftVy).toBe("skapa");

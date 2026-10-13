@@ -8,6 +8,7 @@ import {
   FTableButton,
   FTableColumn,
 } from "@fkui/vue";
+import { env } from "../config/env";
 import { useViewStore } from "../stores/viewStore";
 import type { OperativUppgiftItem } from "../types";
 import { formatDate } from "../utils/formatDate";
@@ -215,8 +216,8 @@ onBeforeUnmount(() => {
       </FInteractiveTable>
     </template>
 
-    <!-- For a caller with no uppgift to find (PORT-FR-08.3). -->
-    <div class="sok-uppgift__skapa">
+    <!-- For a caller with no uppgift to find. Experimental, behind a flag. -->
+    <div v-if="env.experimentSkapaUppgift" class="sok-uppgift__skapa">
       <FButton variant="secondary" @click="viewStore.setVy('skapa')"
         >Skapa uppgift</FButton
       >

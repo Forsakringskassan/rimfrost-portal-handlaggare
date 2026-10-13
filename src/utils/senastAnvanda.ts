@@ -1,6 +1,6 @@
 // "Senast använda" uppgiftstyper, kept per handläggare in localStorage
-// (PORT-FR-09.6, PORT-FR-09.9). Only uppgiftstyp ids are stored — never a
-// personnummer or note text (PORT-NFR-04.4).
+//. Only uppgiftstyp ids are stored — never a
+// personnummer or note text.
 
 export const MAX_SENAST_ANVANDA = 8;
 

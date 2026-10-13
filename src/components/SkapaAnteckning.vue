@@ -9,7 +9,7 @@ import PersonnummerFalt from "./PersonnummerFalt.vue";
 const samtalStore = useSamtalStore();
 const toast = useToast();
 
-// Prefilled from the ongoing call when known (PORT-FR-11.5).
+// Prefilled from the ongoing call when known.
 const personnummer = ref(samtalStore.pagaendeSamtal.personnummer ?? "");
 const anteckning = ref("");
 const personnummerfel = ref<string | null>(null);
@@ -24,7 +24,7 @@ watch(anteckning, () => {
 });
 
 function onSubmit(): void {
-  // Neither the note nor the personnummer is logged or stored (PORT-NFR-04.4).
+  // Neither the note nor the personnummer is logged or stored.
   const giltigtPersonnummer = normalizePersonnummer(personnummer.value);
   const harAnteckning = anteckning.value.trim().length > 0;
   personnummerfel.value = giltigtPersonnummer ? null : PERSONNUMMER_FEL;
@@ -32,7 +32,7 @@ function onSubmit(): void {
   if (!giltigtPersonnummer || !harAnteckning) {
     return;
   }
-  // Not saved anywhere yet — storage is a later task (PORT-FR-11.4).
+  // Not saved anywhere yet — storage is a later task.
   toast.success("Anteckningen har sparats.");
   anteckning.value = "";
 }

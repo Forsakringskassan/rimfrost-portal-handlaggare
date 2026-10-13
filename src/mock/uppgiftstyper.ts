@@ -1,6 +1,6 @@
 import type { Uppgiftstyp } from "../types";
 
-// Static mock catalog of uppgiftstyper (PORT-FR-09.10). The real catalog and its
+// Static mock catalog of uppgiftstyper. The real catalog and its
 // source are not decided yet; until then hamtaUppgiftstyper() serves this.
 // Each entry is [id, namn, sökord] grouped by kategori.
 const KATALOG: Record<string, Array<[string, string, string[]]>> = {

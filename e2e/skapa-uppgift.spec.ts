@@ -14,16 +14,26 @@ async function oppnaSkapaUppgift(page: Page) {
 }
 
 test.describe("Skapa uppgift", () => {
+  // The view is an experiment behind a flag that is off by default.
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/runtime-config.js", (route) =>
+      route.fulfill({
+        contentType: "application/javascript",
+        body: 'window.__PORTAL_HANDLAGGARE_ENV__ = { RUNTIME_EXPERIMENT_SKAPA_UPPGIFT: "true" };',
+      }),
+    );
+  });
+
   test("sök → välj → bekräfta lägger typen i Senast använda", async ({
     page,
   }) => {
     await oppnaSkapaUppgift(page);
     const vy = page.locator(".skapa-uppgift");
 
-    // Nothing chosen yet, so no Senast använda (PORT-FR-09.6).
+    // Nothing chosen yet, so no Senast använda.
     await expect(vy.getByText("Senast använda")).toHaveCount(0);
 
-    // A sökord, matched while typing without pressing Sök (PORT-FR-09.2, 09.3).
+    // A sökord, matched while typing without pressing Sök.
     await page.getByPlaceholder("Sök uppgiftstyp").fill("VABB");
     await expect(vy.getByText("1 träff")).toBeVisible();
     await vy.getByRole("button", { name: /Anmälan om vård av barn/ }).click();
@@ -46,7 +56,7 @@ test.describe("Skapa uppgift", () => {
       page.getByText("inte inkopplat", { exact: false }),
     ).toBeVisible();
 
-    // Back on the search with the text kept (PORT-FR-10.5).
+    // Back on the search with the text kept.
     await expect(page.getByPlaceholder("Sök uppgiftstyp")).toHaveValue("VABB");
 
     await page.getByPlaceholder("Sök uppgiftstyp").fill("");
@@ -76,7 +86,7 @@ test.describe("Skapa uppgift", () => {
     await page.keyboard.press("Enter");
     await expect(panel).toHaveAttribute("aria-expanded", "true");
 
-    // The first type in the open panel is the next Tab stop (PORT-NFR-04.2).
+    // The first type in the open panel is the next Tab stop.
     await page.keyboard.press("Tab");
     const forsta = vy.getByRole("button", { name: "Ansökan om bostadsbidrag" });
     await expect(forsta).toBeFocused();
@@ -128,4 +138,15 @@ test.describe("Skapa uppgift", () => {
       page.getByRole("heading", { level: 1, name: "Skapa uppgift" }),
     ).toBeVisible();
   });
+});
+
+test("Skapa uppgift döljs när experimentflaggan är av", async ({ page }) => {
+  await mockBffApis(page, []);
+  await gotoPortal(page);
+  await expect(
+    page.locator(".nav-footer").getByRole("button", { name: "Teamvy" }),
+  ).toBeVisible();
+  await expect(
+    page.locator(".nav-footer").getByRole("button", { name: "Skapa uppgift" }),
+  ).toHaveCount(0);
 });

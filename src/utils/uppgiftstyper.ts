@@ -10,7 +10,7 @@ const SORTERING = new Intl.Collator("sv");
 
 /**
  * Fetches the catalog of uppgiftstyper. Shaped like the future BFF call, but
- * served from a static mock until the real source is decided (PORT-FR-09.10).
+ * served from a static mock until the real source is decided.
  */
 export async function hamtaUppgiftstyper(): Promise<Uppgiftstyp[]> {
   return Promise.resolve(UPPGIFTSTYPER.map((typ) => ({ ...typ })));
@@ -18,7 +18,7 @@ export async function hamtaUppgiftstyper(): Promise<Uppgiftstyp[]> {
 
 /**
  * Groups the catalog by kategori. Both kategorier and the types within each
- * are sorted alphabetically (PORT-FR-09.7, PORT-FR-09.8).
+ * are sorted alphabetically.
  */
 export function grupperaPerKategori(typer: Uppgiftstyp[]): Kategori[] {
   const perKategori = new Map<string, Uppgiftstyp[]>();
@@ -39,7 +39,7 @@ export interface Sokindex {
   typ: Uppgiftstyp;
   namn: string;
   // namn, kategori and sökord, lowercased once so each keystroke only has to
-  // do substring checks (PORT-NFR-04.1).
+  // do substring checks.
   falt: string[];
 }
 
@@ -60,7 +60,7 @@ export function byggSokindex(typer: Uppgiftstyp[]): Sokindex[] {
 
 /**
  * Case-insensitive substring search on namn, kategori and sökord
- * (PORT-FR-09.3). Types whose namn matches come first, then alphabetical.
+ *. Types whose namn matches come first, then alphabetical.
  */
 export function sokUppgiftstyper(
   index: Sokindex[],

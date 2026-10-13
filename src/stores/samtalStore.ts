@@ -6,7 +6,7 @@ export interface PagaendeSamtal {
 }
 
 /**
- * The call the handläggare is in right now (PORT-FR-11.5). Used to prefill the
+ * The call the handläggare is in right now. Used to prefill the
  * personnummer in Skapa uppgift and Skapa anteckning. Always empty until the
  * telephony integration fills it in.
  */

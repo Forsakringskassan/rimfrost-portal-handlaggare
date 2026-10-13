@@ -35,7 +35,7 @@ const typer: Uppgiftstyp[] = [
 ];
 
 describe("hamtaUppgiftstyper", () => {
-  it("returns the mock catalog with at least about 100 types (PORT-FR-09.10)", async () => {
+  it("returns the mock catalog with at least about 100 types", async () => {
     const katalog = await hamtaUppgiftstyper();
     expect(katalog.length).toBeGreaterThanOrEqual(100);
     expect(new Set(katalog.map((typ) => typ.id)).size).toBe(katalog.length);
@@ -46,7 +46,7 @@ describe("hamtaUppgiftstyper", () => {
 });
 
 describe("grupperaPerKategori", () => {
-  it("sorts kategorier and the types within each alphabetically (PORT-FR-09.7, PORT-FR-09.8)", () => {
+  it("sorts kategorier and the types within each alphabetically", () => {
     const kategorier = grupperaPerKategori(typer);
     expect(kategorier.map((k) => k.namn)).toEqual([
       "Bostadsbidrag",
@@ -65,7 +65,7 @@ describe("grupperaPerKategori", () => {
   });
 });
 
-describe("sokUppgiftstyper (PORT-FR-09.3)", () => {
+describe("sokUppgiftstyper", () => {
   const index = byggSokindex(typer);
   const sok = (text: string): string[] =>
     sokUppgiftstyper(index, text).map((typ) => typ.id);
@@ -108,7 +108,7 @@ describe("sokUppgiftstyper (PORT-FR-09.3)", () => {
     expect(sok("xyz")).toEqual([]);
   });
 
-  it("searches 500 types well under 50 ms (PORT-NFR-04.1)", () => {
+  it("searches 500 types well under 50 ms", () => {
     const manga = Array.from({ length: 500 }, (_, i) => ({
       ...typer[i % typer.length],
       id: `typ-${i}`,

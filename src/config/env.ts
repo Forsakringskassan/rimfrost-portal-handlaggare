@@ -14,4 +14,14 @@ const runtimeEnv = (window as any).__PORTAL_HANDLAGGARE_ENV__ ?? {};
  */
 export const env = {
   bffUrl: runtimeEnv.RUNTIME_BFF_URL || import.meta.env.VITE_BFF_URL || "",
+  /**
+   * Experimental "Skapa uppgift" view: an experimental take on how the FE for
+   * creating an uppgift or an anteckning could look. Off unless set to "true".
+   */
+  experimentSkapaUppgift:
+    String(
+      runtimeEnv.RUNTIME_EXPERIMENT_SKAPA_UPPGIFT ||
+        import.meta.env.VITE_EXPERIMENT_SKAPA_UPPGIFT ||
+        "",
+    ) === "true",
 };

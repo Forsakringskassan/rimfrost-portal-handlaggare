@@ -12,6 +12,7 @@ import LoginModal from "./components/LoginModal.vue";
 import StartPage from "./components/StartPage.vue";
 import ToastContainer from "./components/ToastContainer.vue";
 import UppgiftLista from "./components/UppgiftLista.vue";
+import { env } from "./config/env";
 import { useHandlaggareStore } from "./stores/handlaggareStore";
 import { useProductStore } from "./stores/uppgiftListaStore";
 import { useViewStore } from "./stores/viewStore";
@@ -199,7 +200,11 @@ async function handleGetNextUppgift() {
             <FButton variant="secondary" @click="goToSokUppgift"
               >Sök uppgift</FButton
             >
-            <FButton variant="secondary" @click="goToSkapaUppgift"
+            <!-- Experimental, behind a flag. -->
+            <FButton
+              v-if="env.experimentSkapaUppgift"
+              variant="secondary"
+              @click="goToSkapaUppgift"
               >Skapa uppgift</FButton
             >
             <FButton variant="secondary" @click="goToTeamvy">Teamvy</FButton>

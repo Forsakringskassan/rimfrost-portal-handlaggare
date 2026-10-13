@@ -1,6 +1,7 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { env } from "../../config/env";
 import { useViewStore } from "../../stores/viewStore";
 import type { OperativUppgiftItem } from "../../types";
 import {
@@ -402,13 +403,28 @@ describe("SokUppgift", () => {
     });
   });
 
-  it("opens Skapa uppgift from the button at the bottom (PORT-FR-08.3)", async () => {
-    const wrapper = mountView();
-    const knapp = wrapper
-      .findAll("button")
-      .find((b) => b.text() === "Skapa uppgift");
-    await knapp?.trigger("click");
+  describe("experiment Skapa uppgift", () => {
+    afterEach(() => {
+      env.experimentSkapaUppgift = false;
+    });
 
-    expect(useViewStore().uppgiftVy).toBe("skapa");
+    it("hides the Skapa uppgift button when the flag is off", () => {
+      env.experimentSkapaUppgift = false;
+      const wrapper = mountView();
+      expect(
+        wrapper.findAll("button").some((b) => b.text() === "Skapa uppgift"),
+      ).toBe(false);
+    });
+
+    it("opens Skapa uppgift from the button at the bottom", async () => {
+      env.experimentSkapaUppgift = true;
+      const wrapper = mountView();
+      const knapp = wrapper
+        .findAll("button")
+        .find((b) => b.text() === "Skapa uppgift");
+      await knapp?.trigger("click");
+
+      expect(useViewStore().uppgiftVy).toBe("skapa");
+    });
   });
 });

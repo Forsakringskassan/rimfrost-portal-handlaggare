@@ -71,10 +71,14 @@ kontrakt betyder 403 att uppgiften inte får tilldelas). BFF:en skickar inte med
 SID-nekande kan inte skiljas från andra 403. Vid 404 visas att uppgiften inte längre kan
 tilldelas. I båda fallen hämtas träfflistan på nytt.
 
-### Skapa uppgift
+### Skapa uppgift (experiment)
 
-Vyn Skapa uppgift (`SkapaUppgift.vue`) är bara gränssnitt: ingen uppgift skapas och ingen
-anteckning sparas (FKPOC-1141). Katalogen hämtas med `hamtaUppgiftstyper()`
+Vyn Skapa uppgift (`SkapaUppgift.vue`) är ett experiment, ett förslag på hur gränssnittet för
+att skapa en uppgift eller en anteckning skulle kunna se ut (FKPOC-1141). Det finns inga krav
+för vyn. Den är dold bakom flaggan `VITE_EXPERIMENT_SKAPA_UPPGIFT` /
+`RUNTIME_EXPERIMENT_SKAPA_UPPGIFT` (av som standard, på med `"true"`), som styr både knappen i
+vänstermenyn, knappen längst ner i sökvyn och själva vyn. Vyn är bara gränssnitt: ingen uppgift
+skapas och ingen anteckning sparas. Katalogen hämtas med `hamtaUppgiftstyper()`
 (`utils/uppgiftstyper.ts`), som har samma form som ett framtida BFF-anrop men tills vidare
 returnerar mockkatalogen i `src/mock/uppgiftstyper.ts`. Sökningen sker helt i webbläsaren mot
 ett förberäknat index (namn, kategori och sökord i gemener). Listan följer sökfältet med 300 ms
@@ -82,8 +86,7 @@ fördröjning, och direkt vid "Sök"/Enter eller när fältet töms.
 
 "Senast använda" (`utils/senastAnvanda.ts`) sparas i `localStorage` under nyckeln
 `rimfrost.senastAnvandaUppgiftstyper.<handläggarens id>`, som en JSON-lista med högst 8 id:n
-för uppgiftstyper. Personnummer och anteckningstext sparas eller loggas aldrig
-(PORT-NFR-04.4). Om lagringen inte går att läsa eller skriva visas vyn utan "Senast använda".
+för uppgiftstyper. Personnummer och anteckningstext sparas eller loggas aldrig. Om lagringen inte går att läsa eller skriva visas vyn utan "Senast använda".
 
 Personnumret förifylls från `samtalStore.pagaendeSamtal.personnummer`, som är tomt tills
 telefonin är integrerad. Personnummerfälten (`PersonnummerFalt.vue`) är vanliga `<input>` med
@@ -112,4 +115,4 @@ Ingen egen hälsokontroll — statisk frontend, hälsa avgörs av webbservern so
 | Funktioner för att hämta teamets uppgifter och att omtilldela en uppgift finns implementerade men är inte kopplade till något gränssnitt | Koppla in eller ta bort                                   |
 | Dokumenterad `regeltyp`-prop skickas aldrig till mikrofrontends trots att det beskrivs i tidigare dokumentation                          | Uppdatera dokumentationen eller implementera propen       |
 | Ingen ruttskyddslogik hindrar direktnavigering till en uppgift utan inloggning                                                           | Bedöm behov av ruttvakter                                 |
-| Skapa uppgift och Skapa anteckning sparar ingenting, och katalogen med uppgiftstyper är en mock                                          | BFF-endpoints för katalog, skapa uppgift och anteckningar |
+| Experimentet Skapa uppgift sparar ingenting, och katalogen med uppgiftstyper är en mock                                                  | BFF-endpoints för katalog, skapa uppgift och anteckningar |

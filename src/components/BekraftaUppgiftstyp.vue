@@ -18,12 +18,12 @@ const emit = defineEmits<{
 const samtalStore = useSamtalStore();
 const rubrik = useTemplateRef("rubrik");
 
-// Prefilled from the ongoing call when known (PORT-FR-10.2).
+// Prefilled from the ongoing call when known.
 const personnummer = ref(samtalStore.pagaendeSamtal.personnummer ?? "");
 const valideringsfel = ref<string | null>(null);
 // Every uppgift can carry a note. Type-specific fields wait until we know
-// how the uppgift is processed (PORT-FR-10.1). Not logged or stored
-// (PORT-NFR-04.4).
+// how the uppgift is processed. Not logged or stored
+//.
 const anteckning = ref("");
 
 watch(personnummer, () => {
@@ -40,7 +40,7 @@ function onSubmit(): void {
 }
 
 onMounted(() => {
-  // Moves focus into the step that replaced the list (PORT-NFR-04.2).
+  // Moves focus into the step that replaced the list.
   rubrik.value?.focus();
 });
 </script>

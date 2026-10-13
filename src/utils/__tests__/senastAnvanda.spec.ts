@@ -25,7 +25,7 @@ function skapaLagring(): Storage & { data: Map<string, string> } {
   };
 }
 
-describe("senastAnvanda (PORT-FR-09.6, PORT-FR-09.9)", () => {
+describe("senastAnvanda", () => {
   let lagring: ReturnType<typeof skapaLagring>;
 
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe("senastAnvanda (PORT-FR-09.6, PORT-FR-09.9)", () => {
     expect(lasSenastAnvanda(BJORN)).toEqual(["b"]);
   });
 
-  it("stores only uppgiftstyp ids (PORT-NFR-04.4)", () => {
+  it("stores only uppgiftstyp ids", () => {
     laggTillSenastAnvanda(ANNA, "a");
     expect([...lagring.data.values()]).toEqual([JSON.stringify(["a"])]);
   });

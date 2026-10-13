@@ -40,14 +40,14 @@ const isLoading = ref(true);
 const error = ref<string | null>(null);
 
 // The choice at the top decides whether an uppgift or an anteckning is
-// registered (PORT-FR-11.1).
+// registered.
 const lage = ref<Lage>("uppgift");
 const steg = ref<Steg>("hitta");
 const valdTyp = ref<Uppgiftstyp | null>(null);
 
 // soktext follows the input; aktivSoktext is what the list shows and trails
-// soktext by the delay while typing (PORT-FR-09.2). Both survive the confirm
-// step and the note form, so Tillbaka keeps the search (PORT-FR-10.5).
+// soktext by the delay while typing. Both survive the confirm
+// step and the note form, so Tillbaka keeps the search.
 const soktext = ref("");
 const aktivSoktext = ref("");
 const oppnaKategorier = ref<Record<string, boolean>>({});
@@ -129,7 +129,7 @@ function onSkapa(): void {
   if (handlaggarId.value) {
     senastAnvandaIds.value = laggTillSenastAnvanda(handlaggarId.value, typ.id);
   }
-  // Creating an uppgift is not wired up yet (PORT-FR-10.4).
+  // Creating an uppgift is not wired up yet.
   toast.info(
     `Att skapa uppgift är inte inkopplat än. Ingen uppgift av typen "${typ.namn}" har skapats.`,
   );
@@ -178,7 +178,7 @@ onBeforeUnmount(() => {
 
       <template v-else>
         <!-- A plain input rather than FTextField: FTextField only updates its
-           v-model on change/blur, and the list follows the typing (PORT-FR-09.2). -->
+           v-model on change/blur, and the list follows the typing. -->
         <form
           class="sok-form"
           novalidate
@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
         <p v-else-if="error" class="error-message" role="alert">{{ error }}</p>
 
         <template v-else-if="harSoktext">
-          <!-- Flat hit list while searching (PORT-FR-09.4, PORT-FR-09.5). -->
+          <!-- Flat hit list while searching. -->
           <p class="body traffar-antal" role="status">
             <template v-if="traffar.length > 0">{{
               antalTraffarText

@@ -13,7 +13,7 @@ const emit = defineEmits<{
 
 <template>
   <!-- Native buttons so every choice is reached with Tab and chosen with
-       Enter or space (PORT-NFR-04.2). -->
+       Enter or space. -->
   <ul class="uppgiftstyp-lista">
     <li v-for="typ in typer" :key="typ.id">
       <button
