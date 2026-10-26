@@ -7,7 +7,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: Forsakringskassan/.github/.github/workflows/app-npm-docker.yaml@<SHA för #72> # temp branch
+    uses: Forsakringskassan/.github/.github/workflows/app-npm-docker.yaml@0499daa51fb3169a2ff0bc0a57658652289dae3c # temp branch
     with:
       version: "0.0.0-test"
       release: false
