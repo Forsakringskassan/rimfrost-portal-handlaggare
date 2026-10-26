@@ -1,0 +1,13 @@
+name: Test npm docker
+on:
+  push:
+    branches: [test/fix-rimfrost-builds]
+jobs:
+  docker:
+    permissions:
+      contents: read
+      packages: write
+    uses: Forsakringskassan/.github/.github/workflows/app-npm-docker.yaml@<SHA för #72> # temp branch
+    with:
+      version: "0.0.0-test"
+      release: false
