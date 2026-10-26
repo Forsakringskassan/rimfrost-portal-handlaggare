@@ -4,7 +4,4 @@ on: [workflow_dispatch, workflow_call, push, pull_request]
 
 jobs:
   bundle-app-npm-ci:
-    uses: Forsakringskassan/.github/.github/workflows/bundle-app-npm-ci-runtime-env.yaml@main
-    secrets:
-      PACKAGES_RW_ACTOR: ${{ secrets.PACKAGES_RW_ACTOR }}
-      PACKAGES_RW_TOKEN: ${{ secrets.PACKAGES_RW_TOKEN }}
+    uses: Forsakringskassan/.github/.github/workflows/bundle-app-npm-ci-runtime-env.yaml@0499daa51fb3169a2ff0bc0a57658652289dae3c # temp branch
