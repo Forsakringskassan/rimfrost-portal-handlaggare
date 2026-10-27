@@ -141,7 +141,7 @@ mikrofrontend (processvyn) tillsammans med uppgiftens, så att handläggaren ser
 ärendet befinner sig. Processen äger vyn, regelmikrofrontenderna visar inte processens steg.
 
 - **PORT-FR-08.1** När en uppgift öppnas ska portalen ladda processens mikrofrontend via
-  route-manifestet, utifrån uppgiftens `processvy_url`, på samma sätt som uppgiftens
+  route-manifestet, utifrån uppgiftens `processvyUrl`, på samma sätt som uppgiftens
   mikrofrontend.
 - **PORT-FR-08.2** Portalen ska skicka med `handlaggningId` och `aktivitetId` till processens
   mikrofrontend.
@@ -149,7 +149,7 @@ mikrofrontend (processvyn) tillsammans med uppgiftens, så att handläggaren ser
   mikrofrontend. _Visas ovanför uppgiftens mikrofrontend, under rubriken._
 - **PORT-FR-08.4** Om processens mikrofrontend inte kan laddas ska uppgiftens mikrofrontend och
   portalen i övrigt fungera som vanligt (jfr PORT-NFR-01).
-- **PORT-FR-08.5** Om uppgiften saknar `processvy_url` ska portalen inte ladda någon processvy.
+- **PORT-FR-08.5** Om uppgiften saknar `processvyUrl` ska portalen inte ladda någon processvy.
   Uppgiftens mikrofrontend visas som vanligt.
 
 ---

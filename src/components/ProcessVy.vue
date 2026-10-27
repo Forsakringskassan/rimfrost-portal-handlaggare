@@ -20,8 +20,8 @@ const failed = ref(false);
 // Guards against a slow load for a previous uppgift overwriting the current one.
 let loadCount = 0;
 
-// Same lookup as the uppgift's own micro frontend: the route key is the last
-// segment of the url, e.g. "/process/vah" → "vah" (PORT-FR-08.1).
+// Route-manifest key from the last segment of the url, e.g. "/process/vah" →
+// "vah" (PORT-FR-08.1). Empty segments are skipped so a trailing slash works.
 const processKey = computed(
   () => props.processvyUrl?.split("/").filter(Boolean).pop() ?? "",
 );
@@ -42,9 +42,7 @@ async function loadProcessvy(key: string): Promise<void> {
       ProcessComponent.value = component;
     }
   } catch (err) {
-    if (current === loadCount) {
-      failed.value = true;
-    }
+    // ProcessComponent stays null, so nothing is rendered.
     console.warn(`Kunde inte ladda processvyn för "${key}":`, err);
   }
 }
