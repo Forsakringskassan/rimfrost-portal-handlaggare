@@ -153,6 +153,10 @@ This app uses **Module Federation** to dynamically load micro frontends based on
 3. **Host calls `loadRemoteModule()`** → registers the remote via `registerRemotes()` then loads it via `loadRemote()` from `@module-federation/enhanced/runtime`
 4. **Micro frontend renders** with props: `handlaggningId` and `regeltyp`
 
+### Process view (processvy)
+
+Tasks created in a process activity also carry `aktivitetId` and `processvyUrl` (e.g. `"/process/vah"`). When such a task is opened, the portal loads the process's micro frontend the same way, using the last segment of `processvyUrl` as the route key, and renders it above the task's micro frontend with the props `handlaggningId` and `aktivitetId`. The process view is optional: if it can't be loaded, or the task has no `processvyUrl`, nothing is shown and the task's micro frontend works as usual.
+
 ### Adding a New Micro Frontend
 
 **No changes to this repo are required.** The registry lives in `rimfrost-portal-bff`.

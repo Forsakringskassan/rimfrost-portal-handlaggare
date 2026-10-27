@@ -14,6 +14,7 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
 | Handläggare                                               | Den enda slutanvändarrollen; loggar in, ser sin uppgiftslista, öppnar och arbetar med uppgifter |
 | Portal BFF                                                | Den enda bakomliggande tjänsten portalen anropar                                                |
 | Regel-mikrofrontends (t.ex. RTF Manuell, Bekräfta Beslut) | Laddas in dynamiskt av portalen för att hantera en specifik uppgiftstyp                         |
+| Process-mikrofrontends (t.ex. VAH, VAB)                   | Laddas in dynamiskt av portalen och visar processens steg för den öppnade uppgiften             |
 
 ---
 
@@ -132,6 +133,24 @@ ett brev från Försäkringskassan.
 - **PORT-FR-07.3** Om uppgiften är SID-märkt ska avgöras av bakomliggande tjänster.
   _Portal BFF skickar ännu ingen sådan uppgift. Tills vidare finns en tillfällig mock som bara
   är aktiv i utvecklingsläge (FKPOC-1113)._
+
+### PORT-FR-08 — Processvy vid öppnad uppgift
+
+När handläggaren öppnar en uppgift som skapats i en processaktivitet visar portalen processens
+mikrofrontend (processvyn) tillsammans med uppgiftens, så att handläggaren ser var i processen
+ärendet befinner sig. Processen äger vyn, regelmikrofrontenderna visar inte processens steg.
+
+- **PORT-FR-08.1** När en uppgift öppnas ska portalen ladda processens mikrofrontend via
+  route-manifestet, utifrån uppgiftens `processvy_url`, på samma sätt som uppgiftens
+  mikrofrontend.
+- **PORT-FR-08.2** Portalen ska skicka med `handlaggningId` och `aktivitetId` till processens
+  mikrofrontend.
+- **PORT-FR-08.3** Processvyn ska visas på en fast plats i förhållande till uppgiftens
+  mikrofrontend. _Visas ovanför uppgiftens mikrofrontend, under rubriken._
+- **PORT-FR-08.4** Om processens mikrofrontend inte kan laddas ska uppgiftens mikrofrontend och
+  portalen i övrigt fungera som vanligt (jfr PORT-NFR-01).
+- **PORT-FR-08.5** Om uppgiften saknar `processvy_url` ska portalen inte ladda någon processvy.
+  Uppgiftens mikrofrontend visas som vanligt.
 
 ---
 
