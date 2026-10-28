@@ -67,4 +67,10 @@ onErrorCaptured((err) => {
 .process-vy {
   margin-bottom: 1.5rem;
 }
+
+/* The remote may choose to render nothing (e.g. an unknown aktivitetId), which
+   would otherwise leave the margin as an empty gap above the uppgift. */
+.process-vy:empty {
+  display: none;
+}
 </style>
