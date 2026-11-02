@@ -212,7 +212,7 @@ VITE_BFF_URL=http://localhost:9001
 
 ### Docker and OpenShift
 
-Mount a `runtime-config.js` file at `/usr/local/apache2/htdocs/runtime-config.js` inside the container:
+Mount a `runtime-config.js` file at `/usr/local/apache2/htdocs/config/runtime-config.js` inside the container:
 
 ```js
 window.__PORTAL_HANDLAGGARE_ENV__ = {
@@ -220,7 +220,7 @@ window.__PORTAL_HANDLAGGARE_ENV__ = {
 };
 ```
 
-In OpenShift this is done via a ConfigMap mounted with `subPath`. See [ENV_SETUP.md](ENV_SETUP.md).
+In OpenShift this is done via a ConfigMap mounted as the `config/` directory. See [ENV_SETUP.md](ENV_SETUP.md).
 
 Micro frontend entry URLs are configured in `remotes.json` in `rimfrost-portal-bff` (or the Kubernetes ConfigMap pointed to by `REMOTES_CONFIG_PATH` on the BFF), not via environment variables on the portal.
 

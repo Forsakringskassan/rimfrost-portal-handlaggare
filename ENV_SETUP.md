@@ -12,7 +12,7 @@ VITE_BFF_URL=http://localhost:9001
 
 ## Docker (local image testing)
 
-Mount a `runtime-config.js` file into the container at the path `/usr/local/apache2/htdocs/runtime-config.js`. Create the file with the values you need:
+Mount a `runtime-config.js` file into the container at the path `/usr/local/apache2/htdocs/config/runtime-config.js`. Create the file with the values you need:
 
 ```js
 window.__PORTAL_HANDLAGGARE_ENV__ = {
@@ -22,13 +22,13 @@ window.__PORTAL_HANDLAGGARE_ENV__ = {
 
 ```bash
 docker run -p 8080:8080 \
-  -v ./runtime-config.js:/usr/local/apache2/htdocs/runtime-config.js \
+  -v ./runtime-config.js:/usr/local/apache2/htdocs/config/runtime-config.js \
   your-image-name
 ```
 
 ## OpenShift (production)
 
-Create a ConfigMap with the config file content and mount it using `subPath` so only the config file is replaced inside the container:
+Create a ConfigMap with the config file content and mount it as the `config/` directory. Only `runtime-config.js` lives there, so nothing else in the image is hidden:
 
 ```yaml
 apiVersion: v1
@@ -46,8 +46,7 @@ data:
 # In your Deployment:
 volumeMounts:
   - name: runtime-config
-    mountPath: /usr/local/apache2/htdocs/runtime-config.js
-    subPath: runtime-config.js
+    mountPath: /usr/local/apache2/htdocs/config
 volumes:
   - name: runtime-config
     configMap:
