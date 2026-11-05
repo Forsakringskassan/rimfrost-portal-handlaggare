@@ -5,6 +5,7 @@ import {
   mockBekraftabeslutUppgift,
   mockBffApis,
   test,
+  uppgiftINavigering,
 } from "./fixtures";
 
 // Exercises the real bekraftabeslut-fe micro frontend (built and served on :3033
@@ -12,7 +13,7 @@ import {
 // same way the portal loads it in production — only the downstream BFF calls the
 // remote itself makes are mocked (handlaggning data, 4 referensdata endpoints,
 // PATCH, done, uppgiftsbeskrivning).
-const listLabel = "fta-001: Bekräfta beslut";
+const listLabel = "Bekräfta beslut";
 
 test.describe("bekraftabeslut MFE", () => {
   test("laddar och visar beslutsdata", async ({ page }) => {
@@ -20,7 +21,7 @@ test.describe("bekraftabeslut MFE", () => {
     await mockBekraftabeslutEndpoints(page);
     await gotoPortal(page);
 
-    await page.getByText(listLabel).click();
+    await uppgiftINavigering(page, listLabel).click();
     await expect(page).toHaveURL(/\/items\/uppg-bekrafta-001/);
 
     await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
@@ -33,7 +34,7 @@ test.describe("bekraftabeslut MFE", () => {
     await mockBekraftabeslutEndpoints(page);
     await gotoPortal(page);
 
-    await page.getByText(listLabel).click();
+    await uppgiftINavigering(page, listLabel).click();
     await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
 
     await page
@@ -74,7 +75,7 @@ test.describe("bekraftabeslut MFE", () => {
     });
     await gotoPortal(page);
 
-    await page.getByText(listLabel).click();
+    await uppgiftINavigering(page, listLabel).click();
     await expect(
       page.getByText(
         "Det är inte möjligt att bekräfta beslut eftersom referensdata saknas.",
@@ -99,7 +100,7 @@ test.describe("bekraftabeslut MFE", () => {
     await mockBekraftabeslutEndpoints(page, { status: 503 });
     await gotoPortal(page);
 
-    await page.getByText(listLabel).click();
+    await uppgiftINavigering(page, listLabel).click();
     await expect(page).toHaveURL(/\/items\/uppg-bekrafta-001/);
     await expect(page.locator(".beslut-information")).toHaveCount(0);
     await expect(

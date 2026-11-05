@@ -1,4 +1,11 @@
-import { expect, gotoPortal, mockBffApis, mockUppgift, test } from "./fixtures";
+import {
+  expect,
+  gotoPortal,
+  mockBffApis,
+  mockUppgift,
+  test,
+  uppgiftINavigering,
+} from "./fixtures";
 
 test.describe("Uppgiftslista", () => {
   test("visar meddelande när inga uppgifter finns", async ({ page }) => {
@@ -20,15 +27,13 @@ test.describe("Uppgiftslista", () => {
   test("visar uppgift i navigationslistan", async ({ page }) => {
     await mockBffApis(page, [mockUppgift]);
     await gotoPortal(page);
-    // Label: last 7 chars of uppgiftId + ": " + regel
-    // "uppg-001".slice(-7) === "ppg-001"
-    await expect(page.getByText("ppg-001: RTF Manuell")).toBeVisible();
+    await expect(uppgiftINavigering(page, "RTF Manuell")).toBeVisible();
   });
 
   test("navigerar till uppgift vid klick i listan", async ({ page }) => {
     await mockBffApis(page, [mockUppgift]);
     await gotoPortal(page);
-    await page.getByText("ppg-001: RTF Manuell").click();
+    await uppgiftINavigering(page, "RTF Manuell").click();
     await expect(page).toHaveURL(/\/items\/uppg-001/);
   });
 
@@ -37,7 +42,7 @@ test.describe("Uppgiftslista", () => {
     // It won't match any manifest entry, so the generic load error is shown.
     await mockBffApis(page, [{ ...mockUppgift, url: "" }]);
     await gotoPortal(page);
-    await page.getByText("ppg-001: RTF Manuell").click();
+    await uppgiftINavigering(page, "RTF Manuell").click();
     await expect(
       page.getByText("Kunde inte ladda komponent", { exact: false }),
     ).toBeVisible({ timeout: 10_000 });
@@ -46,7 +51,7 @@ test.describe("Uppgiftslista", () => {
   test("tar bort uppgift från listan vid task-done event", async ({ page }) => {
     await mockBffApis(page, [mockUppgift]);
     await gotoPortal(page);
-    await expect(page.getByText("ppg-001: RTF Manuell")).toBeVisible();
+    await expect(uppgiftINavigering(page, "RTF Manuell")).toBeVisible();
 
     await page.evaluate((id) => {
       window.dispatchEvent(

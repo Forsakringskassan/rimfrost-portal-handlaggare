@@ -13,7 +13,6 @@ const { confirmModal } = useModal();
 const toast = useToast();
 
 const pageTitle = computed(() => route.query.title ?? "Ingen titel");
-const pageId = computed(() => route.params.uppgiftId ?? "Inget ID");
 
 const isUnassigning = ref(false);
 
@@ -70,7 +69,7 @@ async function handleUnassign(): Promise<void> {
   <div class="container" :class="{ 'sid-uppgift': sidUppgift }">
     <div v-if="route.params.uppgiftId" class="uppgift-header">
       <h1 class="page-title">
-        {{ pageTitle }} - {{ pageId }}
+        {{ pageTitle }}
         <span v-if="sidUppgift" class="sr-only">
           (Uppgiften rör en person med skyddad identitet)
         </span>
