@@ -7,6 +7,7 @@ import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/uppgiftListaStore";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
 import { ManifestLoadError } from "../config/remoteRegistry";
+import ProcessVy from "./ProcessVy.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -103,6 +104,16 @@ watch(
 
 <template>
   <div class="oppnad-uppgift">
+    <!-- Fixed above the uppgift's micro frontend (PORT-FR-08.3). Loaded on its
+         own so a failure never affects the uppgift (PORT-FR-08.4). -->
+    <ProcessVy
+      v-if="currentUppgift?.processvyUrl"
+      :key="currentUppgift.uppgiftId"
+      :processvy-url="currentUppgift.processvyUrl"
+      :handlaggning-id="currentUppgift.handlaggningId"
+      :aktivitet-id="currentUppgift.aktivitetId"
+    />
+
     <f-loader
       :show="isLoading"
       :delay="true"

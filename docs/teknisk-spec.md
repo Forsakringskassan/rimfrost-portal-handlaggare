@@ -17,6 +17,7 @@ src/
 │   ├── TeamUppgiftLista.vue    # Tabell över teamets uppgifter i huvudytan
 │   ├── SokUppgift.vue          # Sökning på personnummer efter uppgifter som inte delas ut via kön
 │   ├── OppnadUppgift.vue       # Löser upp och monterar rätt mikrofrontend för :id
+│   ├── ProcessVy.vue           # Laddar processens mikrofrontend (processvyn) ovanför uppgiftens
 │   ├── LoginModal.vue          # Val av handläggaridentitet
 │   └── ToastContainer.vue      # Renderar meddelanderutor (toasts), inkl. icke-avvisande varianten
 ├── stores/                    # Pinia: handläggare/session, uppgiftslistor, aktiv vy (viewStore)
@@ -66,6 +67,16 @@ listan och öppnas (`/items/:id`). Vid 403 visas "Uppgiften kunde inte tilldelas
 kontrakt betyder 403 att uppgiften inte får tilldelas). BFF:en skickar inte med orsaken, så ett
 SID-nekande kan inte skiljas från andra 403. Vid 404 visas att uppgiften inte längre kan
 tilldelas. I båda fallen hämtas träfflistan på nytt.
+
+### Processvy
+
+Uppgifter från BFF:en kan ha de valfria fälten `aktivitetId` och `processvyUrl`. Har den öppnade
+uppgiften `processvyUrl` laddar `ProcessVy.vue` processens mikrofrontend via route-manifestet,
+med nyckeln från sista delen av url:en (t.ex. `/process/vah` ger `vah`), och skickar med
+`handlaggningId` och `aktivitetId` som props. Processvyn visas ovanför uppgiftens mikrofrontend
+och laddas oberoende av den. Om registret saknar nyckeln, modulen inte kan laddas eller
+komponenten kastar fel när den visas, döljs processvyn utan felmeddelande och uppgiftens
+mikrofrontend påverkas inte. Saknas `processvyUrl` laddas ingen processvy (PORT-FR-08).
 
 ## Kafka-integration
 
