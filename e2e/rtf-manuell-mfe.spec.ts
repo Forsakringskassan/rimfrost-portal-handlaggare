@@ -1,10 +1,15 @@
 import {
   expect,
   gotoPortal,
+  isProcessStegUrl,
   mockBffApis,
+  mockProcessSteg,
+  mockProcessVahSteg,
   mockRtfManuellData,
   mockRtfManuellEndpoints,
   mockRtfManuellUppgift,
+  mockRtfManuellUppgiftMedProcessvy,
+  processvy,
   test,
   uppgiftINavigering,
 } from "./fixtures";
@@ -90,5 +95,133 @@ test.describe("rtf-manuell MFE", () => {
     await expect(
       page.getByText("Kunde inte hämta uppgiftsdata", { exact: false }),
     ).toBeVisible({ timeout: 15_000 });
+  });
+});
+
+// The real process-vah-fe processvy (served on :3041), loaded by the portal above
+// the real rtf-manuell-fe when the uppgift has a processvyUrl (PORT-FR-08). Only
+// the process BFF's GET /api/steg is mocked, per process-vah-bff's contract.
+test.describe("rtf-manuell MFE med VAH:s processvy", () => {
+  const { processnamn } = mockProcessVahSteg;
+
+  test("visar processvyn ovanför regelns mikrofrontend och båda fungerar", async ({
+    page,
+  }) => {
+    await mockBffApis(page, [mockRtfManuellUppgiftMedProcessvy]);
+    await mockRtfManuellEndpoints(page);
+    await mockProcessSteg(page);
+    await gotoPortal(page);
+
+    await uppgiftINavigering(page, listLabel).click();
+    await expect(page).toHaveURL(/\/items\/uppg-rtf-vah-001/);
+
+    const steg = processvy(page, processnamn);
+    await expect(steg).toBeVisible({ timeout: 15_000 });
+    await expect(steg.getByText("Registrera ansökan")).toBeVisible();
+    await expect(steg.locator('[aria-current="step"]')).toContainText(
+      "Kontrollera rätt till försäkring",
+    );
+
+    const kund = page.getByText("Lisa Tass");
+    await expect(kund).toBeVisible({ timeout: 15_000 });
+
+    // PORT-FR-08.3: the processvy sits above the uppgift's micro frontend.
+    const stegBox = await steg.boundingBox();
+    const kundBox = await kund.boundingBox();
+    expect(stegBox!.y + stegBox!.height).toBeLessThanOrEqual(kundBox!.y);
+
+    // The rule's micro frontend still works with the processvy above it.
+    await page.getByText("Godkänd", { exact: true }).click();
+    const patchRequest = page.waitForRequest(
+      (req) =>
+        req.url().includes("/patchErsattningar") && req.method() === "POST",
+    );
+    await page.getByRole("button", { name: "Klarmarkera" }).click();
+    await patchRequest;
+  });
+
+  test("anropar processens BFF med uppgiftens aktivitetId", async ({
+    page,
+  }) => {
+    await mockBffApis(page, [mockRtfManuellUppgiftMedProcessvy]);
+    await mockRtfManuellEndpoints(page);
+    await mockProcessSteg(page);
+    await gotoPortal(page);
+
+    const stegRequest = page.waitForRequest((req) =>
+      isProcessStegUrl(req.url()),
+    );
+    await uppgiftINavigering(page, listLabel).click();
+    const request = await stegRequest;
+
+    expect(new URL(request.url()).searchParams.get("aktivitetId")).toBe(
+      mockRtfManuellUppgiftMedProcessvy.aktivitetId,
+    );
+    await expect(processvy(page, processnamn)).toBeVisible({ timeout: 15_000 });
+  });
+
+  test("regelns mikrofrontend fungerar som vanligt när processens BFF svarar med fel", async ({
+    page,
+  }) => {
+    await mockBffApis(page, [mockRtfManuellUppgiftMedProcessvy]);
+    await mockRtfManuellEndpoints(page);
+    await mockProcessSteg(page, { status: 500 });
+    await gotoPortal(page);
+
+    const stegResponse = page.waitForResponse((res) =>
+      isProcessStegUrl(res.url()),
+    );
+    await uppgiftINavigering(page, listLabel).click();
+    await stegResponse;
+
+    await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("Region Dalarna")).toBeVisible();
+    await expect(page.locator(".error-message")).not.toBeVisible();
+    // process-vah-fe shows a short notice instead of the steps on a BFF error.
+    await expect(
+      page.getByText("Processens steg kan inte visas just nu."),
+    ).toBeVisible();
+    await expect(processvy(page, processnamn)).toHaveCount(0);
+  });
+
+  test("visar ingen processvy när processens BFF inte känner till aktiviteten", async ({
+    page,
+  }) => {
+    await mockBffApis(page, [mockRtfManuellUppgiftMedProcessvy]);
+    await mockRtfManuellEndpoints(page);
+    await mockProcessSteg(page, { status: 404 });
+    await gotoPortal(page);
+
+    const stegResponse = page.waitForResponse((res) =>
+      isProcessStegUrl(res.url()),
+    );
+    await uppgiftINavigering(page, listLabel).click();
+    await stegResponse;
+
+    await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator(".process-vy")).not.toBeVisible();
+  });
+
+  test("laddar ingen processvy när uppgiften saknar processvyUrl", async ({
+    page,
+  }) => {
+    const processvyRequests: string[] = [];
+    page.on("request", (req) => {
+      const url = req.url();
+      if (url.startsWith("http://localhost:3041") || isProcessStegUrl(url)) {
+        processvyRequests.push(url);
+      }
+    });
+
+    await mockBffApis(page, [mockRtfManuellUppgift]);
+    await mockRtfManuellEndpoints(page);
+    await mockProcessSteg(page);
+    await gotoPortal(page);
+
+    await uppgiftINavigering(page, listLabel).click();
+    await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
+
+    await expect(page.locator(".process-vy")).toHaveCount(0);
+    expect(processvyRequests).toEqual([]);
   });
 });

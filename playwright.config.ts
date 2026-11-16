@@ -47,5 +47,13 @@ export default defineConfig({
       timeout: 120_000,
       cwd: "../rimfrost-regel-bekraftabeslut-fe",
     },
+    {
+      // VAH's processvy, loaded above the uppgift's micro frontend (PORT-FR-08).
+      command: "npm run preview",
+      url: "http://localhost:3041",
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      cwd: "../rimfrost-process-vah-fe",
+    },
   ],
 });
