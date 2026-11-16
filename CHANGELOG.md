@@ -2,6 +2,30 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.5.0 (2026-11-16)
+
+### Features
+
+-  load the process view above the opened uppgift (FKPOC-1175) ([f8fad](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/f8fad074db223c4) LisaWedin_Ductus)  
+-  mark opened SID-märkt uppgift with a red left border ([22173](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/221732230d79a07) LisaWedin_Ductus)  
+-  add Sök uppgift view with personnummer search and assignment ([0510c](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/0510ca69988a0fa) LisaWedin_Ductus)  
+
+### Bug Fixes
+
+-  show only regel as uppgift title, drop uppgiftId from list and header ([f3f39](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/f3f39473df8e4a2) LisaWedin_Ductus)  
+-  hide the empty processvy wrapper when the remote renders nothing (FKPOC-1175) ([8dd80](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/8dd80ff34123d8d) LisaWedin_Ductus)  
+-  address review comments (FKPOC-1175) ([8e008](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/8e0089eeadca18e) LisaWedin_Ductus)  
+-  run SID line the full height of the main area, 5px from the nav ([a0f21](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/a0f219112ec98d8) LisaWedin_Ductus)  
+-  address review findings in Sök uppgift view ([b135c](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/b135c32ca594a61) LisaWedin_Ductus)  
+
+### Other changes
+
+**Merge remote-tracking branch 'origin/main' into feat/FKPOC-1175-processvy**
+
+
+[35bb9](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/35bb9b764fe08e6) LisaWedin_Ductus *2026-11-13 12:36:59*
+
+
 ## 0.4.0 (2026-09-23)
 
 ### Features
