@@ -33,6 +33,9 @@ export interface OperativUppgiftItem {
   verksamhetslogik: string;
   roll: string;
   url: string;
+  // Only set for tasks created in a process activity with a processvy (PORT-FR-08).
+  aktivitetId?: string;
+  processvyUrl?: string;
   // Not sent by Portal BFF yet — see utils/skyddadIdentitet.ts (FKPOC-1113).
   skyddadIdentitet?: boolean;
 }
