@@ -51,6 +51,17 @@ export const mockRtfManuellUppgift: OperativUppgiftItem = {
   url: "/regel/rtf-manuell",
 };
 
+// An rtf-manuell uppgift created in a VAH process activity, so the portal also
+// loads the VAH processvy above it (PORT-FR-08). The other mocked uppgifter
+// have no processvyUrl and keep covering uppgifter without a processvy.
+export const mockRtfManuellUppgiftMedProcessvy: OperativUppgiftItem = {
+  ...mockRtfManuellUppgift,
+  uppgiftId: "uppg-rtf-vah-001",
+  // The "Manuell kontroll av rätt till försäkring" activity in vah.bpmn.
+  aktivitetId: "c58dd666-b3c1-4a30-91b8-76c3495668c6",
+  processvyUrl: "/process/vah",
+};
+
 export const mockBekraftabeslutUppgift: OperativUppgiftItem = {
   uppgiftId: "uppg-bekrafta-001",
   handlaggningId: "33333333-3333-3333-3333-333333333333",
@@ -138,9 +149,56 @@ export const mockReferensdata = {
   ],
 };
 
+/** One steg in a process BFF's response; understeg nest at most two levels. */
+export interface ProcessvySteg {
+  id: string;
+  rubrik: string;
+  beskrivning?: string;
+  status: "KLAR" | "PAGAR" | "KOMMANDE";
+  steg?: ProcessvySteg[];
+}
+
+/**
+ * GetProcessvyStegResponse (rimfrost-framework-process-openapi), which every
+ * process BFF (process-vah-bff, process-vab-bff) returns from
+ * GET /api/steg?aktivitetId=….
+ */
+export interface ProcessvyStegSvar {
+  processId: string;
+  processnamn: string;
+  steg: ProcessvySteg[];
+}
+
+export const mockProcessVahSteg: ProcessvyStegSvar = {
+  processId: "vah",
+  processnamn: "Vård av husdjur",
+  steg: [
+    { id: "registrera-ansokan", rubrik: "Registrera ansökan", status: "KLAR" },
+    {
+      id: "kontrollera-ratt",
+      rubrik: "Kontrollera rätt till försäkring",
+      beskrivning: "Handläggaren kontrollerar frånvaron från arbetet.",
+      status: "PAGAR",
+      steg: [
+        {
+          id: "kontrollera-anstallning",
+          rubrik: "Kontrollera anställning",
+          status: "KLAR",
+        },
+        {
+          id: "kontrollera-franvaro",
+          rubrik: "Kontrollera frånvaro",
+          status: "PAGAR",
+        },
+      ],
+    },
+    { id: "besluta", rubrik: "Besluta", status: "KOMMANDE" },
+  ],
+};
+
 // Matches public/route-manifest.json — devEntry points to the preview server (port 3039)
-// plus the rtf-manuell (3031) and bekraftabeslut (3033) preview servers, mirroring
-// portal-bff's real src/main/resources/remotes.json.
+// plus the rtf-manuell (3031) and bekraftabeslut (3033) preview servers and the
+// process-vah (3041) processvy, mirroring portal-bff's real src/main/resources/remotes.json.
 export const mockRouteManifest = {
   routes: {
     remoteExample: {
@@ -160,6 +218,12 @@ export const mockRouteManifest = {
       module: "BekraftaBeslut",
       devEntry: "http://localhost:3033/mf-manifest.json",
       prodEntry: "https://cdn.example.com/bekraftabeslut/mf-manifest.json",
+    },
+    vah: {
+      scope: "processVahApp",
+      module: "ProcessVy",
+      devEntry: "http://localhost:3041/mf-manifest.json",
+      prodEntry: "https://cdn.example.com/process-vah/mf-manifest.json",
     },
   },
 };
@@ -277,6 +341,61 @@ export async function mockRtfManuellEndpoints(
   });
   await page.route("**/api/*/patchErsattningar", async (route) => {
     await route.fulfill({ status: 204 });
+  });
+}
+
+/**
+ * Mocks a process BFF's contract, GET /api/steg?aktivitetId=…, which the
+ * processvy remote calls itself (relative to the portal, as the remotes'
+ * preview builds have no BFF url). Pass \{ status \} to answer with an error.
+ * Shared by the processvy tests for every process (vah, vab).
+ */
+export async function mockProcessSteg(
+  page: Page,
+  svar: ProcessvyStegSvar | { status: number } = mockProcessVahSteg,
+) {
+  await page.route(isProcessStegUrl, async (route) => {
+    if ("status" in svar) {
+      await route.fulfill({ status: svar.status });
+    } else {
+      await route.fulfill({ json: svar });
+    }
+  });
+}
+
+/** True for a process BFF's GET /api/steg?aktivitetId=… */
+export function isProcessStegUrl(url: URL | string) {
+  return new URL(url).pathname.endsWith("/api/steg");
+}
+
+/** Origin of a remote's preview server, from its mockRouteManifest devEntry. */
+export function remoteOrigin(key: keyof typeof mockRouteManifest.routes) {
+  return new URL(mockRouteManifest.routes[key].devEntry).origin;
+}
+
+/**
+ * Collects every request a processvy would make — its remote (the preview
+ * server of `key`) and the process BFF — to assert that none is made.
+ */
+export function samlaProcessvyAnrop(
+  page: Page,
+  key: keyof typeof mockRouteManifest.routes,
+): string[] {
+  const origin = remoteOrigin(key);
+  const anrop: string[] = [];
+  page.on("request", (req) => {
+    const url = req.url();
+    if (url.startsWith(origin) || isProcessStegUrl(url)) {
+      anrop.push(url);
+    }
+  });
+  return anrop;
+}
+
+/** The processvy, located by the steg indicator's accessible name. */
+export function processvy(page: Page, processnamn: string) {
+  return page.getByRole("navigation", {
+    name: `Steg i processen ${processnamn}`,
   });
 }
 

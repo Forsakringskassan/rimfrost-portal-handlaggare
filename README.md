@@ -386,7 +386,7 @@ End-to-end tests are written with [Playwright](https://playwright.dev/) and live
 
 ### Setup
 
-The tests require both the portal dev server (port 3030) and the template-micro-fe **preview** server (port 3039) to be running. Playwright starts them automatically when you run the tests.
+The tests require the portal dev server (port 3030) and the **preview** servers of the real micro frontends to be running: `rimfrost-template-micro-fe` (3039), `rimfrost-regel-rtf-manuell-fe` (3031), `rimfrost-regel-bekraftabeslut-fe` (3033) and `rimfrost-process-vah-fe` (3041). Playwright starts them automatically when you run the tests, so those repos must be cloned next to this one with `npm ci` run in each.
 
 > **First run:** Playwright uses `vite --force` to start the portal, which clears the Vite optimizer cache. This takes ~30 s on the first run but is fast on subsequent runs when the servers are already up.
 
@@ -408,11 +408,12 @@ npm run test:e2e:debug
 
 ### Test structure
 
-| File                    | What it covers                                                                      |
-| ----------------------- | ----------------------------------------------------------------------------------- |
-| `e2e/portal.spec.ts`    | App header, sidebar, handläggare dropdown, toast notifications, home navigation     |
-| `e2e/uppgifter.spec.ts` | Task list rendering, empty state, click navigation, error states, task-done removal |
-| `e2e/mfe.spec.ts`       | Template MFE route navigation, successful load, load-error state                    |
+| File                          | What it covers                                                                      |
+| ----------------------------- | ----------------------------------------------------------------------------------- |
+| `e2e/portal.spec.ts`          | App header, sidebar, handläggare dropdown, toast notifications, home navigation     |
+| `e2e/uppgifter.spec.ts`       | Task list rendering, empty state, click navigation, error states, task-done removal |
+| `e2e/mfe.spec.ts`             | Template MFE route navigation, successful load, load-error state                    |
+| `e2e/rtf-manuell-mfe.spec.ts` | Real rtf-manuell MFE, and VAH's processvy above it (PORT-FR-08)                     |
 
 ### How mocking works
 
