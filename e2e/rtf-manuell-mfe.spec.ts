@@ -10,6 +10,8 @@ import {
   mockRtfManuellUppgift,
   mockRtfManuellUppgiftMedProcessvy,
   processvy,
+  remoteOrigin,
+  samlaProcessvyAnrop,
   test,
   uppgiftINavigering,
 } from "./fixtures";
@@ -160,7 +162,32 @@ test.describe("rtf-manuell MFE med VAH:s processvy", () => {
     await expect(processvy(page, processnamn)).toBeVisible({ timeout: 15_000 });
   });
 
-  test("regelns mikrofrontend fungerar som vanligt när processens BFF svarar med fel", async ({
+  test("regelns mikrofrontend fungerar som vanligt när processvyn inte kan laddas", async ({
+    page,
+  }) => {
+    await mockBffApis(page, [mockRtfManuellUppgiftMedProcessvy]);
+    await mockRtfManuellEndpoints(page);
+    await mockProcessSteg(page);
+    // PORT-FR-08.4: the processvy's remote is unreachable.
+    await page.route(`${remoteOrigin("vah")}/**`, (route) => route.abort());
+    await gotoPortal(page);
+
+    await uppgiftINavigering(page, listLabel).click();
+    await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("Region Dalarna")).toBeVisible();
+    await expect(page.locator(".error-message")).not.toBeVisible();
+    await expect(page.locator(".oppnad-uppgift > .process-vy")).toHaveCount(0);
+
+    await page.getByText("Godkänd", { exact: true }).click();
+    const patchRequest = page.waitForRequest(
+      (req) =>
+        req.url().includes("/patchErsattningar") && req.method() === "POST",
+    );
+    await page.getByRole("button", { name: "Klarmarkera" }).click();
+    await patchRequest;
+  });
+
+  test("visar inga steg men regelns mikrofrontend fungerar när processens BFF svarar med fel", async ({
     page,
   }) => {
     await mockBffApis(page, [mockRtfManuellUppgiftMedProcessvy]);
@@ -177,7 +204,7 @@ test.describe("rtf-manuell MFE med VAH:s processvy", () => {
     await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText("Region Dalarna")).toBeVisible();
     await expect(page.locator(".error-message")).not.toBeVisible();
-    // process-vah-fe shows a short notice instead of the steps on a BFF error.
+    // process-vah-fe handles the BFF error itself: a short notice instead of the steps.
     await expect(
       page.getByText("Processens steg kan inte visas just nu."),
     ).toBeVisible();
@@ -199,19 +226,17 @@ test.describe("rtf-manuell MFE med VAH:s processvy", () => {
     await stegResponse;
 
     await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
-    await expect(page.locator(".process-vy")).not.toBeVisible();
+    await expect(processvy(page, processnamn)).toHaveCount(0);
+    await expect(
+      page.getByText("Processens steg kan inte visas just nu."),
+    ).toHaveCount(0);
+    await expect(page.locator(".oppnad-uppgift > .process-vy")).toBeHidden();
   });
 
   test("laddar ingen processvy när uppgiften saknar processvyUrl", async ({
     page,
   }) => {
-    const processvyRequests: string[] = [];
-    page.on("request", (req) => {
-      const url = req.url();
-      if (url.startsWith("http://localhost:3041") || isProcessStegUrl(url)) {
-        processvyRequests.push(url);
-      }
-    });
+    const processvyAnrop = samlaProcessvyAnrop(page, "vah");
 
     await mockBffApis(page, [mockRtfManuellUppgift]);
     await mockRtfManuellEndpoints(page);
@@ -221,7 +246,7 @@ test.describe("rtf-manuell MFE med VAH:s processvy", () => {
     await uppgiftINavigering(page, listLabel).click();
     await expect(page.getByText("Lisa Tass")).toBeVisible({ timeout: 15_000 });
 
-    await expect(page.locator(".process-vy")).toHaveCount(0);
-    expect(processvyRequests).toEqual([]);
+    await expect(page.locator(".oppnad-uppgift > .process-vy")).toHaveCount(0);
+    expect(processvyAnrop).toEqual([]);
   });
 });
