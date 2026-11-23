@@ -17,7 +17,7 @@ const store = useProductStore();
 const { uppgiftLista, hasFetched } = storeToRefs(store);
 // The logged-in handläggare's Authorization header value, passed to every
 // mounted micro frontend so it can call its BFF as that handläggare
-// (PORT-FR-03.6, D-07). It is part of the remote's key: a switch of
+// (PORT-FR-03.6). It is part of the remote's key: a switch of
 // handläggare or a logout remounts the micro frontend, so it can never keep
 // using — or showing data fetched with — the previous handläggare's token.
 const { authorization } = storeToRefs(useHandlaggareStore());
@@ -122,7 +122,7 @@ watch(
          own so a failure never affects the uppgift (PORT-FR-08.4). -->
     <ProcessVy
       v-if="currentUppgift?.processvyUrl"
-      :key="`${currentUppgift.uppgiftId}|${authorization}`"
+      :key="currentUppgift.uppgiftId"
       :processvy-url="currentUppgift.processvyUrl"
       :handlaggning-id="currentUppgift.handlaggningId"
       :aktivitet-id="currentUppgift.aktivitetId"

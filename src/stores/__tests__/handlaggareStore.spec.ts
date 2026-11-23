@@ -1,5 +1,6 @@
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { stubLocalStorage } from "../../test-utils/stubLocalStorage";
 import type { Handlaggare } from "../../types";
 import { useHandlaggareStore } from "../handlaggareStore";
 
@@ -25,16 +26,6 @@ function mockFetch(data: unknown, ok = true) {
       json: () => Promise.resolve(data),
     }),
   );
-}
-
-// Node 25's own global localStorage shadows happy-dom's and lacks its methods.
-function stubLocalStorage() {
-  const items = new Map<string, string>();
-  vi.stubGlobal("localStorage", {
-    getItem: (key: string) => items.get(key) ?? null,
-    setItem: (key: string, value: string) => items.set(key, value),
-    removeItem: (key: string) => items.delete(key),
-  });
 }
 
 describe("handlaggareStore", () => {

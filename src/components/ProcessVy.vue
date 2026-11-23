@@ -20,7 +20,9 @@ const props = defineProps<{
 
 const ProcessComponent = shallowRef<Component | null>(null);
 const failed = ref(false);
-// Only a remote that declares the prop gets the token (see declaresProp).
+// Only a remote that declares the prop gets the token (see declaresProp). The
+// token is the remote's key, so a switch of handläggare or a logout remounts it
+// without reloading the module (PORT-FR-03.7).
 const remoteAuthorization = computed(() =>
   ProcessComponent.value &&
   declaresProp(ProcessComponent.value, "authorization")
@@ -71,6 +73,7 @@ onErrorCaptured((err) => {
   <div v-if="ProcessComponent && !failed" class="process-vy">
     <component
       :is="ProcessComponent"
+      :key="authorization ?? ''"
       :handlaggning-id
       :aktivitet-id
       v-bind="remoteAuthorization"

@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useHandlaggareStore } from "../../stores/handlaggareStore";
 import { useProductStore } from "../../stores/uppgiftListaStore";
+import { stubLocalStorage } from "../../test-utils/stubLocalStorage";
 import type { OperativUppgiftItem } from "../../types";
 import { loadRemoteModule } from "../../utils/loadRemoteModule";
 import OppnadUppgift from "../OppnadUppgift.vue";
@@ -58,16 +59,6 @@ async function mountWith(item: OperativUppgiftItem) {
   });
   await flushPromises();
   return wrapper;
-}
-
-// Node 25's own global localStorage shadows happy-dom's and lacks its methods.
-function stubLocalStorage() {
-  const items = new Map<string, string>();
-  vi.stubGlobal("localStorage", {
-    getItem: (key: string) => items.get(key) ?? null,
-    setItem: (key: string, value: string) => items.set(key, value),
-    removeItem: (key: string) => items.delete(key),
-  });
 }
 
 describe("OppnadUppgift — processvy", () => {
@@ -187,24 +178,38 @@ describe("OppnadUppgift — handläggarens token till mikrofrontends", () => {
 
   it("remounts the micro frontend with the new token when the handläggare switches", async () => {
     loginAs("kortnr", "1234");
-    const wrapper = await mountWith(uppgift);
+    const wrapper = await mountWith({
+      ...uppgift,
+      aktivitetId: "akt-1",
+      processvyUrl: "/process/vah",
+    });
     expect(mounts).toBe(1);
 
     loginAs("kortnr", "5678");
     await flushPromises();
 
     expect(wrapper.find(".uppgift-mfe").text()).toBe("Bearer kortnr:5678");
+    expect(wrapper.find(".process-mfe").text()).toBe("Bearer kortnr:5678");
     expect(mounts).toBe(2);
+    // The process module is not reloaded, only its component remounted.
+    expect(loadMock.mock.calls.filter(([key]) => key === "vah")).toHaveLength(
+      1,
+    );
   });
 
   it("gives the micro frontend no token after logout", async () => {
     loginAs("kortnr", "1234");
-    const wrapper = await mountWith(uppgift);
+    const wrapper = await mountWith({
+      ...uppgift,
+      aktivitetId: "akt-1",
+      processvyUrl: "/process/vah",
+    });
 
     useHandlaggareStore().logout();
     await flushPromises();
 
     expect(wrapper.find(".uppgift-mfe").text()).toBe("");
+    expect(wrapper.find(".process-mfe").text()).toBe("");
     expect(wrapper.html()).not.toContain("1234");
   });
 

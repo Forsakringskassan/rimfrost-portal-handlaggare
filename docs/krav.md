@@ -59,7 +59,7 @@ tillhandahåller applikationsskalet — inloggning, uppgiftslista och navigering
 - **PORT-FR-03.5** Registret ska kunna uppdateras utan att portalen behöver byggas om.
 - **PORT-FR-03.6** Portalen ska ge den inlästa mikrofrontenden den inloggade handläggarens
   token, som färdigt värde för `Authorization`-headern, så att mikrofrontenden kan anropa sin
-  BFF som handläggaren (beslut D-07). Det gäller både uppgiftens och processens mikrofrontend.
+  BFF som handläggaren. Det gäller både uppgiftens och processens mikrofrontend.
 - **PORT-FR-03.7** När handläggaren byts eller loggar ut ska en monterad mikrofrontend få den nya
   token, eller ingen token, och aldrig fortsätta använda den tidigare handläggarens.
 
