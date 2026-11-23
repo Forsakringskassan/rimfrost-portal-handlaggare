@@ -78,6 +78,28 @@ och laddas oberoende av den. Om registret saknar nyckeln, modulen inte kan ladda
 komponenten kastar fel när den visas, döljs processvyn utan felmeddelande och uppgiftens
 mikrofrontend påverkas inte. Saknas `processvyUrl` laddas ingen processvy (PORT-FR-08).
 
+### Token till mikrofrontends
+
+Portalen ger varje monterad mikrofrontend den inloggade handläggarens token som propen
+`authorization` (PORT-FR-03.6, beslut D-07). Värdet är hela headervärdet, i dag
+`Bearer <typId>:<varde>`, och kommer från `handlaggareStore.authorization`. Den är `null` när
+ingen är inloggad. Samma prop skickas till uppgiftens mikrofrontend (`OppnadUppgift.vue`) och
+till processvyn (`ProcessVy.vue`).
+
+Så gör en mikrofrontend (mallen `rimfrost-template-micro-fe` och nya regler):
+
+1. Deklarera propen på den exponerade komponenten: `authorization?: string | null`. Portalen
+   skickar den bara till komponenter som deklarerar den. En odeklarerad prop skulle annars
+   hamna som HTML-attribut på rotelementet och synas i DOM:en.
+2. Lägg värdet oförändrat i `Authorization`-headern på alla anrop till den egna BFF:en. Tolka
+   inte innehållet, formatet kan ändras (D-08).
+3. Är värdet `null` eller saknas: gör inget BFF-anrop som kräver identitet, visa ett begripligt
+   fel i stället för ett tyst 401.
+
+Token ingår i nyckeln (`key`) för den monterade komponenten. När handläggaren byts eller loggar
+ut monteras mikrofrontenden om med det nya värdet, så den kan aldrig fortsätta med, eller visa
+data hämtad med, den tidigare handläggarens token (PORT-FR-03.7).
+
 ## Kafka-integration
 
 Ingen. Applikationen har ingen meddelandeintegration.

@@ -151,7 +151,11 @@ This app uses **Module Federation** to dynamically load micro frontends based on
 1. **Task arrives with a `url` field** (e.g., `"url": "rtf-manuell"`)
 2. **Host fetches the remote registry** from Portal BFF (`GET /api/route-manifest`) to look up the remote's scope, module, and entry URLs. Falls back to `public/route-manifest.json` when `RUNTIME_BFF_URL` is not set.
 3. **Host calls `loadRemoteModule()`** → registers the remote via `registerRemotes()` then loads it via `loadRemote()` from `@module-federation/enhanced/runtime`
-4. **Micro frontend renders** with props: `handlaggningId` and `regeltyp`
+4. **Micro frontend renders** with props: `handlaggningId` and `regeltyp`, plus `authorization` if it declares it
+
+### Handläggarens token (`authorization`)
+
+The portal passes the logged-in handläggare's token to every mounted micro frontend (the task's and the process view) as the prop `authorization`: the complete `Authorization` header value (today `Bearer <typId>:<varde>`), or `null` when nobody is logged in. The micro frontend puts it unchanged on every call to its own BFF. It is only passed to components that declare the prop, so it never ends up as an HTML attribute. When the handläggare switches or logs out, the micro frontend is remounted with the new value. See `docs/teknisk-spec.md` ("Token till mikrofrontends").
 
 ### Process view (processvy)
 
@@ -188,7 +192,7 @@ In **development**, the BFF re-reads the file on every request — just save the
 
 #### Backend/BFF
 
-Have the backend set the task's `url` field to your route key (e.g., `"url": "your-route-key"`). Ensure your micro frontend accepts `handlaggningId` and `regeltyp` props.
+Have the backend set the task's `url` field to your route key (e.g., `"url": "your-route-key"`). Ensure your micro frontend accepts `handlaggningId` and `regeltyp` props, and `authorization` if it calls a BFF that needs the handläggare's identity.
 
 ### Building for Production
 
@@ -293,7 +297,7 @@ federation({
 });
 ```
 
-5. **Accept props**: `handlaggningId` (string) and `regeltyp` (string)
+5. **Accept props**: `handlaggningId` (string), `regeltyp` (string) and `authorization` (string | null, forwarded as the `Authorization` header to your BFF)
 
 ### Shared Dependencies
 
