@@ -2,6 +2,7 @@ import { defineComponent, h } from "vue";
 import { flushPromises, mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { useHandlaggareStore } from "../../stores/handlaggareStore";
 import { useProductStore } from "../../stores/uppgiftListaStore";
 import type { OperativUppgiftItem } from "../../types";
 import { loadRemoteModule } from "../../utils/loadRemoteModule";
@@ -59,6 +60,16 @@ async function mountWith(item: OperativUppgiftItem) {
   return wrapper;
 }
 
+// Node 25's own global localStorage shadows happy-dom's and lacks its methods.
+function stubLocalStorage() {
+  const items = new Map<string, string>();
+  vi.stubGlobal("localStorage", {
+    getItem: (key: string) => items.get(key) ?? null,
+    setItem: (key: string, value: string) => items.set(key, value),
+    removeItem: (key: string) => items.delete(key),
+  });
+}
+
 describe("OppnadUppgift — processvy", () => {
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -114,5 +125,95 @@ describe("OppnadUppgift — processvy", () => {
     expect(loadMock).toHaveBeenCalledWith("rtf-manuell");
     expect(wrapper.find(".process-vy").exists()).toBe(false);
     expect(wrapper.find(".uppgift-mfe").exists()).toBe(true);
+  });
+});
+
+describe("OppnadUppgift — handläggarens token till mikrofrontends", () => {
+  let mounts: number;
+
+  const TokenMfe = defineComponent({
+    props: { handlaggningId: String, authorization: String },
+    setup: (props) => {
+      mounts++;
+      return () => h("div", { class: "uppgift-mfe" }, props.authorization);
+    },
+  });
+
+  const TokenProcessMfe = defineComponent({
+    props: {
+      handlaggningId: String,
+      aktivitetId: String,
+      authorization: String,
+    },
+    setup: (props) => () =>
+      h("div", { class: "process-mfe" }, props.authorization),
+  });
+
+  function loginAs(typId: string, varde: string) {
+    const handlaggareStore = useHandlaggareStore();
+    handlaggareStore.handlaggare = [
+      { handlaggarId: { typId, varde }, fornamn: varde, efternamn: "" },
+    ];
+    handlaggareStore.login(varde);
+  }
+
+  beforeEach(() => {
+    setActivePinia(createPinia());
+    stubLocalStorage();
+    mounts = 0;
+    loadMock.mockReset();
+    loadMock.mockImplementation(async (key: string) =>
+      key === "vah" ? TokenProcessMfe : TokenMfe,
+    );
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it("passes the logged-in handläggare's Authorization value to the uppgift's and the process's micro frontend", async () => {
+    loginAs("kortnr", "1234");
+    const wrapper = await mountWith({
+      ...uppgift,
+      aktivitetId: "akt-1",
+      processvyUrl: "/process/vah",
+    });
+
+    expect(wrapper.find(".uppgift-mfe").text()).toBe("Bearer kortnr:1234");
+    expect(wrapper.find(".process-mfe").text()).toBe("Bearer kortnr:1234");
+  });
+
+  it("remounts the micro frontend with the new token when the handläggare switches", async () => {
+    loginAs("kortnr", "1234");
+    const wrapper = await mountWith(uppgift);
+    expect(mounts).toBe(1);
+
+    loginAs("kortnr", "5678");
+    await flushPromises();
+
+    expect(wrapper.find(".uppgift-mfe").text()).toBe("Bearer kortnr:5678");
+    expect(mounts).toBe(2);
+  });
+
+  it("gives the micro frontend no token after logout", async () => {
+    loginAs("kortnr", "1234");
+    const wrapper = await mountWith(uppgift);
+
+    useHandlaggareStore().logout();
+    await flushPromises();
+
+    expect(wrapper.find(".uppgift-mfe").text()).toBe("");
+    expect(wrapper.html()).not.toContain("1234");
+  });
+
+  it("does not leak the token into the DOM of a micro frontend that does not declare the prop", async () => {
+    loadMock.mockImplementation(async () => UppgiftMfe);
+    loginAs("kortnr", "1234");
+    const wrapper = await mountWith(uppgift);
+
+    expect(wrapper.find(".uppgift-mfe").text()).toBe("handl-1");
+    expect(wrapper.html()).not.toContain("Bearer");
   });
 });

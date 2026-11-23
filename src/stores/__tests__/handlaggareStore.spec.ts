@@ -27,6 +27,16 @@ function mockFetch(data: unknown, ok = true) {
   );
 }
 
+// Node 25's own global localStorage shadows happy-dom's and lacks its methods.
+function stubLocalStorage() {
+  const items = new Map<string, string>();
+  vi.stubGlobal("localStorage", {
+    getItem: (key: string) => items.get(key) ?? null,
+    setItem: (key: string, value: string) => items.set(key, value),
+    removeItem: (key: string) => items.delete(key),
+  });
+}
+
 describe("handlaggareStore", () => {
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -87,6 +97,42 @@ describe("handlaggareStore", () => {
       await store.fetchHandlaggare();
       store.setSelectedHandlaggare("does-not-exist");
       expect(store.selectedHandlaggare?.handlaggarId.typId).toBe("abc123");
+    });
+  });
+
+  describe("authorization", () => {
+    beforeEach(() => {
+      stubLocalStorage();
+    });
+
+    it("is null before login", () => {
+      expect(useHandlaggareStore().authorization).toBeNull();
+    });
+
+    it("is the Authorization header value for the logged-in handläggare", async () => {
+      mockFetch({ handlaggare: mockHandlaggare });
+      const store = useHandlaggareStore();
+      await store.fetchHandlaggare();
+      store.login("Anna Svensson");
+      expect(store.authorization).toBe("Bearer abc123:Anna Svensson");
+    });
+
+    it("follows a switch of handläggare", async () => {
+      mockFetch({ handlaggare: mockHandlaggare });
+      const store = useHandlaggareStore();
+      await store.fetchHandlaggare();
+      store.login("Anna Svensson");
+      store.login("Bo Karlsson");
+      expect(store.authorization).toBe("Bearer def456:Bo Karlsson");
+    });
+
+    it("is cleared on logout", async () => {
+      mockFetch({ handlaggare: mockHandlaggare });
+      const store = useHandlaggareStore();
+      await store.fetchHandlaggare();
+      store.login("Anna Svensson");
+      store.logout();
+      expect(store.authorization).toBeNull();
     });
   });
 });

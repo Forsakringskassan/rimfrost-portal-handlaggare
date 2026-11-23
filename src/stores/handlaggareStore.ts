@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { env } from "../config/env";
 import type { Handlaggare } from "../types";
@@ -14,6 +14,15 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
   const selectedHandlaggare = ref<Handlaggare | null>(null);
   const isAuthenticated = ref(false);
   const bearerToken = ref<string | null>(null);
+
+  /**
+   * Färdigt värde för `Authorization`-headern, eller `null` när ingen är
+   * inloggad. Skickas till monterade mikrofrontends (PORT-FR-03.6), som lägger
+   * det oförändrat på sina BFF-anrop.
+   */
+  const authorization = computed(() =>
+    bearerToken.value ? `Bearer ${bearerToken.value}` : null,
+  );
 
   function setSelectedHandlaggare(varde: string) {
     const found = handlaggare.value.find(
@@ -76,6 +85,7 @@ export const useHandlaggareStore = defineStore("handlaggareStore", () => {
     selectedHandlaggare,
     isAuthenticated,
     bearerToken,
+    authorization,
     login,
     logout,
     setSelectedHandlaggare,

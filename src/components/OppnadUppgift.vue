@@ -4,7 +4,9 @@ import type { Component } from "vue";
 import { FLoader } from "@fkui/vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
+import { useHandlaggareStore } from "../stores/handlaggareStore";
 import { useProductStore } from "../stores/uppgiftListaStore";
+import { declaresProp } from "../utils/declaresProp";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
 import { ManifestLoadError } from "../config/remoteRegistry";
 import ProcessVy from "./ProcessVy.vue";
@@ -13,6 +15,12 @@ const route = useRoute();
 const router = useRouter();
 const store = useProductStore();
 const { uppgiftLista, hasFetched } = storeToRefs(store);
+// The logged-in handläggare's Authorization header value, passed to every
+// mounted micro frontend so it can call its BFF as that handläggare
+// (PORT-FR-03.6, D-07). It is part of the remote's key: a switch of
+// handläggare or a logout remounts the micro frontend, so it can never keep
+// using — or showing data fetched with — the previous handläggare's token.
+const { authorization } = storeToRefs(useHandlaggareStore());
 
 const uppgiftId = computed(() => route.params.uppgiftId as string | null);
 const componentKey = ref(0);
@@ -45,6 +53,12 @@ const remoteKey = computed(() => {
   const url = currentUppgift.value?.url ?? "";
   return url.split("/").pop() || uppgiftId.value || "";
 });
+
+const remoteAuthorization = computed(() =>
+  RemoteComponent.value && declaresProp(RemoteComponent.value, "authorization")
+    ? { authorization: authorization.value }
+    : {},
+);
 
 async function loadComponent() {
   if (!remoteKey.value) {
@@ -108,10 +122,11 @@ watch(
          own so a failure never affects the uppgift (PORT-FR-08.4). -->
     <ProcessVy
       v-if="currentUppgift?.processvyUrl"
-      :key="currentUppgift.uppgiftId"
+      :key="`${currentUppgift.uppgiftId}|${authorization}`"
       :processvy-url="currentUppgift.processvyUrl"
       :handlaggning-id="currentUppgift.handlaggningId"
       :aktivitet-id="currentUppgift.aktivitetId"
+      :authorization
     />
 
     <f-loader
@@ -133,8 +148,9 @@ watch(
     <component
       v-else-if="RemoteComponent"
       :is="RemoteComponent"
-      :key="componentKey"
+      :key="`${componentKey}|${authorization}`"
       :handlaggning-id="handlaggningId"
+      v-bind="remoteAuthorization"
     />
   </div>
 </template>

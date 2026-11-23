@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { computed, onErrorCaptured, ref, shallowRef, watch } from "vue";
+import { declaresProp } from "../utils/declaresProp";
 import { loadRemoteModule } from "../utils/loadRemoteModule";
 
 /**
@@ -13,10 +14,19 @@ const props = defineProps<{
   processvyUrl?: string | null;
   handlaggningId?: string | null;
   aktivitetId?: string | null;
+  /** Authorization-headerns värde för den inloggade handläggaren (PORT-FR-03.6). */
+  authorization?: string | null;
 }>();
 
 const ProcessComponent = shallowRef<Component | null>(null);
 const failed = ref(false);
+// Only a remote that declares the prop gets the token (see declaresProp).
+const remoteAuthorization = computed(() =>
+  ProcessComponent.value &&
+  declaresProp(ProcessComponent.value, "authorization")
+    ? { authorization: props.authorization }
+    : {},
+);
 // Guards against a slow load for a previous uppgift overwriting the current one.
 let loadCount = 0;
 
@@ -59,7 +69,12 @@ onErrorCaptured((err) => {
 
 <template>
   <div v-if="ProcessComponent && !failed" class="process-vy">
-    <component :is="ProcessComponent" :handlaggning-id :aktivitet-id />
+    <component
+      :is="ProcessComponent"
+      :handlaggning-id
+      :aktivitet-id
+      v-bind="remoteAuthorization"
+    />
   </div>
 </template>
 
