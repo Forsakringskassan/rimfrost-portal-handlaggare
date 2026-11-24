@@ -2,6 +2,18 @@
 
 Changelog of rimfrost-portal-handlaggare.
 
+## 0.5.1 (2026-11-24)
+
+### Bug Fixes
+
+-  address review comments (FKPOC-1494) ([b7c30](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/b7c30109eda47ae) LisaWedin_Ductus)  
+-  pass the handläggare's token to mounted micro frontends (FKPOC-1494) ([7c948](https://github.com/Forsakringskassan/rimfrost-portal-handlaggare/commit/7c948f1fd393d94) LisaWedin_Ductus)  
+
+### Other changes
+
+
+## rimfrost-1_3 (2026-11-16)
+
 ## 0.5.0 (2026-11-16)
 
 ### Features
